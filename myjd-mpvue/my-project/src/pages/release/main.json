@@ -1,0 +1,7 @@
+{
+    "usingComponents":{
+        "i-action-sheet": "../../../static/dist/action-sheet/index",
+        "i-input": "../../../static/dist/input/index",
+        "i-button": "../../../static/dist/button/index"
+    }
+}

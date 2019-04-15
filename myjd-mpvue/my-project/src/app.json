@@ -1,0 +1,50 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/index/express/main",
+    "pages/index/twoHandsBook/main",
+    "pages/index/tutor/main",
+    "pages/index/partTimeJob/main",
+    "pages/logs/main",
+    "pages/conversation/main",
+    "pages/conversation/chatPage/main",
+    "pages/me/main",
+    "pages/release/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "需求宝",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999",
+    "backgroundColor": "#fafafa",
+    "selectedColor": "#333",
+    "borderStyle": "white",
+
+    "list": [{
+      "text": "首页",
+      "pagePath": "pages/index/main",
+      "iconPath": "static/tabs/home.png",
+      "selectedIconPath": "static/tabs/home-active.png"
+    }, {
+      "text": "发布",
+      "pagePath": "pages/release/main",
+      "iconPath": "static/tabs/release.png",
+      "selectedIconPath": "static/tabs/release-active.png"
+    },{
+      "text": "会话",
+      "pagePath": "pages/conversation/main",
+      "iconPath": "static/tabs/conversation.png",
+      "selectedIconPath": "static/tabs/conversation-active.png"
+    },{
+      "text": "我",
+      "pagePath": "pages/me/main",
+      "iconPath": "static/tabs/mine.png",
+      "selectedIconPath": "static/tabs/mine-active.png"
+    }
+    ],
+    "position": "bottom"
+  }
+}
