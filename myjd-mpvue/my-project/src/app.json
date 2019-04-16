@@ -1,10 +1,11 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/index/express/main",
-    "pages/index/twoHandsBook/main",
     "pages/index/tutor/main",
+    "pages/index/usedBook/main",
     "pages/index/partTimeJob/main",
+    "pages/index/renting/main",
+    "pages/index/express/main",
     "pages/logs/main",
     "pages/conversation/main",
     "pages/conversation/chatPage/main",

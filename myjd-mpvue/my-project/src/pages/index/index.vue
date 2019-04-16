@@ -3,104 +3,86 @@
     <div>
       <img src="/static/images/top.png" class="image"/>
     </div>
-    <div class="weui-grids"  >
-      <a class="weui-grid js_grid"  @click="toExpressPage">
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          代拿快递
-        </p>
-      </a>
-      <a class="weui-grid js_grid" @click="toTwoHandsBookPage">
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          学习类（二手书，竞赛组队等）
-        </p>
-      </a>
-      <a class="weui-grid js_grid" >
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          拼单类
-        </p>
-      </a>
-      <a href="javascript:" class="weui-grid js_grid" >
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          闲置物转出
-        </p>
-      </a>
-      <a class="weui-grid js_grid" @click="toPartTimeJobPage">
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          兼职类
-        </p>
-      </a>
-      <a href="javascript:" class="weui-grid js_grid" >
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          租房及转租
-        </p>
-      </a>
-      <a href="javascript:" class="weui-grid js_grid" >
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          旅游类
-        </p>
-      </a>
-      <!-- <a href="javascript:" class="weui-grid js_grid" >
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          技术处理类
-        </p>
-      </a> -->
-      <a class="weui-grid js_grid" @click="toTutorPage">
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          家教类
-        </p>
-      </a>
-      <!-- <a href="javascript:" class="weui-grid js_grid" >
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          竞赛组队
-        </p>
-      </a> -->
-      <!-- <a href="javascript:" class="weui-grid js_grid" >
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          资源需求
-        </p>
-      </a> -->
-      <a href="javascript:" class="weui-grid js_grid" >
-        <div class="weui-grid__icon">
-          <img src="" alt="">
-        </div>
-        <p class="weui-grid__label">
-          其他
-        </p>
-      </a>
-    </div>
+    <i-grid>
+    <i-grid-item @click="toTutorPage">
+        <i-grid-icon>
+            <image src="/static/images/tutor.png" />
+        </i-grid-icon>
+        <i-grid-label>家教类</i-grid-label>
+    </i-grid-item>
+    <i-grid-item @click="toUsedBookPage">
+        <i-grid-icon>
+            <image src="/static/images/study.png" />
+        </i-grid-icon>
+        <i-grid-label>二手书类</i-grid-label>
+    </i-grid-item>
+    <i-grid-item>
+        <i-grid-icon>
+            <image src="/static/images/shareTheBill.png" />
+        </i-grid-icon>
+        <i-grid-label>拼单类</i-grid-label>
+    </i-grid-item>
+    </i-grid>
+    <i-grid>
+    <i-grid-item>
+        <i-grid-icon>
+            <image src="/static/images/idle.png" />
+        </i-grid-icon>
+        <i-grid-label>闲置物转出</i-grid-label>
+    </i-grid-item>
+    <i-grid-item @click="toPartTimeJobPage">
+        <i-grid-icon>
+            <image src="/static/images/partTimeJob.png" />
+        </i-grid-icon>
+        <i-grid-label>兼职类</i-grid-label>
+    </i-grid-item>
+    <i-grid-item @click="toRentingPage">
+        <i-grid-icon>
+            <image src="/static/images/renting.png" />
+        </i-grid-icon>
+        <i-grid-label>租房及转租</i-grid-label>
+    </i-grid-item>
+    </i-grid>
+    <i-grid>
+    <i-grid-item>
+        <i-grid-icon>
+            <image src="/static/images/travel.png" />
+        </i-grid-icon>
+        <i-grid-label>旅游类</i-grid-label>
+    </i-grid-item>
+    <i-grid-item>
+        <i-grid-icon>
+            <image src="/static/images/technology.png" />
+        </i-grid-icon>
+        <i-grid-label>技术处理类</i-grid-label>
+    </i-grid-item>
+    <i-grid-item @click="toExpressPage">
+        <i-grid-icon>
+            <image src="/static/images/parcle.png" />
+        </i-grid-icon>
+        <i-grid-label>代拿快递</i-grid-label>
+    </i-grid-item>
+    </i-grid>
+    <i-grid>
+    <i-grid-item>
+        <i-grid-icon>
+            <image src="/static/images/competition.png" />
+        </i-grid-icon>
+        <i-grid-label>竞赛组队</i-grid-label>
+    </i-grid-item>
+    <i-grid-item>
+        <i-grid-icon>
+            <image src="/static/images/resource.png" />
+        </i-grid-icon>
+        <i-grid-label>资源需求</i-grid-label>
+    </i-grid-item>
+    <i-grid-item>
+        <i-grid-icon>
+            <image src="/static/images/others.png" />
+        </i-grid-icon>
+        <i-grid-label>其他</i-grid-label>
+    </i-grid-item>
+    </i-grid>
   </div>
 </template>
 
@@ -122,9 +104,9 @@ export default {
         url: 'express/main'
       })
     },
-    toTwoHandsBookPage () {
+    toUsedBookPage () {
       wx.navigateTo({
-        url: 'twoHandsBook/main'
+        url: 'usedBook/main'
       })
     },
     toTutorPage () {
@@ -135,6 +117,11 @@ export default {
     toPartTimeJobPage () {
       wx.navigateTo({
         url: 'partTimeJob/main'
+      })
+    },
+    toRentingPage () {
+      wx.navigateTo({
+        url: 'renting/main'
       })
     }
   },
