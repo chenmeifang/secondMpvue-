@@ -16,7 +16,7 @@
         </i-grid-icon>
         <i-grid-label>二手书类</i-grid-label>
     </i-grid-item>
-    <i-grid-item>
+    <i-grid-item @click="toShareBillPage">
         <i-grid-icon>
             <image src="/static/images/shareTheBill.png" />
         </i-grid-icon>
@@ -24,7 +24,7 @@
     </i-grid-item>
     </i-grid>
     <i-grid>
-    <i-grid-item>
+    <i-grid-item  @click="toIdleItemPage">
         <i-grid-icon>
             <image src="/static/images/idle.png" />
         </i-grid-icon>
@@ -44,13 +44,13 @@
     </i-grid-item>
     </i-grid>
     <i-grid>
-    <i-grid-item>
+    <i-grid-item  @click="toTravelPage">
         <i-grid-icon>
             <image src="/static/images/travel.png" />
         </i-grid-icon>
         <i-grid-label>旅游类</i-grid-label>
     </i-grid-item>
-    <i-grid-item>
+    <i-grid-item  @click="toTechnologyPage">
         <i-grid-icon>
             <image src="/static/images/technology.png" />
         </i-grid-icon>
@@ -64,19 +64,19 @@
     </i-grid-item>
     </i-grid>
     <i-grid>
-    <i-grid-item>
+    <i-grid-item  @click="toCompetitionPage">
         <i-grid-icon>
             <image src="/static/images/competition.png" />
         </i-grid-icon>
         <i-grid-label>竞赛组队</i-grid-label>
     </i-grid-item>
-    <i-grid-item>
+    <i-grid-item  @click="toResourcePage">
         <i-grid-icon>
             <image src="/static/images/resource.png" />
         </i-grid-icon>
         <i-grid-label>资源需求</i-grid-label>
     </i-grid-item>
-    <i-grid-item>
+    <i-grid-item  @click="toOthersPage">
         <i-grid-icon>
             <image src="/static/images/others.png" />
         </i-grid-icon>
@@ -99,9 +99,9 @@ export default {
   },
 
   methods: {
-    toExpressPage () {
+    toTutorPage () {
       wx.navigateTo({
-        url: 'express/main'
+        url: 'tutor/main'
       })
     },
     toUsedBookPage () {
@@ -109,9 +109,14 @@ export default {
         url: 'usedBook/main'
       })
     },
-    toTutorPage () {
+    toShareBillPage () {
       wx.navigateTo({
-        url: 'tutor/main'
+        url: 'shareBill/main'
+      })
+    },
+    toIdleItemPage () {
+      wx.navigateTo({
+        url: 'idleItem/main'
       })
     },
     toPartTimeJobPage () {
@@ -122,6 +127,36 @@ export default {
     toRentingPage () {
       wx.navigateTo({
         url: 'renting/main'
+      })
+    },
+    toTravelPage () {
+      wx.navigateTo({
+        url: 'travel/main'
+      })
+    },
+    toTechnologyPage () {
+      wx.navigateTo({
+        url: 'technology/main'
+      })
+    },
+    toExpressPage () {
+      wx.navigateTo({
+        url: 'express/main'
+      })
+    },
+    toCompetitionPage () {
+      wx.navigateTo({
+        url: 'competition/main'
+      })
+    },
+    toResourcePage () {
+      wx.navigateTo({
+        url: 'resource/main'
+      })
+    },
+    toOthersPage () {
+      wx.navigateTo({
+        url: 'others/main'
       })
     }
   },
