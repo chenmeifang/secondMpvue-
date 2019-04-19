@@ -18,6 +18,5 @@
 <style scoped>
   .title {
     text-align: center;
-    font-size: 30px;
   }
 </style>

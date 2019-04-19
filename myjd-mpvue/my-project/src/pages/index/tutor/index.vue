@@ -1,15 +1,17 @@
 <template>
     <div>
-        <p class="top">家教</p>
-        <p>_________________________________________________</p>
+      <p class="top">家教</p>
         <div v-for="item in tutorList" :key="item" class="tutorBox">
-           <ul>
+          <div class="left">
+          <ul>
             <li>课程详情：{{ item.detail }}</li>
             <li>上课地点：{{ item.workPlace}}</li>
             <li>上课报酬：{{ item.salary }}</li>
-           </ul>
-           <p>_________________________________________________</p>
-        </div>
+          </ul>
+          </div>
+          <div class="pattern">
+          </div>
+        </div>      
     </div>
 </template>
 <script>
@@ -19,12 +21,12 @@ export default {
       tutorList: []
     }
   },
-  created: function () {
+  created () {
     this.$fly.get('https://www.wjxweb.cn:789/Tutor/all/1').then((res) => {
-      console.log(res)
-      console.log('家教类')
+      // console.log(res)
+      // console.log('家教类')
       this.tutorList = res.data.data
-      console.log(res.data.data)
+      // console.log(res.data.data)
     })
   }
 }
@@ -34,7 +36,21 @@ export default {
   text-align: center
 }
 .tutorBox{
-  text-align: center,
+  /* border:solid 2px black; */
+  /* background-color: bisque; */
+  padding:10px;
+}
+.left{
+  float: left
+}
+.pattern{
+  width:50px;
+  height:50px;
+  margin-top:20px; 
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  background-color:cornflowerblue;
+  float:right
 }
 </style>
 

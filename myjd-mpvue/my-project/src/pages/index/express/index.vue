@@ -20,7 +20,7 @@ export default {
       expressList: []
     }
   },
-  created: function () {
+  created () {
     this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1')
       .then((res) => {
         console.log(res)
