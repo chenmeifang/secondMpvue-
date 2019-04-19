@@ -19,7 +19,7 @@
     <others v-if="eleven"></others>
   </router-view>
   <view>
-  <picker-view @change="showDiff" indicator-style="height: 50px;" style="width: 100%; height: 300px;">
+  <picker-view @change="showDiff" indicator-style="height: 50px;" class="list">
     <picker-view-column>
       <view  class="choiceList">家教类</view>
       <view  class="choiceList">二手书类</view>
@@ -266,5 +266,10 @@ export default {
 }
 h2 {
   text-align: center
+}
+.list{
+  width: 100%; 
+  height: 300px;
+  /* position: fixed */
 }
 </style>
