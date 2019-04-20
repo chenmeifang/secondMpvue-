@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "usingComponents": {
+    "i-cell": "../../static/dist/cell/index",
+    "i-card": "../../static/dist/card/index",
+    "i-cell-group": "../../static/dist/cell-group/index",
+    "i-divider": "../../static/dist/divider/index"
+  }
+}

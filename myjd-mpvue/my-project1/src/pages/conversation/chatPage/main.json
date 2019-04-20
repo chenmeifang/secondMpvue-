@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true
+  },
+  "usingComponents": {
+    "i-button": "../../static/dist/button/index",
+    "Input": "../../static/dist/input/index",
+    "i-divider": "../../static/dist/divider/index"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
