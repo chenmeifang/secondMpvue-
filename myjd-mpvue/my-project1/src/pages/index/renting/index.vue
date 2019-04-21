@@ -4,8 +4,8 @@
     <p>_________________________________________________</p>
         <div v-for="item in rentList" :key="item" class="rentBox">
            <ul>
-            <li>房子内部细节：{{ item.detail }}</li>
-            <li>地点：{{ item.place }}</li>
+            <li>房子内部配置：{{ item.detail }}</li>
+            <li>房子大概位置：{{ item.place }}</li>
             <li>房租：{{ item.price }}</li>
            </ul>
            <p>_________________________________________________</p>
@@ -23,18 +23,25 @@
     },
     created () {
       this.$fly.get('https://www.wjxweb.cn:789/Renting/all/1').then(res => {
-        console.log(res)
-        console.log(res.data.data)
+        // console.log(res)
+        // console.log(res.data.data)
+        console.log('租房及转租')
         this.rentList = res.data.data
-        console.log('啊啊啊啊啊啊')
       })
     }
+    /* beforeUpdate的触发时机是当data里面的数据改变 */
+    /* beforeUpdate () {
+      this.$fly.get('https://www.wjxweb.cn:789/Renting/all/1').then(res => {
+        console.log('租房及转租')
+        this.rentList = res.data.data
+      })
+    } */
   }
 </script>
 
 <style scoped>
   .title {
     text-align: center;
-    font-size: 30px;
+    /* font-size: 30px; */
   }
 </style>

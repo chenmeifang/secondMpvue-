@@ -61,10 +61,10 @@
       }
     },
     methods: {
-      send (item) {
+    /*       send (item) {
         console.log(item)
         console.log(this.allList)
-      },
+      }, */
       sortById (array, key) {
         return array.sort(function (a, b) {
           const x = a[key]
