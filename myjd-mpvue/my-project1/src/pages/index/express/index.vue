@@ -1,13 +1,13 @@
 <template>
   <div>
     <p class="title">快递</p>
-    <p>_________________________________________________</p>
+    <p>_____________________________________________________________</p>
     <ul v-for="(item, index) in expressList" :key="index">
       <li>发布者：{{ item.studentNumber }}</li>
       <li>详情：{{ item.detail }}</li>
       <li>赏金：{{ item.price }}</li>
       <button class="accept" @click="accept">接受</button>
-      <p>_________________________________________________</p>
+      <p>_______________________________________________________________</p>
     </ul>
   </div>
 </template>

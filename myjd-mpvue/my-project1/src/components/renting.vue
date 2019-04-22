@@ -68,9 +68,6 @@ h2 {
 .each{
   margin-bottom: 50rpx
 }
-.top{
-
-}
 input{
   float:right;
   width:487rpx
