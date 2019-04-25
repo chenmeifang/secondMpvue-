@@ -1,29 +1,26 @@
 <template>
     <div>
-    <div class="top">
+    <div class="title">
         <h2>租房及转租</h2>
     </div>
-    <!-- <i-panel title="基础用法">
-        <i-input v-model="detail" type="textarea" title="房子内部配置：" autofocus placeholder="请输入房子细节" maxlength="50"/>
-        <i-input v-model="place" type="textarea" title="房子大概位置：" placeholder="请输入房子大概位置"  />
-        <i-input v-model="price" type="textarea" title="房租：" placeholder="请输入房租"  />
-    </i-panel> -->
     <div class="each">
-      <span>房子内部配置：</span>
-      <input type="textarea" v-model="detail"/>
+      <span>内部配置：</span>
+      <input type="textarea" v-model="detail" placeholder="请输入内部配置"/>
     </div>
     <div class="each">
-      <span>房子大概位置：</span>
-      <input type="textarea" v-model="place"/>
+      <span>大概位置：</span>
+      <input type="textarea" v-model="place" placeholder="请输入位置"/>
     </div>
     <div class="each">
-      <span>房子大概价钱：</span>
-      <input type="textarea" v-model="price"/>
+      <span>大概房租：</span>
+      <input type="textarea" v-model="price" placeholder="请输入房租"/>
     </div>
     <i-button @click="handleClick" type="primary" shape="circle">发布</i-button>
+    <i-toast id="toast"/>
     </div>
 </template>
 <script>
+import { $Toast } from '../../static/dist/base/index'
 export default {
   data () {
     return {
@@ -49,17 +46,16 @@ export default {
       }).catch(err => {
         console.log(err)
       })
-      // console.log(this.detail)
-      /* this.$fly.get('https://www.wjxweb.cn:789/Renting/all/1').then(res => {
-        console.log('租房及转租')
-        this.rentList = res.data.data
-      }) */
+      $Toast({
+        content: '发布成功',
+        type: 'success'
+      })
     }
   }
 }
 </script>
 <style scoped>
-.top{
+.title{
   margin-bottom: 50rpx
 }
 h2 {
@@ -70,7 +66,7 @@ h2 {
 }
 input{
   float:right;
-  width:487rpx
+  width:563rpx
 }
 </style>
 

@@ -3,19 +3,16 @@
     <div class="top">
         <h2>竞赛组队类</h2>
     </div>
-    <!-- <i-panel title="基础用法"> -->
-        <!-- <i-input type="textarea" title="竞赛详情：" autofocus placeholder="请输入竞赛详情" maxlength="50"/> -->
-        <!-- <i-input type="text" title="工作其他细节：" placeholder="请输入工作其他细节" />
-        <i-input type="text" title="工资：" placeholder="请输入工资"  /> -->
-    <!-- </i-panel> -->
     <div class="each">
       <span>竞赛详情：</span>
-      <input type="textarea" v-model="detail"/>
+      <input type="textarea" v-model="detail" placeholder="请输入竞赛详情"/>
     </div>
     <i-button @click="handleClick" type="primary" shape="circle">发布</i-button>
+    <i-toast id="toast"/>
     </div>
 </template>
 <script>
+import { $Toast } from '../../static/dist/base/index'
 export default {
   data () {
     return {
@@ -24,7 +21,26 @@ export default {
   },
   methods: {
     handleClick () {
-
+      this.$fly.post('https://www.wjxweb.cn:789/Demand', {
+        id: 0,
+        studentNumber: 0,
+        detail: this.detail,
+        price: 0,
+        isFind: false,
+        keywords: '竞赛组队',
+        serviceMan: null,
+        date: new Date()
+      })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      $Toast({
+        content: '发布成功',
+        type: 'success'
+      })
     }
   }
 }
@@ -41,7 +57,7 @@ h2 {
 }
 input{
   float:right;
-  width:487rpx
+  width:563rpx
 }
 </style>
 

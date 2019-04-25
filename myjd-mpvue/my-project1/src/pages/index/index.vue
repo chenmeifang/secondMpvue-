@@ -1,7 +1,8 @@
 <template>
-  <div class="whole">
-    <div>
-      <img src="/static/images/top.png" class="image"/>
+  <div>
+    <div class="top">
+      <!-- <canvas id="can" width="750px" height="150px"></canvas> -->
+      <!-- <img src="/static/images/top.png" class="image"/> -->
     </div>
     <i-grid>
     <i-grid-item @click="toTutorPage">
@@ -87,15 +88,11 @@
 </template>
 
 <script>
-import card from '@/components/card'
-
 export default {
   data () {
 
   },
-
   components: {
-    card
   },
 
   methods: {
@@ -168,10 +165,20 @@ export default {
 </script>
 
 <style scoped>
-.image {
+/* .image {
 width:750px;
 height:150px;
 display:inline-block;
 overflow:hidden;
+} */
+.top {
+width:750px;
+height:150px;
+display:inline-block;
+overflow:hidden;
+/* background-color: aqua */
+}
+.can{
+  background-color:blue
 }
 </style>

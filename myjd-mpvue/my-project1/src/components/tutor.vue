@@ -3,14 +3,6 @@
     <div class="top">
         <h2>家教类</h2>
     </div>
-    <!-- <i-panel title="基础用法"> -->
-        <!-- <i-input :value="detail" type="textarea" title="课程详情：" autofocus placeholder="请输入课程详情(最多50字)" maxlength="50"/> -->
-        <!-- <i-input :value="workPlace" type="textarea" title="上课地点："  placeholder="请输入上课地点" /> -->
-        <!-- <i-input :value="salary" type="textarea" title="上课薪资："  placeholder="请输入薪资"  /> -->
-        <!-- <i-input v-model="detail" type="textarea" title="课程详情：" autofocus placeholder="请输入课程详情(最多50字)" maxlength="50"/>
-        <i-input v-model="workPlace" type="textarea" title="上课地点："  placeholder="请输入上课地点" />
-        <i-input v-model="salary" type="textarea" title="上课薪资："  placeholder="请输入薪资"  /> -->
-    <!-- </i-panel> -->
     <div class="each">
       <span>课程详情：</span>
       <input type="textarea" v-model="detail" placeholder="请输入授课对象年级及学科等信息"/>
@@ -53,8 +45,6 @@ export default {
         'workPlace': this.workPlace
       })
         .then(res => {
-          // console.log('啦啦啦啦啦啦啦')
-          // console.log(this.workPlace)
           console.log(res)
         })
         .catch(err => {

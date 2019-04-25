@@ -1,11 +1,11 @@
 <template>
-  <div class="twoHandsBook">
+  <div class="idleItem">
     <p class="title">闲置物转出</p>
-    <p>_________________________________________________________________</p>
-    <ul v-for="item in itemList" :key="item">
-      <li>闲置物详情：{{ item.name }}</li>
-    <p>__________________________________________________________________</p>
-    </ul>
+    <div v-for="item in itemList" :key="item" class="idleItemBox">
+      <ul>
+        <li>详情：{{ item.name }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -24,13 +24,20 @@
         console.log(err)
       })
     }
-
   }
 </script>
 
 <style scoped>
   .title {
     text-align: center;
-    /* font-size: 30px; */
+    margin-bottom: 50rpx
+  }
+  .idleItemBox{
+    border-left: 2px solid cornflowerblue;
+    border-right: 2px solid cornflowerblue;
+    border-top: 2px solid cornflowerblue;
+    margin-left: 2rpx;
+    margin-right: 2rpx;
+    margin-bottom: 2rpx
   }
 </style>
