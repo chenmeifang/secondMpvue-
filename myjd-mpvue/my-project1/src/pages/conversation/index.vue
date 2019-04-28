@@ -1,7 +1,7 @@
 <template>
   <div class="whole" title="seed">
     <div class="header">
-      <p>最近</p>
+      <!-- <p>消息</p> -->
     </div>
     <div class="body">
       <i-divider>***</i-divider>
@@ -11,7 +11,8 @@
            :key="index">
         <div class="contact-name">
           <p class="contact">{{ item.nickname }}</p>
-          <img class="userinfo-avatar" :src=item.avatar></div>
+          <img class="userinfo-avatar" :src=item.avatar>
+        </div>
       </div>
     </div>
   </div>
@@ -23,12 +24,15 @@
     data () {
       return {
         content: '',
-        list: []
+        list: [],
+        me: ''
       }
     },
-    created () {
-      this.$fly.get('https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=1')
+    onLoad () {
+      this.me = this.$store.state.userInformation[0].id
+      this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.me}`)
         .then((res) => {
+          console.log('联系人', res)
           this.list = res.data.data
         })
     },

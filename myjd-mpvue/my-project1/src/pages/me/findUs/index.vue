@@ -1,18 +1,18 @@
 <template>
   <div class="whole">
     <div class="displayRoom">
-      <p class="header">{{ name }}</p>
+      <p class="header">wjx</p>
       <div class="msg_room" v-for="(item, index) in allList"  :key="index">
-        <div class="li1"><img class="userinfo-avatar-left" :src=ava v-if="(item.fromTo === sendId + '-' + myId)"></div>
+        <div class="li1"><img class="userinfo-avatar-left" src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIWgpgEACljAEoKgSQWAdSICPuOkiavAyyRuebzFoXJW1AU9BcGCltFySVnTWeNQ0rUeZPbFLftESA/132" v-if="(item.fromTo ===  '5-' + myId)"></div>
         <div class="li2">
           <ul>
             <li class="time_room">{{ item.date }}</li>
             <li>{{ item.content }}</li>
           </ul>
         </div>
-      <div class="li3"><img class="userinfo-avatar-right" :src=user.avatar v-if="(item.fromTo ===  myId +  '-' + sendId)"></div>
+        <div class="li3"><img class="userinfo-avatar-right" :src=user.avatar v-if="(item.fromTo ===  myId +  '-5')"></div>
       </div>
-      </div>
+    </div>
     <div class="footer">
       <label><input type="text" v-model="msg"></label>
       <i-button i-class="i-button" type="primary" @click="sendMsg">发送</i-button>
@@ -28,22 +28,14 @@
     name: 'index',
     data () {
       return {
-        ava: '',
-        name: '',
-        sendId: '',
         msg: '',
         reservedList: [],
         sendList: [],
         allList: [],
-        reserve: true,
-        send: true,
         myId: ''
       }
     },
-    onLoad (option) {
-      this.name = option.name
-      this.sendId = option.toWho
-      this.ava = option.ava
+    onLoad () {
       this.myId = this.$store.state.userInformation[0].id
       // 设置定时器，不断从服务器取得数据，轮询是一种性能比较差的方法
       setInterval(this.getReserved, 200)
@@ -71,7 +63,7 @@
       },
       getReserved () {
         // 别人发给我的消息
-        this.$fly.get(`https://www.wjxweb.cn:789/Message/all/1?type=fromTo&value=${this.sendId}-${this.myId}`)
+        this.$fly.get(`https://www.wjxweb.cn:789/Message/all/1?type=fromTo&value=5-${this.myId}`)
           .then((res) => {
             this.reservedList = res.data.data
             // 时间格式化
@@ -82,7 +74,7 @@
       },
       getSend () {
         // 我发给别人的消息
-        this.$fly.get(`https://www.wjxweb.cn:789/Message/all/1?type=fromTo&value=${this.myId}-${this.sendId}`)
+        this.$fly.get(`https://www.wjxweb.cn:789/Message/all/1?type=fromTo&value=${this.myId}-5`)
           .then((res) => {
             this.sendList = res.data.data
             // 时间格式化
@@ -101,10 +93,10 @@
           'id': 0,
           'content': this.msg,
           'date': new Date(),
-          'fromTo': this.myId + '-' + this.sendId,
+          'fromTo': this.myId + '-5',
           'toFrom': null,
           'fromWho': this.myId,
-          'toWho': this.sendId
+          'toWho': 5
         })
           .then((res) => {
             console.log(res)
@@ -131,12 +123,12 @@
     height: 85rpx;
     border-radius: 50%;
   }
- input {
-   height: 36px;
-   border-radius: 10px;
-   border:3px solid #ffd9bd;
-   background: #f6f7ff;
- }
+  input {
+    height: 36px;
+    border-radius: 10px;
+    border:3px solid #ffd9bd;
+    background: #f6f7ff;
+  }
   .displayRoom {
     position: absolute;
     width: 100%;

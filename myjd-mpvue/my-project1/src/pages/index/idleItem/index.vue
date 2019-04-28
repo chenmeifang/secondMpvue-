@@ -17,8 +17,9 @@
         itemList: []
       }
     },
-    onShow () {
+    onLoad () {
       this.$fly.get('https://www.wjxweb.cn:789/setAsideGoods/all/1').then(res => {
+        console.log('kkkkk')
         this.itemList = res.data.data
       }).catch(err => {
         console.log(err)

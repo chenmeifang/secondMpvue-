@@ -1,7 +1,7 @@
 <template>
   <div>
     <i-notice-bar icon="remind">
-      请在下方先选择将发布需求所属的类型！！(默认家教类)
+      请在下方选择需求类型！！(默认为家教类)
     </i-notice-bar>
   <!-- <i-button @click="showAllClick">选择将发布的需求所属的类型</i-button> -->
   <router-view>

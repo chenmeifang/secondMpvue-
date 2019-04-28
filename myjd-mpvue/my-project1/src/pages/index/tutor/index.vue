@@ -33,12 +33,12 @@ export default {
     margin-bottom: 50rpx
   }
 .tutorBox{
-  border-left: 2px solid cornflowerblue;
+  /* border-left: 2px solid cornflowerblue;
   border-right: 2px solid cornflowerblue;
-  border-top: 2px solid cornflowerblue;
-  margin-left: 2rpx;
+  border-top: 2px solid cornflowerblue; */
+  margin-left: 20rpx;
   margin-right: 2rpx;
-  margin-bottom: 2rpx
+  margin-bottom: 20rpx
 }
 </style>
 

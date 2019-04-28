@@ -4,12 +4,12 @@
     "target": "es5",
     "sourceMap": true
   },
+  "exclude": [
+    "node_modules"
+  ],
   "usingComponents": {
     "i-button": "../../static/dist/button/index",
     "Input": "../../static/dist/input/index",
     "i-divider": "../../static/dist/divider/index"
-  },
-  "exclude": [
-    "node_modules"
-  ]
+  }
 }

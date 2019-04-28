@@ -17,6 +17,10 @@
     "pages/conversation/main",
     "pages/conversation/chatPage/main",
     "pages/me/main",
+    "pages/me/myAcceptation/main",
+    "pages/me/myRelease/main",
+    "pages/me/findUs/main",
+    "pages/me/aboutUs/main",
     "pages/release/main"
   ],
   "window": {

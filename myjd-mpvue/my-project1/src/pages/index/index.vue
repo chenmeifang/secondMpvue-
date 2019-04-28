@@ -2,7 +2,8 @@
   <div>
     <div class="top">
       <!-- <canvas id="can" width="750px" height="150px"></canvas> -->
-      <!-- <img src="/static/images/top.png" class="image"/> -->
+      <!-- <canvas style="width: 1500rpx; height: 300rpx;" canvas-id="firstCanvas" ref="canvas"></canvas> -->
+      <img src="/static/images/header.png"/>
     </div>
     <i-grid>
     <i-grid-item @click="toTutorPage">
@@ -156,29 +157,40 @@ export default {
         url: 'others/main'
       })
     }
-  },
-
-  created () {
-    // let app = getApp()
   }
+  /* created () {
+    let canvas=this.$refs.canvas;
+    const context = wx.createCanvasContext('firstCanvas')
+    context.beginPath()
+    context.arc(100, 100, 10, 0, 2 * Math.PI, false)
+    context.stroke()
+    context.draw()
+  } */
 }
 </script>
 
 <style scoped>
-/* .image {
-width:750px;
-height:150px;
-display:inline-block;
-overflow:hidden;
-} */
+img{
+  width: 320rpx;
+  height: 300rpx;
+  margin-left: 220rpx;
+  /* background-color: darkgray */
+  /* background-color: dimgray */
+}
 .top {
 width:750px;
-height:150px;
-display:inline-block;
-overflow:hidden;
-/* background-color: aqua */
+height:300rpx;
+/* display:inline-block; */
+/* overflow:hidden; */
+/* background-color: darkgray */
 }
-.can{
+canvas{
+  /* background-color: lightblue */
+}
+/* #firstCanvas{
+  background-color: pink
+} */
+/* .can{
   background-color:blue
-}
+} */
 </style>

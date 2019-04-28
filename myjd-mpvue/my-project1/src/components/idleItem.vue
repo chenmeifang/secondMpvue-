@@ -28,9 +28,10 @@ export default {
         price: 'string',
         imgUrl: 'string',
         date: new Date(),
-        isSaled: true,
-        saleTo: 'string'
+        saleTo: 'string',
+        isSaled: true
       }).then(res => {
+        console.log('44444444444')
         console.log(res)
       }).catch(err => {
         console.log(err)

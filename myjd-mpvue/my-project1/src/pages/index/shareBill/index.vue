@@ -1,5 +1,5 @@
 <template>
-  <div class="twoHandsBook">
+  <div class="shareBill">
     <p class="title">拼单</p>
     <div v-for="item in shareBillList" :key="item" class="shareBillBox">
       <ul>
@@ -11,7 +11,6 @@
 
 <script>
   export default {
-    name: 'index',
     data () {
       return {
         shareBillList: []
@@ -20,6 +19,7 @@
     onLoad () {
       this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=拼单')
         .then(res => {
+          console.log('yyyyyyy')
           this.shareBillList = res.data.data
           // console.log(res)
         })
