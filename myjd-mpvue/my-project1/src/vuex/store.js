@@ -5,11 +5,19 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    userInformation: {}
+    userInformation: {},
+    WxInfo: {},
+    openId: ''
   },
   mutations: {
     getUserInformation (state, data) {
-      state.userInfoemation = data
+      state.userInformation = data
+    },
+    getWxInfo (state, data) {
+      state.Wxinfo = data
+    },
+    getOpenId (state, data) {
+      state.openId = data
     }
   }
 })
