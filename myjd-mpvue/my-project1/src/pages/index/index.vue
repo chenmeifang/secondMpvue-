@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="top">
-      <!-- <canvas id="can" width="750px" height="150px"></canvas> -->
-      <!-- <canvas style="width: 1500rpx; height: 300rpx;" canvas-id="firstCanvas" ref="canvas"></canvas> -->
+      <!-- <canvas id="can" width="750px" height="150px" ref="myCanvas"></canvas> -->
+      <!-- <canvas style="width: 1500rpx; height: 300rpx;" canvas-id="firstCanvas" ref="myCanvas"></canvas> -->
       <img src="/static/images/header.png"/>
     </div>
     <i-grid>
@@ -91,7 +91,9 @@
 <script>
 export default {
   data () {
-
+    return {
+      // ctx: {}
+    }
   },
   components: {
   },
@@ -157,19 +159,56 @@ export default {
         url: 'others/main'
       })
     }
-  }
-  /* created () {
-    let canvas=this.$refs.canvas;
-    const context = wx.createCanvasContext('firstCanvas')
+  },
+  mounted () {
+    /* const context = wx.createCanvasContext('firstCanvas')
     context.beginPath()
     context.arc(100, 100, 10, 0, 2 * Math.PI, false)
     context.stroke()
-    context.draw()
-  } */
+    context.draw() */
+    // var canvas = document.getElementById('can')
+    // var canvas = this.$refs.myCanvas
+    /*  const canvas = this.$refs.maCanvas
+    var ctx = canvas.getContext('2d') */
+    // const ctx = wx.createCanvasContext(canvas)
+    /* var arr = []
+    setInterval(function () {
+      var x = Math.random() * canvas.width
+      var y = Math.random() * canvas.height
+      var r = 10
+      var red = Math.floor(Math.random() * 255)
+      var green = Math.floor(Math.random() * 255)
+      var blue = Math.floor(Math.random() * 255)
+      var alpha = 1
+      arr.push({
+        circleX: x,
+        circleY: y,
+        circleR: r,
+        circleRed: red,
+        circleGreen: green,
+        circleBlue: blue,
+        circleAlpha: alpha
+      })
+    }, 60)
+    setInterval(function () {
+      this.ctx.clearRect(0, 0, canvas.width, canvas.height)
+      for (var i = 0; i < arr.length; i++) {
+        ctx.beginPath()
+        arr[i].circleR += 2.5
+        arr[i].circleAlpha -= 0.03
+        ctx.fillStyle = `rgba(${arr[i].circleRed},${arr[i].circleGreen},${arr[i].circleBlue},${arr[i].circleAlpha})`
+        ctx.arc(arr[i].circleX, arr[i].circleY, arr[i].circleR, 0, 360 * Math.PI / 180, false)
+        ctx.closePath()
+        ctx.fill()
+        ctx.draw()
+      }
+    }, 60) */
+  }
 }
 </script>
 
 <style scoped>
+
 img{
   width: 320rpx;
   height: 300rpx;

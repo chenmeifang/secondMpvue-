@@ -21,5 +21,5 @@ const store = new Vuex.Store({
     }
   }
 })
-
+// 使store和vue实例之间创立关系
 export default store

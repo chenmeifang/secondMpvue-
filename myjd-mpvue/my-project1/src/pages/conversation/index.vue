@@ -4,7 +4,7 @@
       <!-- <p>消息</p> -->
     </div>
     <div class="body">
-      <i-divider>***</i-divider>
+      <!-- <i-divider>***</i-divider> -->
       <div class="linkMan-list"
            @click="nav(item)"
            v-for="(item, index) in list"

@@ -46,12 +46,12 @@
       "iconPath": "static/tabs/release.png",
       "selectedIconPath": "static/tabs/release-active.png"
     },{
-      "text": "会话",
+      "text": "消息",
       "pagePath": "pages/conversation/main",
       "iconPath": "static/tabs/conversation.png",
       "selectedIconPath": "static/tabs/conversation-active.png"
     },{
-      "text": "我",
+      "text": "我的",
       "pagePath": "pages/me/main",
       "iconPath": "static/tabs/mine.png",
       "selectedIconPath": "static/tabs/mine-active.png"

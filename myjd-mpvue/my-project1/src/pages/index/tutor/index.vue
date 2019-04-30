@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="all">
         <p class="title">家教</p>
         <div v-for="item in tutorList" :key="item" class="tutorBox">
            <ul>
@@ -28,17 +28,19 @@ export default {
 }
 </script>
 <style scoped>
+.all{
+}
 .title {
     text-align: center;
     margin-bottom: 50rpx
   }
 .tutorBox{
-  /* border-left: 2px solid cornflowerblue;
-  border-right: 2px solid cornflowerblue;
-  border-top: 2px solid cornflowerblue; */
+  border:3px solid black;
   margin-left: 20rpx;
-  margin-right: 2rpx;
-  margin-bottom: 20rpx
+  margin-right: 20rpx;
+  margin-bottom: 20rpx;
+  border-radius: 20px;
+  text-align: center
 }
 </style>
 

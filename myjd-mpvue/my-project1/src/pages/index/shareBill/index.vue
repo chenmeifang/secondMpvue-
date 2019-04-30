@@ -36,11 +36,11 @@
     margin-bottom: 50rpx
   }
   .shareBillBox{
-    border-left: 2px solid cornflowerblue;
-    border-right: 2px solid cornflowerblue;
-    border-top: 2px solid cornflowerblue;
-    margin-left: 2rpx;
-    margin-right: 2rpx;
-    margin-bottom: 2rpx
+    border:3px solid black;
+    margin-left: 20rpx;
+    margin-right: 20rpx;
+    margin-bottom: 20rpx;
+    border-radius: 20px;
+    text-align: center
   }
 </style>
