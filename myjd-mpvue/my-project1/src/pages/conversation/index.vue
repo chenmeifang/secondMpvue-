@@ -1,20 +1,14 @@
 <template>
-  <div class="whole" title="seed">
-    <div class="header">
-      <!-- <p>消息</p> -->
-    </div>
-    <div class="body">
-      <!-- <i-divider>***</i-divider> -->
+  <div>
       <div class="linkMan-list"
            @click="nav(item)"
            v-for="(item, index) in list"
            :key="index">
-        <div class="contact-name">
-          <p class="contact">{{ item.nickname }}</p>
-          <img class="userinfo-avatar" :src=item.avatar>
+        <div class="contact">
+          <img class="avatar" :src=item.avatar>
+          <p class="name">{{ item.nickname }}</p>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -48,25 +42,16 @@
 </script>
 
 <style scoped>
-  .header{
-    text-align: center;
-  }
-  .linkMan-list {
-    background: linear-gradient(to bottom right, #63b5f0, #ffe1dd);
-    border-radius: 30px;
-    margin: 6px;
-    line-height: 30px;
-  }
-  .contact-name {
-    text-align: center;
-  }
-  .userinfo-avatar {
-    width: 128rpx;
-    height: 128rpx;
-    border-radius: 50%;
-  }
-  .contact {
-    background-color: #639cc1;
-    color: white;
-  }
+.contact{
+  border:1px solid grey;
+  height: 150rpx;
+}
+.avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  float:left;
+  margin-left: 20rpx;
+  margin-top: 10rpx
+}
 </style>

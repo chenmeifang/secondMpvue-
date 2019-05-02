@@ -18,7 +18,7 @@
       }
     },
     onLoad () {
-      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=竞赛组队')
+      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=competition')
         .then(res => {
           console.log(res)
           this.competitionList = res.data.data

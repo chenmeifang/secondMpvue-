@@ -16,18 +16,30 @@ import { $Toast } from '../../static/dist/base/index'
 export default {
   data () {
     return {
-      detail: ''
+      detail: '',
+      belongTo: 0
     }
+  },
+  onLoad () {
+    console.log('pppppppp' + this.$store.state.openId)
+    this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+      .then(res => {
+        console.log(res)
+        this.belongTo = res.data.data[0].id
+      })
+      .catch(err => {
+        console.log(err)
+      })
   },
   methods: {
     handleClick () {
       this.$fly.post('https://www.wjxweb.cn:789/Demand', {
         id: 0,
-        studentNumber: 0,
+        belongTo: this.belongTo,
         detail: this.detail,
         price: 0,
         isFind: false,
-        keywords: '拼单',
+        keywords: 'shareBill',
         serviceMan: null,
         date: new Date()
       })

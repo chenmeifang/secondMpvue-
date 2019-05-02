@@ -17,13 +17,13 @@
       }
     },
     onLoad () {
-      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=拼单')
+      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=shareBill')
         .then(res => {
           console.log('yyyyyyy')
           this.shareBillList = res.data.data
           // console.log(res)
         })
-        .then(err => {
+        .catch(err => {
           console.log(err)
         })
     }

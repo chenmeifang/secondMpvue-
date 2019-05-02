@@ -16,29 +16,41 @@ import { $Toast } from '../../static/dist/base/index'
 export default {
   data () {
     return {
-      datail: ''
+      datail: '',
+      belongTo: 0
     }
+  },
+  onLoad () {
+    console.log('pppppppp' + this.$store.state.openId)
+    // this.$fly.get('https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=this.$store.state.openId')
+    this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+      .then(res => {
+        console.log(res)
+        this.belongTo = res.data.data[0].id
+      })
+      .catch(err => {
+        console.log(err)
+      })
   },
   methods: {
     handleClick () {
       this.$fly.post('https://www.wjxweb.cn:789/Demand', {
-        id: 0,
-        studentNumber: 0,
+        belongTo: this.belongTo,
+        date: new Date(),
         detail: this.detail,
-        price: 'string',
+        id: 0,
         isFind: true,
-        keywords: '其他',
-        serviceMan: null,
-        date: new Date()
+        keywords: 'others',
+        price: 'string',
+        servicedMan: 0
       })
         .then(res => {
-          console.log('hhhhhhhhh')
           console.log(res)
+          // this.detail = '请输入需求详情'
         })
         .catch(err => {
           console.log(err)
         })
-      //   this.detail = '请输入需求详情'
       $Toast({
         content: '发布成功',
         type: 'success'

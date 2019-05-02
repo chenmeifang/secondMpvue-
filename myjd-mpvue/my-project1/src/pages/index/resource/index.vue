@@ -17,7 +17,7 @@
       }
     },
     onLoad () {
-      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=资源')
+      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=resource')
         .then(res => {
           console.log('uuuuuuuuu')
           console.log(res.data.data)

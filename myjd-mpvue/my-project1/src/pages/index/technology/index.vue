@@ -17,7 +17,7 @@
       }
     },
     onLoad () {
-      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=技术处理')
+      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=technology')
         .then(res => {
           this.technologyList = res.data.data
         })

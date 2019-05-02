@@ -16,12 +16,25 @@ import { $Toast } from '../../static/dist/base/index'
 export default {
   data () {
     return {
-      place: ''
+      place: '',
+      belongTo: 0
     }
+  },
+  onLoad () {
+    console.log('pppppppp' + this.$store.state.openId)
+    this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+      .then(res => {
+        console.log(res)
+        this.belongTo = res.data.data[0].id
+      })
+      .catch(err => {
+        console.log(err)
+      })
   },
   methods: {
     handleClick () {
       this.$fly.post('https://www.wjxweb.cn:789/Travel', {
+        belongTo: this.belongTo,
         id: 0,
         isFull: true,
         number: 0,

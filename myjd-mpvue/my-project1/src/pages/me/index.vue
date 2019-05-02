@@ -31,7 +31,7 @@
         <p class="each3">></p>
       </div>
       <div class="each" @click="goToAboutUs">
-        <img class="each1" src="../../../static/images/2.png"/>
+        <img class="each1" src="../../../static/images/4.png"/>
         <p class="each2">关于小程序</p>
         <p class="each3">></p>
         </div>
@@ -58,8 +58,6 @@
       user () {
         return this.$store.state.userInformation[0]
       }
-    },
-    onLoad () {
     },
     methods: {
       goToMyAcceptation () {

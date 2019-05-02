@@ -29,8 +29,21 @@ export default {
       id: 0,
       imgUrl: 'string',
       bookName: '',
-      bookPrice: ''
+      bookPrice: '',
+      belongTo: 0
     }
+  },
+  onLoad () {
+    console.log('pppppppp' + this.$store.state.openId)
+    // this.$fly.get('https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=this.$store.state.openId')
+    this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+      .then(res => {
+        console.log(res)
+        this.belongTo = res.data.data[0].id
+      })
+      .catch(err => {
+        console.log(err)
+      })
   },
   methods: {
     handleClick () {
@@ -41,7 +54,7 @@ export default {
         imgUrl: this.imgUrl,
         date: new Date(),
         isSaled: true,
-        belongTo: 'string',
+        belongTo: this.belongTo,
         saleTo: 'string'
       }).then(res => {
         console.log(res)

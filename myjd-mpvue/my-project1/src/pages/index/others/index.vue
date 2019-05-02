@@ -18,7 +18,7 @@
       }
     },
     onLoad () {
-      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=其他')
+      this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=others')
         .then(res => {
           console.log(res)
           this.othersList = res.data.data
