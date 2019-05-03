@@ -5,6 +5,9 @@
       <ul>
         <li>详情：{{ item.detail }}</li>
       </ul>
+      <ul>
+        <li>报酬：{{ item.price }}</li>
+      </ul>
     </div>
   </div>
 </template>
@@ -19,11 +22,10 @@
     onLoad () {
       this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=resource')
         .then(res => {
-          console.log('uuuuuuuuu')
-          console.log(res.data.data)
+          console.log(res)
           this.resourceList = res.data.data
         })
-        .then(err => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -35,12 +37,12 @@
     text-align: center;
     margin-bottom: 50rpx
   }
+  li{
+    margin: 20rpx
+  }
   .resourceBox{
     border:3px solid black;
-    margin-left: 20rpx;
-    margin-right: 20rpx;
-    margin-bottom: 20rpx;
+    margin: 0 20rpx 20rpx 20rpx;
     border-radius: 20px;
-    text-align: center
   }
 </style>

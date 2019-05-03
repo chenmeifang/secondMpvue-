@@ -25,6 +25,7 @@
     onShow () {
       this.me = this.$store.state.userInformation[0].id
       console.log(this.$store.state.userInformation)
+      // console.log(this.$store.state.WxInfo)
       this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.me}`)
         .then((res) => {
           console.log('联系人', res)

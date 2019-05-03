@@ -140,10 +140,7 @@
   }
   .myReleaseBox{
   border:3px solid black;
-  margin-left: 20rpx;
-  margin-right: 20rpx;
-  margin-bottom: 20rpx;
+  margin: 0 20rpx 20rpx 20rpx;
   border-radius: 20px;
-  /* text-align: center */
 }
 </style>

@@ -21,7 +21,6 @@
     onReady () {
       this.$fly.get('https://www.wjxweb.cn:789/TwoHandsBook/all/1').then(res => {
         console.log(res)
-        console.log('二手书')
         this.usedBookList = res.data.data
       })
     }

@@ -7,6 +7,10 @@
       <span>需求详情：</span>
       <input type="textarea" v-model="detail" placeholder="请输入需求详情"/>
     </div>
+    <div class="each">
+      <span>报酬：</span>
+      <input type="textarea" v-model="price" placeholder="可填可不填"/>
+    </div>
     <i-button @click="handleClick" type="primary" shape="circle">发布</i-button>
     <i-toast id="toast"/>
     </div>
@@ -17,6 +21,7 @@ export default {
   data () {
     return {
       datail: '',
+      price: '0',
       belongTo: 0
     }
   },
@@ -41,12 +46,11 @@ export default {
         id: 0,
         isFind: true,
         keywords: 'others',
-        price: 'string',
+        price: this.price,
         servicedMan: 0
       })
         .then(res => {
           console.log(res)
-          // this.detail = '请输入需求详情'
         })
         .catch(err => {
           console.log(err)

@@ -7,6 +7,10 @@
       <span>闲置物详情：</span>
       <input type="textarea" v-model="name" placeholder="请输入闲置物详情"/>
     </div>
+    <div class="each">
+      <span>价格：</span>
+      <input type="textarea" v-model="price" placeholder="请输入价格"/>
+    </div>
     <i-button @click="handleClick" type="primary" shape="circle">发布</i-button>
     <i-toast id="toast"/>
     </div>
@@ -17,6 +21,7 @@ export default {
   data () {
     return {
       name: '',
+      price: '',
       belongTo: 0
     }
   },
@@ -37,13 +42,12 @@ export default {
         id: 0,
         belongTo: this.belongTo,
         name: this.name,
-        price: 'string',
+        price: this.price,
         imgUrl: 'string',
         date: new Date(),
         saleTo: 'string',
         isSaled: true
       }).then(res => {
-        console.log('44444444444')
         console.log(res)
       }).catch(err => {
         console.log(err)

@@ -5,6 +5,9 @@
       <ul>
         <li>详情：{{ item.detail }}</li>
       </ul>
+      <ul>
+        <li>报酬：{{ item.price }}</li>
+      </ul>
     </div>
   </div>
 </template>
@@ -35,12 +38,12 @@
   text-align: center;
   margin-bottom: 50rpx
 }
+li{
+  margin: 20rpx
+}
 .othersBox{
   border:3px solid black;
-  margin-left: 20rpx;
-  margin-right: 20rpx;
-  margin-bottom: 20rpx;
+  margin: 0 20rpx 20rpx 20rpx;
   border-radius: 20px;
-  text-align: center
 }
 </style>

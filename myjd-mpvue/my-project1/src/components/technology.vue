@@ -7,6 +7,10 @@
       <span>技术问题详情：</span>
       <input type="textarea" v-model="detail" placeholder="请输入技术问题详情"/>
     </div>
+    <div class="each">
+      <span>报酬：</span>
+      <input type="textarea" v-model="price" placeholder="请输入报酬"/>
+    </div>
     <i-button @click="handleClick" type="primary" shape="circle">发布</i-button>
     <i-toast id="toast"/>
     </div>
@@ -17,7 +21,8 @@ export default {
   data () {
     return {
       datail: '',
-      belongTo: 0
+      belongTo: 0,
+      price: ''
     }
   },
   onLoad () {

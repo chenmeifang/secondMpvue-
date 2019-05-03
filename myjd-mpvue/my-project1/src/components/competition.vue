@@ -39,7 +39,7 @@ export default {
         detail: this.detail,
         price: 0,
         isFind: false,
-        keywords: 'competition',
+        keywords: 'comp',
         serviceMan: null,
         date: new Date()
       })
