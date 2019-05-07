@@ -1,7 +1,7 @@
 <template>
     <div>
     <div class="top">
-        <h2>旅游类</h2>
+        <h2>驾校类</h2>
     </div>
     <div class="each">
       <span>旅游地点：</span>
@@ -36,7 +36,7 @@ export default {
       this.$fly.post('https://www.wjxweb.cn:789/Travel', {
         belongTo: this.belongTo,
         id: 0,
-        isFull: true,
+        isFull: false,
         number: 0,
         place: this.place,
         time: new Date()

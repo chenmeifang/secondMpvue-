@@ -8,6 +8,7 @@
         <li>工作报酬：{{ item.salary }}</li>
         <li>需要人数：{{ item.num }}</li>
       </ul>
+      <button @click="toPublisher(item)">去工作(联系发布人)</button>
     </div>
   </div>
 </template>
@@ -28,6 +29,10 @@
         .catch(err => {
           console.log(err)
         })
+    },
+    methods: {
+      toPublisher (item) {
+      }
     }
   }
 </script>
@@ -35,6 +40,9 @@
 .title {
     text-align: center;
     margin-bottom: 50rpx
+  }
+li{
+    margin: 20rpx
   }
 .partTimeJobBox{
   border:3px solid black;

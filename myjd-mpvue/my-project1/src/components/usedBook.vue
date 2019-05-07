@@ -53,7 +53,7 @@ export default {
         bookPrice: this.bookPrice,
         imgUrl: this.imgUrl,
         date: new Date(),
-        isSaled: true,
+        isSaled: false,
         belongTo: this.belongTo,
         saleTo: 'string'
       }).then(res => {

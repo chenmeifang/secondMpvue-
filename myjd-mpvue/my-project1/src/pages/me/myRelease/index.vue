@@ -1,11 +1,6 @@
 <template>
   <div class="whole">
       <h2>发布的单子</h2>
-        <!-- <div v-for="item in shareBillList" :key="item" class="myReleaseBox">
-          <ul>
-            <li>详情：{{ item.detail }}</li>
-          </ul>
-        </div> -->
         <div v-for="item in usedBookList" :key="item" class="myReleaseBox">
           <ul>
             <li>书名：{{ item.bookName }}</li>
@@ -22,32 +17,6 @@
             <li>旅游地：{{ item.place }}</li>
           </ul>
         </div>
-        <!-- <div v-for="item in technologyList" :key="item" class="myReleaseBox">
-          <ul>
-            <li>详情：{{ item.detail }}</li>
-          </ul>
-        </div> -->
-        <!-- <div v-for="item in expressList" :key="item" class="myReleaseBox">
-          <ul>
-            <li>详情：{{ item.detail }}</li>
-            <li>赏金：{{ item.price }}</li>
-          </ul>
-        </div> -->
-        <!-- <div v-for="item in competitionList" :key="item" class="myReleaseBox">
-          <ul>
-            <li>详情：{{ item.detail }}</li>
-          </ul>
-        </div> -->
-        <!-- <div v-for="item in resourceList" :key="item" class="myReleaseBox">
-          <ul>
-            <li>详情：{{ item.detail }}</li>
-          </ul>
-        </div> -->
-        <!-- <div v-for="item in othersList" :key="item" class="myReleaseBox">
-          <ul>
-            <li>详情：{{ item.detail }}</li>
-          </ul>
-        </div> -->
         <div v-for="item in myReleaseList" :key="item" class="myReleaseBox">
           <ul>
             <li>详情：{{ item.detail }}</li>
@@ -61,21 +30,15 @@
     data () {
       return {
         belongTo: 0,
-        // shareBillList: [],
         usedBookList: [],
         itemList: [],
         travelList: [],
-        // technologyList: [],
-        // expressList: [],
-        // competitionList: [],
-        // resourceList: [],
-        // othersList: [],
         myReleaseList: []
       }
     },
     methods: {
     },
-    created () {
+    onLoad () {
       this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
         .then(res => {
           console.log(res)
@@ -86,11 +49,10 @@
           console.log(err)
         })
     },
-    onLoad () {
+    onReady () {
       this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/1?type=belongTo&value=${this.belongTo}`)
         .then(res => {
           console.log(res)
-          console.log('pppppp')
           this.myReleaseList = res.data.data
         })
         .catch(err => {

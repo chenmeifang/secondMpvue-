@@ -6,13 +6,8 @@
         <li>详情：{{ item.detail }}</li>
         <li>赏金：{{ item.price }}</li>
       </ul>
+      <button @click="toPublisher(item)">代拿快递</button>
     </div>
-    <!-- <ul v-for="(item, index) in expressList" :key="index">
-      <li>发布者：{{ item.studentNumber }}</li>
-      <li>详情：{{ item.detail }}</li>
-      <li>赏金：{{ item.price }}</li>
-      <button class="accept" @click="accept">接受</button>
-    </ul> -->
   </div>
 </template>
 
@@ -21,11 +16,17 @@ export default {
   name: 'index',
   data () {
     return {
-      expressList: []
+      pages: 1,
+      expressList: [],
+      servicedMan: 0,
+      nickname1: '',
+      nickname2: '',
+      avatar1: '',
+      avatar2: ''
     }
   },
   onLoad () {
-    this.$fly.get('https://www.wjxweb.cn:789/Demand/all/1?type=keywords&value=express')
+    this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=express`)
       .then((res) => {
         console.log(res)
         this.expressList = res.data.data
@@ -33,8 +34,79 @@ export default {
       .catch((err) => {
         console.log(err)
       })
+    this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+      .then(res => {
+        console.log(res)
+        this.servicedMan = res.data.data[0].id
+        this.nickname1 = res.data.data[0].nickName
+        this.avatar1 = res.data.data[0].avatar
+        console.log('拿快递1')
+        console.log(this.nickname1)
+        console.log(this.avatar1)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   },
   methods: {
+    toPublisher (item) {
+      this.$fly.put('https://www.wjxweb.cn:789/Demand', {
+        id: item.id,
+        belongTo: item.belongTo,
+        detail: item.detail,
+        price: item.price,
+        isFind: true,
+        keywords: item.keywords,
+        servicedMan: this.servicedMan,
+        date: item.date
+      })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
+        .then(res => {
+          this.nickname2 = res.data.data[0].nickName
+          this.avatar2 = res.data.data[0].avatar
+          console.log('拿快递2')
+          console.log(this.nickname2)
+          console.log(this.avatar2)
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+        id: 0,
+        fromWho: item.belongTo,
+        toWho: this.servicedMan,
+        nickname: this.nickname1,
+        avatar: this.avatar1
+      })
+        .then(res => {
+          console.log(res)
+          this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+            id: 0,
+            fromWho: this.servicedMan,
+            toWho: item.belongTo,
+            nickname: this.nickname2,
+            avatar: this.avatar2
+          })
+            .then(res => {
+              console.log(res)
+              console.log(this.nickname2)
+              console.log(this.avatar2)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 }
 </script>

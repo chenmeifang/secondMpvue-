@@ -7,6 +7,7 @@
             <li>大概位置：{{ item.place }}</li>
             <li>房租：{{ item.price }}</li>
            </ul>
+           <button @click="toPublisher(item)">去租房(联系发布人)</button>
         </div>   
   </div>
 </template>
@@ -20,10 +21,18 @@
       }
     },
     onShow () {
-      this.$fly.get('https://www.wjxweb.cn:789/Renting/all/1').then(res => {
-        console.log('租房及转租')
-        this.rentList = res.data.data
-      })
+      this.$fly.get('https://www.wjxweb.cn:789/Renting/all/1')
+        .then(res => {
+          console.log('租房及转租')
+          this.rentList = res.data.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    methods: {
+      toPublisher (item) {
+      }
     }
   }
 </script>
@@ -32,6 +41,9 @@
   .title {
     text-align: center;
     margin-bottom: 50rpx
+  }
+  li{
+    margin: 20rpx
   }
   .rentBox{
     border:3px solid black;

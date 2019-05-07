@@ -4,11 +4,9 @@
     <div v-for="(item, index) in itemList" :key="index" class="idleItemBox">
       <ul>
         <li>详情：{{ item.name }}</li>
-      </ul>
-      <ul>
         <li>价格：{{ item.price }}</li>
       </ul>
-      <button @click="toPublisher(item)">收入囊中（联系卖主）</button>
+      <button @click="toPublisher(item)">收入囊中(联系卖主)</button>
     </div>
   </div>
 </template>
@@ -18,6 +16,7 @@
     name: 'index',
     data () {
       return {
+        pages: 1,
         itemList: [],
         saleTo: 0,
         nickname1: '',
@@ -28,7 +27,15 @@
     },
     onLoad () {
       /* 在进入到此页面之前，先拿到属于该类别的需求 然后用for循环渲染到页面 */
-      this.$fly.get('https://www.wjxweb.cn:789/setAsideGoods/all/1')
+      /* this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`) */
+      /* this.$fly.get('https://www.wjxweb.cn:789/setAsideGoods/all/' + this.pages) */
+      /* this.page怎么变 要有一个触发点！！！！！呜呜呜不会啊 */
+      // if(hidden){
+      /* wx.showLoading({
+        title: '加载中'
+      }) */
+      // }
+      this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
         .then(res => {
           console.log(res)
           this.itemList = res.data.data
@@ -36,6 +43,7 @@
         .catch(err => {
           console.log(err)
         })
+      // wx.hideLoading({})
       this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
         .then(res => {
           console.log(res)
@@ -53,7 +61,7 @@
       toPublisher (item) {
         this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
           belongTo: item.belongTo,
-          date: new Date(),
+          date: item.date,
           id: item.id,
           imgUrl: 'string',
           isSaled: false,
@@ -80,26 +88,26 @@
           .catch(err => {
             console.log(err)
           })
-        /* 先拿到发布这条需求的人的nickname和avatar， 首先已经有这个人的id（item.belongTo）*/
+        /* 先拿到发布这条需求的人的nickname和avatar， 首先已经有这个人的id（item.belongTo） */
         this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
           .then(res => {
             this.nickname2 = res.data.data[0].nickName
             this.avatar2 = res.data.data[0].avatar
             console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        this.$fly.post('https://www.wjxweb.cn:789/Contact', {
-          id: 0,
-          fromWho: this.saleTo,
-          toWho: item.belongTo,
-          /* 这里的nickname和avatar是发布这条需求的人的nickname和avatar */
-          nickname: this.nickname2,
-          avatar: this.avatar2
-        })
-          .then(res => {
-            console.log(res)
+            this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+              id: 0,
+              fromWho: this.saleTo,
+              toWho: item.belongTo,
+              /* 这里的nickname和avatar是发布这条需求的人的nickname和avatar */
+              nickname: this.nickname2,
+              avatar: this.avatar2
+            })
+              .then(res => {
+                console.log(res)
+              })
+              .catch(err => {
+                console.log(err)
+              })
           })
           .catch(err => {
             console.log(err)
