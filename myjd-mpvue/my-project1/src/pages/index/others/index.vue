@@ -1,6 +1,10 @@
 <template>
   <div class="others">
     <p class="title">其他</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
     <div v-for="item in othersList" :key="item" class="othersBox">
       <ul>
         <li>详情：{{ item.detail }}</li>
@@ -8,6 +12,7 @@
       </ul>
       <button @click="toPublisher(item)">联系发布者</button>
     </div>
+    </scroll-view>
   </div>
 </template>
 
@@ -48,6 +53,20 @@
         })
     },
     methods: {
+      scrolltolower () {
+        this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=others`)
+          .then(res => {
+            this.othersList = this.othersList.concat(res.data.data)
+            if (res.data.data.length < 20) {
+              this.pages = null
+            } else {
+              this.pages++
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
       toPublisher (item) {
         this.$fly.put('https://www.wjxweb.cn:789/Demand', {
           id: item.id,

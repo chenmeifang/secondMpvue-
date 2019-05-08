@@ -1,12 +1,17 @@
 <template>
   <div class="travel">
     <p class="title">旅游</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
     <div v-for="item in travelList" :key="item" class="travelBox">
       <ul>
         <li>旅游地：{{ item.place }}</li>
       </ul>
       <button @click="toPublisher(item)">处理(联系发布人)</button>
     </div>
+    </scroll-view>
   </div>
 </template>
 

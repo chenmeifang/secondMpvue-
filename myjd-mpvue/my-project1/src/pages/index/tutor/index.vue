@@ -1,6 +1,10 @@
 <template>
     <div class="all">
         <p class="title">家教</p>
+        <scroll-view
+        :style="{'height': '550px'}"
+        :scroll-y="true"
+        @scrolltolower="scrolltolower">
         <div v-for="item in tutorList" :key="item" class="tutorBox">
            <ul>
             <li>课程详情：{{ item.detail }}</li>
@@ -9,6 +13,7 @@
            </ul>
            <button @click="toPublisher(item)">做家教(联系发布人)</button>
         </div>
+        </scroll-view>
     </div>
 </template>
 <script>

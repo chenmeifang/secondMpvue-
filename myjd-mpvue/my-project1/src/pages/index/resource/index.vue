@@ -1,6 +1,10 @@
 <template>
   <div class="resource">
     <p class="title">资源类</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
     <div v-for="item in resourceList" :key="item" class="resourceBox">
       <ul>
         <li>详情：{{ item.detail }}</li>
@@ -8,6 +12,7 @@
       </ul>
       <button @click="toPublisher(item)">给资源(联系需要者)</button>
     </div>
+    </scroll-view>
   </div>
 </template>
 
@@ -45,6 +50,20 @@
         })
     },
     methods: {
+      scrolltolower () {
+        this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=resource`)
+          .then(res => {
+            this.resourceList = this.resourceList.concat(res.data.data)
+            if (res.data.data.length < 20) {
+              this.pages = null
+            } else {
+              this.pages++
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
       toPublisher (item) {
         this.$fly.put('https://www.wjxweb.cn:789/Demand', {
           id: item.id,

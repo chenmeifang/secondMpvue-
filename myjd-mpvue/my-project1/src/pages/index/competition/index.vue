@@ -1,12 +1,17 @@
 <template>
   <div class="twoHandsBook">
     <p class="title">竞赛组队</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
     <div v-for="item in competitionList" :key="item" class="competitionBox">
       <ul>
         <li>详情：{{ item.detail }}</li>
       </ul>
       <button @click="toPublisher(item)">组队(联系发起人)</button>
     </div>
+    </scroll-view>
   </div>
 </template>
 
@@ -47,6 +52,20 @@
         })
     },
     methods: {
+      scrolltolower () {
+        this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=comp`)
+          .then(res => {
+            this.competitionList = this.competitionList.concat(res.data.data)
+            if (res.data.data.length < 20) {
+              this.pages = null
+            } else {
+              this.pages++
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
       toPublisher (item) {
         this.$fly.put('https://www.wjxweb.cn:789/Demand', {
           id: item.id,

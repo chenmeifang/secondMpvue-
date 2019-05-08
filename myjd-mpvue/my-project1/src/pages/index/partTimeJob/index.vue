@@ -1,6 +1,10 @@
 <template>
   <div class="partTimeJob">
     <p class="title">兼职</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
     <div v-for="item in partTimeJobList" :key="item" class="partTimeJobBox">
       <ul>
         <li>工作细节：{{ item.detail }}</li>
@@ -10,6 +14,7 @@
       </ul>
       <button @click="toPublisher(item)">去工作(联系发布人)</button>
     </div>
+    </scroll-view>
   </div>
 </template>
 

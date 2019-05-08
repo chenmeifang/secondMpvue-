@@ -1,12 +1,17 @@
 <template>
   <div class="shareBill">
     <p class="title">拼单</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
     <div v-for="item in shareBillList" :key="item" class="shareBillBox">
       <ul>
         <li>详情：{{ item.detail }}</li>
       </ul>
       <button @click="toPublisher(item)">拼单(联系拼单者)</button>
     </div>
+    </scroll-view>
   </div>
 </template>
 
@@ -44,6 +49,20 @@
         })
     },
     methods: {
+      scrolltolower () {
+        this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=shareBill`)
+          .then(res => {
+            this.shareBillList = this.shareBillList.concat(res.data.data)
+            if (res.data.data.length < 20) {
+              this.pages = null
+            } else {
+              this.pages++
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
       toPublisher (item) {
         this.$fly.put('https://www.wjxweb.cn:789/Demand', {
           id: item.id,

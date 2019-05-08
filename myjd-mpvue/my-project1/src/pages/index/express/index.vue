@@ -1,6 +1,10 @@
 <template>
   <div>
     <p class="title">快递</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
     <div v-for="item in expressList" :key="item" class="expressBox">
       <ul>
         <li>详情：{{ item.detail }}</li>
@@ -8,6 +12,7 @@
       </ul>
       <button @click="toPublisher(item)">代拿快递</button>
     </div>
+    </scroll-view>
   </div>
 </template>
 
@@ -49,6 +54,20 @@ export default {
       })
   },
   methods: {
+    scrolltolower () {
+      this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=express`)
+        .then(res => {
+          this.expressList = this.expressList.concat(res.data.data)
+          if (res.data.data.length < 20) {
+            this.pages = null
+          } else {
+            this.pages++
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     toPublisher (item) {
       this.$fly.put('https://www.wjxweb.cn:789/Demand', {
         id: item.id,

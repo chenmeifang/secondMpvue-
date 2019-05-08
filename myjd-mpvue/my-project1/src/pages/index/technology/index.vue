@@ -1,6 +1,10 @@
 <template>
   <div class="technology">
     <p class="title">技术处理</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
     <div v-for="item in technologyList" :key="item" class="technologyBox">
       <ul>
         <li>详情：{{ item.detail }}</li>
@@ -8,6 +12,7 @@
       </ul>
       <button @click="toPublisher(item)">处理(联系发布人)</button>
     </div>
+    </scroll-view>
   </div>
 </template>
 
@@ -45,6 +50,20 @@
         })
     },
     methods: {
+      scrolltolower () {
+        this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=technology`)
+          .then(res => {
+            this.technologyList = this.technologyList.concat(res.data.data)
+            if (res.data.data.length < 20) {
+              this.pages = null
+            } else {
+              this.pages++
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
       toPublisher (item) {
         this.$fly.put('https://www.wjxweb.cn:789/Demand', {
           id: item.id,

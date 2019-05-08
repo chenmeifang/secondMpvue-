@@ -1,13 +1,22 @@
 <template>
   <div class="idleItem">
     <p class="title">闲置物转出</p>
-    <div v-for="(item, index) in itemList" :key="index" class="idleItemBox">
-      <ul>
-        <li>详情：{{ item.name }}</li>
-        <li>价格：{{ item.price }}</li>
-      </ul>
-      <button @click="toPublisher(item)">收入囊中(联系卖主)</button>
-    </div>
+    <!-- <scroll-view
+    scroll-y
+    style="height: 400px;"
+    @bindscrolltolower="scrolltolower"> -->
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
+      <div v-for="(item, index) in itemList" :key="index" class="idleItemBox">
+        <ul>
+          <li>详情：{{ item.name }}</li>
+          <li>价格：{{ item.price }}</li>
+        </ul>
+        <button @click="toPublisher(item)">收入囊中(联系卖主)</button>
+      </div>
+    </scroll-view>
   </div>
 </template>
 
@@ -19,31 +28,23 @@
         pages: 1,
         itemList: [],
         saleTo: 0,
-        nickname1: '',
-        nickname2: '',
+        nickname1: '', /* 接受这条需求的人的Nickname */
+        nickname2: '', /* 发布这条需求的人的Nickname */
         avatar1: '',
-        avatar2: ''
+        avatar2: '',
+        is: false
       }
     },
     onLoad () {
-      /* 在进入到此页面之前，先拿到属于该类别的需求 然后用for循环渲染到页面 */
-      /* this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`) */
-      /* this.$fly.get('https://www.wjxweb.cn:789/setAsideGoods/all/' + this.pages) */
-      /* this.page怎么变 要有一个触发点！！！！！呜呜呜不会啊 */
-      // if(hidden){
-      /* wx.showLoading({
-        title: '加载中'
-      }) */
-      // }
       this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
         .then(res => {
           console.log(res)
           this.itemList = res.data.data
+          this.pages++
         })
         .catch(err => {
           console.log(err)
         })
-      // wx.hideLoading({})
       this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
         .then(res => {
           console.log(res)
@@ -57,6 +58,26 @@
         })
     },
     methods: {
+      scrolltolower () {
+        this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
+          .then(res => {
+            // console.log(res)
+            // console.log(res.data.data.length)
+            this.itemList = this.itemList.concat(res.data.data)
+            if (res.data.data.length < 20) {
+              // 如果请求的那一页的数据没有20个，pages就不再自增了
+              // 设置pages为 null，这样就请求不到数据了，只是服务器会报错
+              // 这个地方应该还可以改进
+              this.pages = null
+            } else {
+              this.pages++
+            }
+            // console.log(this.itemList)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
       /* 点击收入囊中（联系卖主）的按钮时，要用this.$fly.put修改需求表中的对应的需求的saleTo和isSaled属性 */
       toPublisher (item) {
         this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
@@ -75,7 +96,65 @@
           .catch(err => {
             console.log(err)
           })
-        this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+        this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.saleTo}`)
+          .then(res => {
+            res.data.data.forEach(value => {
+              /* console.log(value.toWho)
+              console.log(item.belongTo) */
+              // 这里toWho和belongTo数据类型不一致  toWho是int型，belongTo是string型
+              if (value.toWho.toString() === item.belongTo) {
+                console.log('已存在该联系人')
+                this.is = true
+                console.log('bbbbbb')
+                console.log(this.is)
+              }
+            })
+            console.log('aaaaa')
+            console.log(this.is)
+            if (!this.is) {
+              console.log('不存在此联系人，正在双向创建')
+              this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+                id: 0,
+                fromWho: item.belongTo,
+                toWho: this.saleTo,
+                nickname: this.nickname1,
+                avatar: this.avatar1
+              })
+                .then(res => {
+                  console.log(res)
+                })
+                .catch(err => {
+                  console.log(err)
+                })
+              this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
+                .then(res => {
+                  this.nickname2 = res.data.data[0].nickName
+                  this.avatar2 = res.data.data[0].avatar
+                  console.log(res)
+                  this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+                    id: 0,
+                    fromWho: this.saleTo,
+                    toWho: item.belongTo,
+                    // 这里的nickname和avatar是发布这条需求的人的nickname和avatar
+                    nickname: this.nickname2,
+                    avatar: this.avatar2
+                  })
+                    .then(res => {
+                      console.log(res)
+                    })
+                    .catch(err => {
+                      console.log(err)
+                    })
+                })
+                .catch(err => {
+                  console.log(err)
+                })
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        /* this.$fly.post('https://www.wjxweb.cn:789/Contact', {
           id: 0,
           fromWho: item.belongTo,
           toWho: this.saleTo,
@@ -88,7 +167,7 @@
           .catch(err => {
             console.log(err)
           })
-        /* 先拿到发布这条需求的人的nickname和avatar， 首先已经有这个人的id（item.belongTo） */
+        先拿到发布这条需求的人的nickname和avatar， 首先已经有这个人的id（item.belongTo）
         this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
           .then(res => {
             this.nickname2 = res.data.data[0].nickName
@@ -98,7 +177,7 @@
               id: 0,
               fromWho: this.saleTo,
               toWho: item.belongTo,
-              /* 这里的nickname和avatar是发布这条需求的人的nickname和avatar */
+              这里的nickname和avatar是发布这条需求的人的nickname和avatar
               nickname: this.nickname2,
               avatar: this.avatar2
             })
@@ -111,7 +190,10 @@
           })
           .catch(err => {
             console.log(err)
-          })
+          }) */
+        /* wx.navigateTo({
+          url: '../../conversation/main'
+        }) */
       }
     }
   }
@@ -126,7 +208,7 @@
     margin: 20rpx
   }
   .idleItemBox{
-    border:3px solid black;
+    border: 3px solid black;
     margin: 0 20rpx 20rpx 20rpx;
     border-radius: 20px;
   }

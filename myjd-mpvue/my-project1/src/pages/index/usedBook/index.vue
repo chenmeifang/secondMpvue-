@@ -1,6 +1,10 @@
 <template>
   <div class="twoHandsBook">
     <p class="title">二手书</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
     <div v-for="item in usedBookList" :key="item" class="usedBookBox">
       <ul>
         <li>书名：{{ item.bookName }}</li>
@@ -8,6 +12,7 @@
       </ul>
       <button @click="toPublisher(item)">处理(联系发布人)</button>
     </div>
+    </scroll-view>
   </div>
 </template>
 
@@ -46,6 +51,20 @@
         })
     },
     methods: {
+      scrolltolower () {
+        this.$fly.get(`https://www.wjxweb.cn:789/TwoHandsBook/all/${this.pages}`)
+          .then(res => {
+            this.usedBookList = this.usedBookList.concat(res.data.data)
+            if (res.data.data.length < 20) {
+              this.pages = null
+            } else {
+              this.pages++
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
       toPublisher (item) {
         this.$fly.put('https://www.wjxweb.cn:789/TwoHandsBook', {
           belongTo: item.belongTo,

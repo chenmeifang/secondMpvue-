@@ -1,6 +1,10 @@
 <template>
   <div class="twoHandsBook">
     <p class="title">租房及转租</p>
+    <scroll-view
+    :style="{'height': '550px'}"
+    :scroll-y="true"
+    @scrolltolower="scrolltolower">
         <div v-for="item in rentList" :key="item" class="rentBox">
            <ul>
             <li>内部配置：{{ item.detail }}</li>
@@ -8,7 +12,8 @@
             <li>房租：{{ item.price }}</li>
            </ul>
            <button @click="toPublisher(item)">去租房(联系发布人)</button>
-        </div>   
+        </div>
+    </scroll-view>   
   </div>
 </template>
 
