@@ -58,7 +58,6 @@
             console.log(res)
             this.itemList = res.data.data
             this.count = res.data.count / 20
-            // this.pages++
           })
           .catch(err => {
             console.log(err)

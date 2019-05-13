@@ -7,7 +7,7 @@ const store = new Vuex.Store({
   state: {
     userInformation: {},
     /* 应该是对应到数据库user表里面该用户信息，多了一项id（第几位用户）和wxOpen（微信的openid） */
-    WxInfo: {},
+    wxInfo: {},
     /* 点击认证按钮的时候拿到的微信提供的当前用户信息 avatarUrl,city,country,gender,language,nickName,province  */
     openId: ''
   },
@@ -16,7 +16,7 @@ const store = new Vuex.Store({
       state.userInformation = data
     },
     getWxInfo (state, data) {
-      state.Wxinfo = data
+      state.wxInfo = data
     },
     getOpenId (state, data) {
       state.openId = data

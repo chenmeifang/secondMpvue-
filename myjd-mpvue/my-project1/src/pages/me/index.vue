@@ -10,8 +10,8 @@
       点击认证
       </button>
       <block v-else>
-      <img class="userinfo-avatar" :src="user.avatar" alt="">
-      <p>{{ user.nickName }}</p>
+      <img class="userinfo-avatar" :src=avatar alt="">
+      <p>{{ nickName }}</p>
       </block>
     </div>
     <div class="menuRoom">
@@ -35,14 +35,6 @@
         <p class="each2">关于小程序</p>
         <p class="each3">></p>
         </div>
-      <!-- <i-divider>***</i-divider> -->
-      <!-- <i-cell-group>
-        <i-cell title="我接受的单子" @click="goToMyAcceptation"/>
-        <i-cell title="我发布的单子" @click="goToMyRelease" />
-        <i-cell title="联系开发者" @click="goToFindUs"/>
-        <i-cell title="关于我们" @click="goToAboutUs"/>
-      </i-cell-group> -->
-      <!-- <i-divider>***</i-divider> -->
     </div>
   </div>
 </template>
@@ -51,12 +43,9 @@
   export default {
     data () {
       return {
-        canIUse: true
-      }
-    },
-    computed: {
-      user () {
-        return this.$store.state.userInformation[0]
+        canIUse: true,
+        avatar: '',
+        nickName: ''
       }
     },
     methods: {
@@ -81,39 +70,55 @@
         })
       },
       onGotUserInfo: function (res) {
-        this.$store.state.wxInfo = res.mp.detail.userInfo
-        console.log('啊啊啊啊啊')
+        wx.showToast({
+          title: '认证成功，可正常使用该程序',
+          icon: 'none',
+          duration: 3000
+        })
         console.log(res)
-        this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
-          .then((user) => {
-            if (user.data.count !== 0) {
-              // 如果数据库存在记录则返回值，赋值至store
-              this.$store.state.userInformation = user.data.data
-              this.canIUse = false
-              console.log('数据库已存在记录，已获取用户信息', this.$store.state.userInformation)
-            }
-            if (user.data.count === 0) {
-              // 如果数据库不存在记录，则post一条新纪录，将返回值赋值至store
-              this.$fly.post('https://www.wjxweb.cn:789/User',
-                {
-                  'id': 0,
-                  'wxOpen': this.$store.state.openId,
-                  'userCity': this.$store.state.wxInfo.city,
-                  'nickName': this.$store.state.wxInfo.nickName,
-                  'studentNumber': null,
-                  'phoneNumber': null,
-                  'userNewLogin': new Date(),
-                  'avatar': this.$store.state.wxInfo.avatarUrl,
-                  'userProvince': this.$store.state.wxInfo.province,
-                  'userGender': this.$store.state.wxInfo.gender
-                })
-                .then((postRes) => {
-                  this.$store.state.userInformation = postRes.data
-                  this.canIUse = false
-                  console.log('已新建用户', this.$store.state.userInformation)
-                })
-            }
+        this.avatar = res.mp.detail.userInfo.avatarUrl
+        this.nickName = res.mp.detail.userInfo.nickName
+        this.$store.state.wxInfo = res.mp.detail.userInfo
+        console.log(this.$store.state.wxInfo)
+        // 这里拿到的是微信提供的用户信息 如：avatarUrl city country gender nickName language
+        if (this.$store.state.openId === '') {
+          wx.showToast({
+            title: '登录异常，请稍后再试',
+            icon: 'none',
+            duration: 2000
           })
+        } else {
+          this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+            .then((user) => {
+              if (user.data.count !== 0) {
+                // 如果数据库存在记录则返回值，赋值至store
+                this.$store.state.userInformation = user.data.data
+                this.canIUse = false
+                console.log('数据库已存在记录，已获取用户信息', this.$store.state.userInformation)
+              }
+              if (user.data.count === 0) {
+                // 如果数据库不存在记录，则post一条新纪录，将返回值赋值至store
+                this.$fly.post('https://www.wjxweb.cn:789/User',
+                  {
+                    'id': 0,
+                    'wxOpen': this.$store.state.openId,
+                    'userCity': this.$store.state.wxInfo.city,
+                    'nickName': this.$store.state.wxInfo.nickName,
+                    'studentNumber': null,
+                    'phoneNumber': null,
+                    'userNewLogin': new Date(),
+                    'avatar': this.$store.state.wxInfo.avatarUrl,
+                    'userProvince': this.$store.state.wxInfo.province,
+                    'userGender': this.$store.state.wxInfo.gender
+                  })
+                  .then((postRes) => {
+                    this.$store.state.userInformation = postRes.data
+                    this.canIUse = false
+                    console.log('已新建用户', this.$store.state.userInformation)
+                  })
+              }
+            })
+        }
       }
     }
   }

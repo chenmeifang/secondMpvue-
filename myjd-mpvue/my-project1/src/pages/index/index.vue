@@ -99,18 +99,35 @@ export default {
   components: {
   },
   onReady () {
-    console.log('aaaaaaa')
-    wx.showModal({
-      title: '提示',
-      content: '这是一个模态弹窗',
-      success (res) {
-        if (res.confirm) {
-          console.log('用户点击确定')
-        } else if (res.cancel) {
-          console.log('用户点击取消')
+    console.log(this.$store.state.wxInfo)
+    // 在showModal之前要先判断该用户是不是新用户，若不是新用户，就不显示弹框
+    if (this.$store.state.wxInfo === undefined) {
+      wx.showModal({
+        title: '提示',
+        content: '是否跳转到‘我的‘界面进行点击认证，否则无法正常运行该小程序',
+        success (res) {
+          if (res.confirm) {
+            wx.switchTab({
+              url: '/pages/me/main'
+            })
+          } else if (res.cancel) {
+            wx.showModal({
+              title: '提示',
+              content: '建议先点击认证',
+              success (res) {
+                if (res.confirm) {
+                  wx.switchTab({
+                    url: '/pages/me/main'
+                  })
+                } else if (res.cancle) {
+                  console.log('eeeee')/* 这里到时候可以搞一个for循环，直到用户点击确定 */
+                }
+              }
+            })
+          }
         }
-      }
-    })
+      })
+    }
   },
   methods: {
     toTutorPage () {
