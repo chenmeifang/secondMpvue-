@@ -7,7 +7,8 @@
 		"minified": true,
 		"newFeature": true,
 		"nodeModules": true,
-		"autoAudits": false
+		"autoAudits": false,
+		"checkInvalidKey": true
 	},
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
@@ -15,6 +16,7 @@
 	"projectname": "myjd-mpvue",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
+	"libVersion": "2.6.6",
 	"condition": {
 		"search": {
 			"current": -1,

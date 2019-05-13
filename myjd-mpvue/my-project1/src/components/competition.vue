@@ -17,15 +17,17 @@ export default {
   data () {
     return {
       detail: '',
-      belongTo: 0
+      belongTo: 0,
+      userAva: ''
     }
   },
   onLoad () {
-    console.log('pppppppp' + this.$store.state.openId)
+    console.log(this.$store.state.openId)
     this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
       .then(res => {
         console.log(res)
         this.belongTo = res.data.data[0].id
+        this.userAva = res.data.data[0].avatar
       })
       .catch(err => {
         console.log(err)
@@ -40,8 +42,9 @@ export default {
         price: 0,
         isFind: false,
         keywords: 'comp',
-        serviceMan: null,
-        date: new Date()
+        servicedMan: null,
+        date: new Date(),
+        userAva: this.userAva
       })
         .then(res => {
           console.log(res)

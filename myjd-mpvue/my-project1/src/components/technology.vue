@@ -22,15 +22,17 @@ export default {
     return {
       datail: '',
       belongTo: 0,
-      price: ''
+      price: '',
+      userAva: ''
     }
   },
   onLoad () {
-    console.log('pppppppp' + this.$store.state.openId)
+    console.log(this.$store.state.openId)
     this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
       .then(res => {
         console.log(res)
         this.belongTo = res.data.data[0].id
+        this.userAva = res.data.data[0].avatar
       })
       .catch(err => {
         console.log(err)
@@ -46,7 +48,8 @@ export default {
         isFind: false,
         keywords: 'technology',
         serviceMan: null,
-        date: new Date()
+        date: new Date(),
+        userAva: this.userAva
       })
         .then(res => {
           console.log(res)

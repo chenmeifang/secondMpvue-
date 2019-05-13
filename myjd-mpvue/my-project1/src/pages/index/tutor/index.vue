@@ -23,7 +23,7 @@ export default {
       tutorList: []
     }
   },
-  onLoad () {
+  onShow () {
     this.$fly.get('https://www.wjxweb.cn:789/Tutor/all/1')
       .then((res) => {
         console.log(res)

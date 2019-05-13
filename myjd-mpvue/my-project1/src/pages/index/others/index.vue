@@ -6,6 +6,7 @@
     :scroll-y="true"
     @scrolltolower="scrolltolower">
     <div v-for="item in othersList" :key="item" class="othersBox">
+      <img :src="item.userAva" class="avatar"/>      
       <ul>
         <li>详情：{{ item.detail }}</li>
         <li>报酬：{{ item.price }}</li>
@@ -27,45 +28,48 @@
         nickname1: '',
         nickname2: '',
         avatar1: '',
-        avatar2: ''
+        avatar2: '',
+        is: false,
+        count: 0
       }
     },
     onLoad () {
-      this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=others`)
-        .then(res => {
-          console.log(res)
-          this.othersList = res.data.data
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      this.showData()
       this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
         .then(res => {
           console.log(res)
           this.servicedMan = res.data.data[0].id
           this.nickname1 = res.data.data[0].nickName
           this.avatar1 = res.data.data[0].avatar
-          console.log(this.servicedMan)
-          console.log('其他')
         })
         .catch(err => {
           console.log(err)
         })
     },
     methods: {
-      scrolltolower () {
+      showData () {
+        this.pages = 1
         this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=others`)
           .then(res => {
-            this.othersList = this.othersList.concat(res.data.data)
-            if (res.data.data.length < 20) {
-              this.pages = null
-            } else {
-              this.pages++
-            }
+            console.log(res)
+            this.othersList = res.data.data
+            this.count = res.data.count / 20
           })
           .catch(err => {
             console.log(err)
           })
+      },
+      scrolltolower () {
+        if (this.count > this.pages) {
+          this.pages++
+          this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=others`)
+            .then(res => {
+              this.othersList = this.othersList.concat(res.data.data)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        }
       },
       toPublisher (item) {
         this.$fly.put('https://www.wjxweb.cn:789/Demand', {
@@ -76,7 +80,8 @@
           isFind: true,
           keywords: item.keywords,
           servicedMan: this.servicedMan,
-          date: item.date
+          date: item.date,
+          userAva: item.userAva
         })
           .then(res => {
             console.log(res)
@@ -88,38 +93,52 @@
           .then(res => {
             this.nickname2 = res.data.data[0].nickName
             this.avatar2 = res.data.data[0].avatar
-            console.log('拿快递2')
-            console.log(this.nickname2)
-            console.log(this.avatar2)
             console.log(res)
           })
           .catch(err => {
             console.log(err)
           })
-        this.$fly.post('https://www.wjxweb.cn:789/Contact', {
-          id: 0,
-          fromWho: item.belongTo,
-          toWho: this.servicedMan,
-          nickname: this.nickname1,
-          avatar: this.avatar1
-        })
+        this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.servicedMan}`)
           .then(res => {
-            console.log(res)
-            this.$fly.post('https://www.wjxweb.cn:789/Contact', {
-              id: 0,
-              fromWho: this.servicedMan,
-              toWho: item.belongTo,
-              nickname: this.nickname2,
-              avatar: this.avatar2
+            res.data.data.forEach(value => {
+              if (value.toWho.toString() === item.belongTo) {
+                console.log('已存在该联系人')
+                this.is = true
+              }
             })
-              .then(res => {
-                console.log(res)
-                console.log(this.nickname2)
-                console.log(this.avatar2)
+            if (!this.is) {
+              this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+                id: 0,
+                fromWho: item.belongTo,
+                toWho: this.servicedMan,
+                nickname: this.nickname1,
+                avatar: this.avatar1
               })
-              .catch(err => {
-                console.log(err)
-              })
+                .then(res => {
+                  console.log(res)
+                  this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+                    id: 0,
+                    fromWho: this.servicedMan,
+                    toWho: item.belongTo,
+                    nickname: this.nickname2,
+                    avatar: this.avatar2
+                  })
+                    .then(res => {
+                      console.log(res)
+                      console.log(this.nickname2)
+                      console.log(this.avatar2)
+                    })
+                    .catch(err => {
+                      console.log(err)
+                    })
+                })
+                .catch(err => {
+                  console.log(err)
+                })
+            }
+            wx.switchTab({
+              url: '/pages/conversation/main'
+            })
           })
           .catch(err => {
             console.log(err)
@@ -134,8 +153,14 @@
   text-align: center;
   margin-bottom: 50rpx
 }
+.avatar{
+  width: 100rpx;
+  height: 100rpx;
+  border-radius:100rpx;
+  float:left
+}
 li{
-  margin: 20rpx
+  margin: 20rpx 20rpx 20rpx 120rpx
 }
 .othersBox{
   border:3px solid black;

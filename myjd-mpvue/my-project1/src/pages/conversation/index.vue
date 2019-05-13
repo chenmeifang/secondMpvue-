@@ -22,7 +22,7 @@
         me: ''
       }
     },
-    onShow () {
+    onLoad () {
       this.me = this.$store.state.userInformation[0].id
       console.log(this.$store.state.userInformation)
       // console.log(this.$store.state.WxInfo)

@@ -4,6 +4,7 @@
       <!-- <canvas id="can" width="750px" height="150px" ref="myCanvas"></canvas> -->
       <!-- <canvas style="width: 1500rpx; height: 300rpx;" canvas-id="firstCanvas" ref="myCanvas"></canvas> -->
       <img src="/static/images/header.png"/>
+      <!-- 温馨提示：请先跳转至“我的”页面点击认证 -->
     </div>
     <i-grid>
     <i-grid-item @click="toTutorPage">
@@ -32,12 +33,12 @@
         </i-grid-icon>
         <i-grid-label>闲置物转出</i-grid-label>
     </i-grid-item>
-    <i-grid-item @click="toPartTimeJobPage">
+    <!-- <i-grid-item  @click="toTravelPage">
         <i-grid-icon>
-            <image src="/static/images/partTimeJob.png" />
+            <image src="/static/images/travel.png" />
         </i-grid-icon>
-        <i-grid-label>兼职类</i-grid-label>
-    </i-grid-item>
+        <i-grid-label>旅游类</i-grid-label>
+    </i-grid-item> -->
     <i-grid-item @click="toRentingPage">
         <i-grid-icon>
             <image src="/static/images/renting.png" />
@@ -46,17 +47,17 @@
     </i-grid-item>
     </i-grid>
     <i-grid>
-    <i-grid-item  @click="toTravelPage">
+    <i-grid-item  @click="toResourcePage">
         <i-grid-icon>
-            <image src="/static/images/travel.png" />
+            <image src="/static/images/resource.png" />
         </i-grid-icon>
-        <i-grid-label>旅游类</i-grid-label>
+        <i-grid-label>资源需求</i-grid-label>
     </i-grid-item>
-    <i-grid-item  @click="toTechnologyPage">
+    <i-grid-item @click="toPartTimeJobPage">
         <i-grid-icon>
-            <image src="/static/images/technology.png" />
+            <image src="/static/images/partTimeJob.png" />
         </i-grid-icon>
-        <i-grid-label>技术处理类</i-grid-label>
+        <i-grid-label>兼职类</i-grid-label>
     </i-grid-item>
     <i-grid-item @click="toExpressPage">
         <i-grid-icon>
@@ -66,17 +67,17 @@
     </i-grid-item>
     </i-grid>
     <i-grid>
-    <i-grid-item  @click="toCompetitionPage">
+    <!-- <i-grid-item  @click="toCompetitionPage">
         <i-grid-icon>
             <image src="/static/images/competition.png" />
         </i-grid-icon>
         <i-grid-label>竞赛组队</i-grid-label>
-    </i-grid-item>
-    <i-grid-item  @click="toResourcePage">
+    </i-grid-item> -->
+    <i-grid-item  @click="toTechnologyPage">
         <i-grid-icon>
-            <image src="/static/images/resource.png" />
+            <image src="/static/images/technology.png" />
         </i-grid-icon>
-        <i-grid-label>资源需求</i-grid-label>
+        <i-grid-label>技术处理类</i-grid-label>
     </i-grid-item>
     <i-grid-item  @click="toOthersPage">
         <i-grid-icon>
@@ -97,7 +98,20 @@ export default {
   },
   components: {
   },
-
+  onReady () {
+    console.log('aaaaaaa')
+    wx.showModal({
+      title: '提示',
+      content: '这是一个模态弹窗',
+      success (res) {
+        if (res.confirm) {
+          console.log('用户点击确定')
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
   methods: {
     toTutorPage () {
       wx.navigateTo({
@@ -219,17 +233,9 @@ img{
 .top {
 width:750px;
 height:300rpx;
+/* height: 150px; */
 /* display:inline-block; */
 /* overflow:hidden; */
-/* background-color: darkgray */
+/* background-color: blue */
 }
-canvas{
-  /* background-color: lightblue */
-}
-/* #firstCanvas{
-  background-color: pink
-} */
-/* .can{
-  background-color:blue
-} */
 </style>

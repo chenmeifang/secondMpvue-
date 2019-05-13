@@ -82,6 +82,8 @@
       },
       onGotUserInfo: function (res) {
         this.$store.state.wxInfo = res.mp.detail.userInfo
+        console.log('啊啊啊啊啊')
+        console.log(res)
         this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
           .then((user) => {
             if (user.data.count !== 0) {

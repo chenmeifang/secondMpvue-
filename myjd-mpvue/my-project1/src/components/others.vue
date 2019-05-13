@@ -9,7 +9,7 @@
     </div>
     <div class="each">
       <span>报酬：</span>
-      <input type="textarea" v-model="price" placeholder="可填可不填"/>
+      <input type="textarea" v-model="price" placeholder="请输入报酬"/>
     </div>
     <i-button @click="handleClick" type="primary" shape="circle">发布</i-button>
     <i-toast id="toast"/>
@@ -21,17 +21,18 @@ export default {
   data () {
     return {
       datail: '',
-      price: '0',
-      belongTo: 0
+      price: '',
+      belongTo: 0,
+      userAva: ''
     }
   },
   onLoad () {
-    console.log('pppppppp' + this.$store.state.openId)
-    // this.$fly.get('https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=this.$store.state.openId')
+    console.log(this.$store.state.openId)
     this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
       .then(res => {
         console.log(res)
         this.belongTo = res.data.data[0].id
+        this.userAva = res.data.data[0].avatar
       })
       .catch(err => {
         console.log(err)
@@ -44,10 +45,11 @@ export default {
         date: new Date(),
         detail: this.detail,
         id: 0,
-        isFind: true,
+        isFind: false,
         keywords: 'others',
         price: this.price,
-        servicedMan: 0
+        servicedMan: 0,
+        userAva: this.userAva
       })
         .then(res => {
           console.log(res)

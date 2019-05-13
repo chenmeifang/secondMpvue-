@@ -26,6 +26,7 @@
       }
     },
     onLoad () {
+      this.pages = 1
       this.$fly.get('https://www.wjxweb.cn:789/PartTimeJob/all/1')
         .then(res => {
           console.log(res)

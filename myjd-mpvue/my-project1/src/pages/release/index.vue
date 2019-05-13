@@ -1,9 +1,8 @@
 <template>
   <div>
-    <i-notice-bar icon="remind">
+    <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop>
       请在下方选择需求类型！！
     </i-notice-bar>
-  <!-- <i-button @click="showAllClick">选择将发布的需求所属的类型</i-button> -->
   <router-view>
     <tutor v-if="zero"></tutor>
     <usedBook v-if="one"></usedBook>
@@ -11,12 +10,10 @@
     <idleItem v-if="three"></idleItem>
     <partTimeJob v-if="four"></partTimeJob>
     <renting v-if="five"></renting>
-    <travel v-if="six"></travel>
-    <technology v-if="seven"></technology>
-    <express v-if="eight"></express>
-    <competition v-if="nine"></competition>
-    <resource v-if="ten"></resource>
-    <others v-if="eleven"></others>
+    <technology v-if="six"></technology>
+    <express v-if="seven"></express>
+    <resource v-if="eight"></resource>
+    <others v-if="nine"></others>
   </router-view>
   <view>
   <picker-view @change="showDiff" indicator-style="height: 50px;" class="allList">
@@ -27,10 +24,8 @@
       <view  class="choiceList">闲置物转出</view>
       <view  class="choiceList">兼职类</view>
       <view  class="choiceList">租房及转租</view>
-      <view  class="choiceList">旅游类</view>
       <view  class="choiceList">技术处理类</view>
       <view  class="choiceList">代拿快递</view>
-      <view  class="choiceList">竞赛组队</view>
       <view  class="choiceList">资源需求</view>
       <view  class="choiceList">其他</view>
     </picker-view-column>
@@ -46,15 +41,13 @@ import shareBill from '@/components/shareBill'
 import idleItem from '@/components/idleItem'
 import partTimeJob from '@/components/partTimeJob'
 import renting from '@/components/renting'
-import travel from '@/components/travel'
 import technology from '@/components/technology'
 import express from '@/components/express'
-import competition from '@/components/competition'
 import resource from '@/components/resource'
 import others from '@/components/others'
 
 export default {
-  components: {tutor, usedBook, shareBill, idleItem, partTimeJob, renting, travel, technology, express, competition, resource, others},
+  components: {tutor, usedBook, shareBill, idleItem, partTimeJob, renting, technology, express, resource, others},
   name: 'index.vue',
   data () {
     return {
@@ -68,8 +61,6 @@ export default {
       seven: false,
       eight: false,
       nine: false,
-      ten: false,
-      eleven: false,
       choice: 13
     }
   },
@@ -221,34 +212,6 @@ export default {
       this.ten = false
       this.eleven = false
     }
-    if (this.choice === 10) {
-      this.zero = false
-      this.one = false
-      this.two = false
-      this.three = false
-      this.four = false
-      this.five = false
-      this.six = false
-      this.seven = false
-      this.eight = false
-      this.nine = false
-      this.ten = true
-      this.eleven = false
-    }
-    if (this.choice === 11) {
-      this.zero = false
-      this.one = false
-      this.two = false
-      this.three = false
-      this.four = false
-      this.five = false
-      this.six = false
-      this.seven = false
-      this.eight = false
-      this.nine = false
-      this.ten = false
-      this.eleven = true
-    }
   }
 }
 </script>
@@ -259,7 +222,7 @@ export default {
 }
 .allList{
   width: 100%; 
-  height: 200px;
+  height: 350rpx;
   position:fixed;
   bottom: 0px
 }

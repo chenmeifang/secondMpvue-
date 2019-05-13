@@ -10,11 +10,11 @@
     :scroll-y="true"
     @scrolltolower="scrolltolower">
       <div v-for="(item, index) in itemList" :key="index" class="idleItemBox">
-        <ul>
-          <li>详情：{{ item.name }}</li>
-          <li>价格：{{ item.price }}</li>
-        </ul>
-        <button @click="toPublisher(item)">收入囊中(联系卖主)</button>
+        <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
+        <img :src="item.imgUrl" class="detailImg" @click="preview(item)"/>
+        <div class="one">详情：{{  item.name  }}</div>
+        <div class="two">价格：{{  item.price  }}</div>
+        <button @click="toPublisher(item)" class="btn">收入囊中(联系卖主)</button>
       </div>
     </scroll-view>
   </div>
@@ -32,19 +32,12 @@
         nickname2: '', /* 发布这条需求的人的Nickname */
         avatar1: '',
         avatar2: '',
-        is: false
+        is: false,
+        count: 0
       }
     },
     onLoad () {
-      this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
-        .then(res => {
-          console.log(res)
-          this.itemList = res.data.data
-          this.pages++
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      this.showData()
       this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
         .then(res => {
           console.log(res)
@@ -58,11 +51,25 @@
         })
     },
     methods: {
-      scrolltolower () {
+      showData () {
+        this.pages = 1
         this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
           .then(res => {
-            // console.log(res)
-            // console.log(res.data.data.length)
+            console.log(res)
+            this.itemList = res.data.data
+            this.count = res.data.count / 20
+            // this.pages++
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      /* scrolltolower () {
+        if (this.itemList.length < 20) {
+          this.pages = null
+        }
+        this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
+          .then(res => {
             this.itemList = this.itemList.concat(res.data.data)
             if (res.data.data.length < 20) {
               // 如果请求的那一页的数据没有20个，pages就不再自增了
@@ -72,11 +79,23 @@
             } else {
               this.pages++
             }
-            // console.log(this.itemList)
           })
           .catch(err => {
             console.log(err)
           })
+      }, */
+      // 改进后
+      scrolltolower () {
+        if (this.count > this.pages) {
+          this.pages++
+          this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
+            .then(res => {
+              this.itemList = this.itemList.concat(res.data.data)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        }
       },
       /* 点击收入囊中（联系卖主）的按钮时，要用this.$fly.put修改需求表中的对应的需求的saleTo和isSaled属性 */
       toPublisher (item) {
@@ -84,11 +103,12 @@
           belongTo: item.belongTo,
           date: item.date,
           id: item.id,
-          imgUrl: 'string',
+          imgUrl: item.imgUrl,
           isSaled: false,
           name: item.name,
           price: item.price,
-          saleTo: this.saleTo
+          saleTo: this.saleTo,
+          userAva: item.userAva
         })
           .then(res => {
             console.log(res)
@@ -105,12 +125,8 @@
               if (value.toWho.toString() === item.belongTo) {
                 console.log('已存在该联系人')
                 this.is = true
-                console.log('bbbbbb')
-                console.log(this.is)
               }
             })
-            console.log('aaaaa')
-            console.log(this.is)
             if (!this.is) {
               console.log('不存在此联系人，正在双向创建')
               this.$fly.post('https://www.wjxweb.cn:789/Contact', {
@@ -150,50 +166,19 @@
                   console.log(err)
                 })
             }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        /* this.$fly.post('https://www.wjxweb.cn:789/Contact', {
-          id: 0,
-          fromWho: item.belongTo,
-          toWho: this.saleTo,
-          nickname: this.nickname1,
-          avatar: this.avatar1
-        })
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        先拿到发布这条需求的人的nickname和avatar， 首先已经有这个人的id（item.belongTo）
-        this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
-          .then(res => {
-            this.nickname2 = res.data.data[0].nickName
-            this.avatar2 = res.data.data[0].avatar
-            console.log(res)
-            this.$fly.post('https://www.wjxweb.cn:789/Contact', {
-              id: 0,
-              fromWho: this.saleTo,
-              toWho: item.belongTo,
-              这里的nickname和avatar是发布这条需求的人的nickname和avatar
-              nickname: this.nickname2,
-              avatar: this.avatar2
+            wx.switchTab({
+              url: '/pages/conversation/main'
             })
-              .then(res => {
-                console.log(res)
-              })
-              .catch(err => {
-                console.log(err)
-              })
           })
           .catch(err => {
             console.log(err)
-          }) */
-        /* wx.navigateTo({
-          url: '../../conversation/main'
-        }) */
+          })
+      },
+      preview (item) {
+        wx.previewImage({
+          current: item.imgUrl, // 当前显示图片的http链接
+          urls: [item.imgUrl] // 需要预览的图片http链接列表
+        })
       }
     }
   }
@@ -204,12 +189,50 @@
     text-align: center;
     margin-bottom: 50rpx
   }
-  li{
-    margin: 20rpx
+  .avatar{
+  width: 100rpx;
+  height: 100rpx;
+  border-radius:100rpx;
+  }
+  .avatarDiv{
+    width: 700rpx;
+    height: 100rpx;
+    background-color:lightgrey;
+    border-top-left-radius: 50rpx;
+    border-bottom-left-radius: 50rpx;
+    border-top-right-radius: 40rpx    
+  }
+  .detailImg{
+    position: absolute;
+    width: 300rpx;
+    height: 300rpx;
+    top: 100rpx
+  }
+  .one{
+    position: absolute;
+    width: 380rpx;
+    height: 200rpx;
+    left:320rpx;
+    top:100rpx;
+    word-wrap:break-word;
+  }
+  .two{
+    position: absolute;
+    width: 380rpx;
+    height: 100rpx;
+    left:320rpx;
+    top:340rpx
   }
   .idleItemBox{
+    height: 500rpx;
+    position: relative;
     border: 3px solid black;
     margin: 0 20rpx 20rpx 20rpx;
     border-radius: 20px;
+  }
+  .btn{
+    position: absolute;
+    top:400rpx;
+    width: 698rpx;
   }
 </style>

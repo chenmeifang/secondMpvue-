@@ -26,6 +26,7 @@
       }
     },
     onShow () {
+      this.pages = 1
       this.$fly.get('https://www.wjxweb.cn:789/Renting/all/1')
         .then(res => {
           console.log('租房及转租')

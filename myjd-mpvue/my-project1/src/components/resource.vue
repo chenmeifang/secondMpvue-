@@ -22,7 +22,8 @@ export default {
     return {
       datail: '',
       price: '',
-      belongTo: 0
+      belongTo: 0,
+      userAva: ''
     }
   },
   onLoad () {
@@ -31,6 +32,7 @@ export default {
       .then(res => {
         console.log(res)
         this.belongTo = res.data.data[0].id
+        this.userAva = res.data.data[0].avatar
       })
       .catch(err => {
         console.log(err)
@@ -43,10 +45,11 @@ export default {
         belongTo: this.belongTo,
         detail: this.detail,
         price: this.price,
-        isFind: true,
+        isFind: false,
         keywords: 'resource',
         serviceMan: null,
-        date: new Date()
+        date: new Date(),
+        userAva: this.userAva
       })
         .then(res => {
           console.log(res)
