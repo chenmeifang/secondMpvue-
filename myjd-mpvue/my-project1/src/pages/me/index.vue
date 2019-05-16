@@ -10,7 +10,7 @@
       点击认证
       </button>
       <block v-else>
-      <img class="userinfo-avatar" :src=avatar alt="">
+      <img class="userinfo-avatar" :src=avatarUrl alt="">
       <p>{{ nickName }}</p>
       </block>
     </div>
@@ -44,11 +44,77 @@
     data () {
       return {
         canIUse: true,
-        avatar: '',
+        avatarUrl: '',
         nickName: ''
       }
     },
+    // 这里一定要写onShow 不能写onLoad！！！！
+    onShow () {
+      // this.$store.commit('judgeNewUser')
+      // 这个地方跟那个隐藏button有一些逻辑冲突
+      // this.hideBtn()
+      this.judgeNewUser()
+    },
     methods: {
+      judgeNewUser () {
+        wx.login({
+          success: (res) => {
+            console.log('调用wx.login接口获取登录凭证')
+            console.log(res)
+            const code = res.code
+            wx.request({
+              url: 'https://www.wjxweb.cn:789/me/wxLogin?code=' + code,
+              method: 'POST',
+              header: {
+                'content-type': 'application/json'
+              },
+              success: (result) => {
+                this.$store.state.openId = result.data.data.openid
+                wx.request({
+                  url: 'https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=' + this.$store.state.openId,
+                  method: 'GET',
+                  header: {
+                    'content-type': 'application/json'
+                  },
+                  success: (res) => {
+                    if (res.data.data[0] !== undefined) {
+                      this.canIUse = false
+                      // 在这里隐藏的按钮之后，之后每次开启程序vuex里面的userInformation都是空的，会影响其他页面的大部分逻辑
+                      // 隐藏认证按钮的同时要显示该用户的头像和昵称
+                      this.avatarUrl = res.data.data[0].avatar
+                      this.nickName = res.data.data[0].nickName
+                      this.$store.state.userInformation = res.data.data[0]
+                    }
+                    if (res.data.data[0] === undefined) {
+                      wx.showModal({
+                        title: '温馨提示',
+                        content: '请先点击上方按钮进行认证',
+                        success (res) {
+                          if (res.confirm) {
+                            /* wx.switchTab({
+                              url: '/pages/me/main'
+                            }) */
+                          } else if (res.cancel) {
+                            wx.switchTab({
+                              url: '/pages/index/main'
+                            })
+                          }
+                        }
+                      })
+                    }
+                  },
+                  fail: err => {
+                    console.log(err)
+                  }
+                })
+              },
+              fail: (err) => {
+                console.log(err)
+              }
+            })
+          }
+        })
+      },
       goToMyAcceptation () {
         wx.navigateTo({
           url: 'myAcceptation/main'
@@ -69,6 +135,22 @@
           url: 'aboutUs/main'
         })
       },
+      /* hideBtn () {
+        this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+          .then(res => {
+            console.log('啊啊啊啊')
+            console.log(res)
+            if (res.data.data[0] !== undefined) {
+              this.canIUse = false
+              // 隐藏认证按钮的同时要显示该用户的头像和昵称
+              this.avatarUrl = res.data.data[0].avatar
+              this.nickName = res.data.data[0].nickName
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }, */
       onGotUserInfo: function (res) {
         wx.showToast({
           title: '认证成功，可正常使用该程序',
@@ -76,7 +158,7 @@
           duration: 3000
         })
         console.log(res)
-        this.avatar = res.mp.detail.userInfo.avatarUrl
+        this.avatarUrl = res.mp.detail.userInfo.avatarUrl
         this.nickName = res.mp.detail.userInfo.nickName
         this.$store.state.wxInfo = res.mp.detail.userInfo
         console.log(this.$store.state.wxInfo)

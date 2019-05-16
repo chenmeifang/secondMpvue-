@@ -64,6 +64,9 @@ export default {
       choice: 13
     }
   },
+  onShow () {
+    this.$store.commit('judgeNewUser')
+  },
   methods: {
     showDiff (choiceList) {
       console.log(choiceList.mp.detail.value[0])

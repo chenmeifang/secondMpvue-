@@ -34,19 +34,8 @@ export default {
     }
   },
   onLoad () {
-    this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
-      .then(res => {
-        console.log(res)
-        this.servicedMan = res.data.data[0].id
-        this.nickname1 = res.data.data[0].nickName
-        this.avatar1 = res.data.data[0].avatar
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  },
-  onShow () {
     this.showData()
+    this.$store.commit('judgeNewUser')
   },
   methods: {
     showData () {
@@ -74,27 +63,19 @@ export default {
       }
     },
     toPublisher (item) {
+      this.servicedMan = this.$store.state.userInformation.id
       this.$fly.put('https://www.wjxweb.cn:789/Demand', {
-        id: item.id,
         belongTo: item.belongTo,
         detail: item.detail,
         price: item.price,
-        isFind: true,
-        keywords: item.keywords,
-        servicedMan: this.servicedMan,
         date: item.date,
+        id: item.id,
+        imgUrl: item.imgUrl,
+        isFind: true,
+        servicedMan: this.servicedMan,
         userAva: item.userAva
       })
         .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
-        .then(res => {
-          this.nickname2 = res.data.data[0].nickName
-          this.avatar2 = res.data.data[0].avatar
           console.log(res)
         })
         .catch(err => {
@@ -114,11 +95,20 @@ export default {
               id: 0,
               fromWho: item.belongTo,
               toWho: this.servicedMan,
-              nickname: this.nickname1,
-              avatar: this.avatar1
+              nickname: this.$store.state.nickname1,
+              avatar: this.$store.state.avatar1
             })
               .then(res => {
                 console.log(res)
+              })
+              .catch(err => {
+                console.log(err)
+              })
+            this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
+              .then(res => {
+                console.log(res)
+                this.nickname2 = res.data.data[0].nickName
+                this.avatar2 = res.data.data[0].avatar
                 this.$fly.post('https://www.wjxweb.cn:789/Contact', {
                   id: 0,
                   fromWho: this.servicedMan,
@@ -128,23 +118,18 @@ export default {
                 })
                   .then(res => {
                     console.log(res)
-                    console.log(this.nickname2)
-                    console.log(this.avatar2)
                   })
                   .catch(err => {
                     console.log(err)
                   })
+                wx.switchTab({
+                  url: '/pages/conversation/main'
+                })
               })
               .catch(err => {
                 console.log(err)
               })
           }
-          wx.switchTab({
-            url: '/pages/conversation/main'
-          })
-        })
-        .catch(err => {
-          console.log(err)
         })
     }
   }

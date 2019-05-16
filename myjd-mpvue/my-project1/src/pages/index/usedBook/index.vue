@@ -24,7 +24,7 @@
         pages: 1,
         usedBookList: [],
         saleTo: 0,
-        nickname1: '',
+        nickname1: '', /* 接受这条需求的人的Nickname */
         nickname2: '',
         avatar1: '',
         avatar2: '',
@@ -34,7 +34,10 @@
     },
     onLoad () {
       this.showData()
-      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+      this.$store.commit('judgeNewUser')
+      // 不能直接执行下面这段代码，逻辑有问题，如果该用户还没有注册，那下面拿到的数据就是错误的
+      // 下面这段代码的功能：拿到当前用户的信息
+      /* this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
         .then(res => {
           console.log(res)
           this.saleTo = res.data.data[0].id
@@ -43,7 +46,7 @@
         })
         .catch(err => {
           console.log(err)
-        })
+        }) */
     },
     methods: {
       showData () {
@@ -71,6 +74,7 @@
         }
       },
       toPublisher (item) {
+        this.saleTo = this.$store.state.userInformation.id
         this.$fly.put('https://www.wjxweb.cn:789/TwoHandsBook', {
           belongTo: item.belongTo,
           bookName: item.bookName,
@@ -83,15 +87,6 @@
           userAva: item.userAva
         })
           .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
-          .then(res => {
-            this.nickname2 = res.data.data[0].nickName
-            this.avatar2 = res.data.data[0].avatar
             console.log(res)
           })
           .catch(err => {
@@ -110,38 +105,42 @@
               this.$fly.post('https://www.wjxweb.cn:789/Contact', {
                 id: 0,
                 fromWho: item.belongTo,
-                toWho: this.servicedMan,
-                nickname: this.nickname1,
-                avatar: this.avatar1
+                toWho: this.saleTo,
+                nickname: this.$store.state.nickname1,
+                avatar: this.$store.state.avatar1
               })
                 .then(res => {
                   console.log(res)
+                })
+                .catch(err => {
+                  console.log(err)
+                })
+              this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
+                .then(res => {
+                  console.log(res)
+                  this.nickname2 = res.data.data[0].nickName
+                  this.avatar2 = res.data.data[0].avatar
                   this.$fly.post('https://www.wjxweb.cn:789/Contact', {
                     id: 0,
-                    fromWho: this.servicedMan,
+                    fromWho: this.saleTo,
                     toWho: item.belongTo,
                     nickname: this.nickname2,
                     avatar: this.avatar2
                   })
                     .then(res => {
                       console.log(res)
-                      console.log(this.nickname2)
-                      console.log(this.avatar2)
                     })
                     .catch(err => {
                       console.log(err)
                     })
+                  wx.switchTab({
+                    url: '/pages/conversation/main'
+                  })
                 })
                 .catch(err => {
                   console.log(err)
                 })
             }
-            wx.switchTab({
-              url: '/pages/conversation/main'
-            })
-          })
-          .catch(err => {
-            console.log(err)
           })
       },
       preview (item) {

@@ -38,17 +38,7 @@
     },
     onLoad () {
       this.showData()
-      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
-        .then(res => {
-          console.log(res)
-          /* 拿到接受需求的人的openid，点击按钮的时候，就调用put修改saleTo为此人openId的对应User表里面的id */
-          this.saleTo = res.data.data[0].id
-          this.nickname1 = res.data.data[0].nickName
-          this.avatar1 = res.data.data[0].avatar
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      this.$store.commit('judgeNewUser')
     },
     methods: {
       showData () {
@@ -98,6 +88,8 @@
       },
       /* 点击收入囊中（联系卖主）的按钮时，要用this.$fly.put修改需求表中的对应的需求的saleTo和isSaled属性 */
       toPublisher (item) {
+        /* 拿到接受需求的人的openid，点击按钮的时候，就调用put修改saleTo为此人openId的对应User表里面的id */
+        this.saleTo = this.$store.state.userInformation.id
         this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
           belongTo: item.belongTo,
           date: item.date,
@@ -132,8 +124,8 @@
                 id: 0,
                 fromWho: item.belongTo,
                 toWho: this.saleTo,
-                nickname: this.nickname1,
-                avatar: this.avatar1
+                nickname: this.$store.state.nickname1,
+                avatar: this.$store.state.avatar1
               })
                 .then(res => {
                   console.log(res)
