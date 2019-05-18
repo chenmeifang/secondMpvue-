@@ -1,22 +1,36 @@
 <template>
   <div class="twoHandsBook">
+    <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
+      点击蓝色图标联系发布人，点击红色图标删除（仅发布该条记录的人删除有效）
+    </i-notice-bar>
     <p class="title">二手书</p>
+    <!-- :style="{'height': windowHeight + 'px'}" -->
     <scroll-view
-    :style="{'height': '550px'}"
-    :scroll-y="true"
-    @scrolltolower="scrolltolower">
-    <div v-for="item in usedBookList" :key="item" class="usedBookBox">
-      <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
-      <img :src="item.imgUrl" class="detailImg" @click="preview(item)"/>
-      <div class="one">书名：{{  item.bookName  }}</div>
-      <div class="two">书价：{{  item.bookPrice  }}</div>
-      <button @click="toPublisher(item)" class="btn">pick此书(联系卖主)</button>
+      :style="{'height':windowHeight + 'px'}"
+      :scroll-y="true"
+      @scrolltolower="scrolltolower">
+    <div v-for="item in usedBookList" v-show='!item.isSaled' :key="item" class="usedBookBox">
+      <div class="topDiv">
+        <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
+        <div class="nicknameDiv">{{ item.belongUsername }}</div>
+        <div class="deleteDiv"></div>
+        <div class="acceptDiv" @click="toPublisher(item)"></div>
+      </div>
+      <div class="bookBoxImg"><img :src="item.imgUrl" class="bookImg" @click="preview(item)"/></div>
+      <div class="details">
+        <ul>
+          <li>书名：{{  item.bookName  }}</li>
+          <li>书价：{{  item.bookPrice  }}</li>
+          <li>{{ item.date }}</li>
+        </ul>
+      </div>
     </div>
     </scroll-view>
   </div>
 </template>
 
 <script>
+  import { formatTime } from '../../../utils'
   export default {
     name: 'index',
     data () {
@@ -29,12 +43,14 @@
         avatar1: '',
         avatar2: '',
         is: false,
-        count: 0
+        count: 0,
+        windowHeight: 0
       }
     },
     onLoad () {
       this.showData()
       this.$store.commit('judgeNewUser')
+      this.windowHeight = this.$store.state.windowHeight
       // 不能直接执行下面这段代码，逻辑有问题，如果该用户还没有注册，那下面拿到的数据就是错误的
       // 下面这段代码的功能：拿到当前用户的信息
       /* this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
@@ -54,6 +70,9 @@
         this.$fly.get(`https://www.wjxweb.cn:789/TwoHandsBook/all/${this.pages}`)
           .then(res => {
             console.log(res)
+            res.data.data.forEach(value => {
+              value.date = formatTime(new Date(value.date))
+            })
             this.usedBookList = res.data.data
             this.count = res.data.count / 20
           })
@@ -66,6 +85,9 @@
           this.pages++
           this.$fly.get(`https://www.wjxweb.cn:789/TwoHandsBook/all/${this.pages}`)
             .then(res => {
+              res.data.data.forEach(value => {
+                value.date = formatTime(new Date(value.date))
+              })
               this.usedBookList = this.usedBookList.concat(res.data.data)
             })
             .catch(err => {
@@ -79,12 +101,13 @@
           belongTo: item.belongTo,
           bookName: item.bookName,
           bookPrice: item.bookPrice,
-          date: item.date,
+          date: new Date(),
           id: item.id,
           imgUrl: item.imgUrl,
           isSaled: true,
           saleTo: this.saleTo,
-          userAva: item.userAva
+          userAva: item.userAva,
+          belongUsername: item.belongUsername
         })
           .then(res => {
             console.log(res)
@@ -156,58 +179,67 @@
 <style scoped>
 .title {
     text-align: center;
-    margin-bottom: 50rpx
+    margin: 10rpx;
+    font-size:50rpx
   }
 .usedBookBox{
-  position:relative;
-  height: 400rpx;
-  border:3px solid black;
-  margin-left: 20rpx;
-  margin-right: 20rpx;
-  margin-bottom: 20rpx;
-  border-radius: 20px;
+  position: relative;
+  border-top:1px solid gray;
+  margin:0 20rpx 10rpx 20rpx
+}
+.topDiv{
+  position: relative;
+  height: 100rpx;
+  margin-bottom: 5rpx
 }
 .avatarDiv{
-  width: 700rpx;
-  height: 100rpx;
-  background-color:lightgrey;
-  border-top-left-radius: 50rpx;
-  border-bottom-left-radius: 50rpx;
-  border-top-right-radius: 40rpx    
+  float:left;
+  height: 90rpx;
+  margin:5rpx 31rpx 0 0   
 }
 .avatar{
-  width: 100rpx;
-  height: 100rpx;
-  border-radius:100rpx;
+  width: 90rpx;
+  height: 90rpx;
+  border-radius:50%;
   }
-.detailImg{
-    position: absolute;
-    width: 300rpx;
-    height: 300rpx;
-    top: 100rpx;
-    border-bottom-left-radius: 30rpx
-  }
-.one{
-    position: absolute;
-    width: 380rpx;
-    height: 100rpx;
-    left:320rpx;
-    top:100rpx;
-    word-wrap:break-word;
-  }
-.two{
-  position: absolute;
-  width: 380rpx;
-  height: 100rpx;
-  left:320rpx;
-  top:170rpx
+.nicknameDiv{
+  float: left;
+  height:90rpx;
+  line-height: 90rpx;
+  font-size:30rpx
 }
-.btn{
-    position: absolute;
-    top:310rpx;
-    width: 350rpx;
-    height: 80rpx;
-    left: 325rpx;
-    padding: 0
+.deleteDiv{
+  opacity: 0.6;
+  float: right;
+  width: 50rpx;
+  height: 50rpx;
+  background-image: url('../../../../static/images/delete2.png');
+  background-size: 50rpx;
+  margin: 23rpx 10rpx 0 20rpx
+}
+.acceptDiv{
+  opacity: 0.5;
+  float: right;
+  width: 60rpx;
+  height: 60rpx;
+  background-image: url('../../../../static/images/accept1.png');
+  background-size: 60rpx;
+  margin: 20rpx 20rpx 0 20rpx
+}
+.bookBoxImg{
+  display: inline-block
+}
+.bookImg{
+  width: 250rpx;
+  height: 250rpx;
   }
+.details{
+  float: right;
+  margin-right: 20rpx
+}
+li:nth-child(3){
+  float:right;
+  font-size: 25rpx;
+  margin-top: 95rpx
+}
 </style>

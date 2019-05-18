@@ -1,5 +1,6 @@
 <template>
   <div class="whole">
+    <div class="displayBackground">
     <div class="displayRoom">
       <p class="header">wjx</p>
       <div class="msg_room" v-for="(item, index) in allList"  :key="index">
@@ -12,6 +13,7 @@
         </div>
         <div class="li3"><img class="userinfo-avatar-right" :src=user.avatar v-if="(item.fromTo ===  myId +  '-5')"></div>
       </div>
+    </div>
     </div>
     <div class="footer">
       <label><input type="text" v-model="msg"></label>
@@ -32,24 +34,29 @@
         reservedList: [],
         sendList: [],
         allList: [],
-        myId: ''
+        myId: '',
+        reservedTimer: '',
+        sendTimer: '',
+        allTimer: '',
+        user: {}
       }
     },
-    onLoad () {
-      this.myId = this.$store.state.userInformation[0].id
+    onShow () {
+      this.myId = this.$store.state.userInformation.id
       // 设置定时器，不断从服务器取得数据，轮询是一种性能比较差的方法
-      setInterval(this.getReserved, 200)
-      setInterval(this.getSend, 200)
+      this.reservedTimer = setInterval(this.getReserved, 200)
+      this.sendTimer = setInterval(this.getSend, 200)
+      this.allTimer = setInterval(this.handleList, 200)
+      this.user = this.$store.state.userInformation
     },
-    onReady () {
-      setInterval(this.handleList, 200)
+    onUnload () {
+      clearInterval(this.reservedTimer)
+      clearInterval(this.sendTimer)
+      clearInterval(this.allTimer)
     },
     computed: {
       sortAllList () {
         return this.sortById(this.allList, 'id')
-      },
-      user () {
-        return this.$store.state.userInformation[0]
       }
     },
     methods: {
@@ -134,8 +141,15 @@
     width: 100%;
     height: 100%;
     text-align: center;
-    background: linear-gradient(to bottom right, #63b5f0, #ffd3c7);
+    /*background: linear-gradient(to bottom right, #63b5f0, #ffd3c7);*/
+    background-color: #e5e4fe;
     border-radius:25px;
+  }
+  .displayBackground {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #e5e4fe;
   }
   .header {
     text-align: center;

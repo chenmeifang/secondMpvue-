@@ -11,7 +11,9 @@ const store = new Vuex.Store({
     /* 点击认证按钮的时候拿到的微信提供的当前用户信息 avatarUrl,city,country,gender,language,nickName,province  */
     openId: '',
     nickname1: '',
-    avatar1: ''
+    avatar1: '',
+    windowHeight: 0,
+    windowWidth: 0
   },
   mutations: {
     judgeNewUser (state) {
@@ -38,7 +40,6 @@ const store = new Vuex.Store({
                     state.userInformation = res.data.data[0]
                     state.nickname1 = res.data.data[0].nickName
                     state.avatar1 = res.data.data[0].avatar
-                    // console.log(res.data.data[0])
                   }
                   if (res.data.data[0] === undefined) {
                     wx.showModal({
@@ -67,6 +68,14 @@ const store = new Vuex.Store({
               console.log(err)
             }
           })
+        }
+      })
+    },
+    getWindowHeight (state) {
+      wx.getSystemInfo({
+        success: res => {
+          state.windowHeight = res.windowHeight
+          state.windowWidth = res.windowWidth
         }
       })
     },

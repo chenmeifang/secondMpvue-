@@ -1,26 +1,40 @@
 <template>
   <div class="idleItem">
+    <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
+      点击蓝色图标联系发布人，点击红色图标删除（仅发布该条记录的人删除有效）
+    </i-notice-bar>
     <p class="title">闲置物转出</p>
     <!-- <scroll-view
     scroll-y
     style="height: 400px;"
     @bindscrolltolower="scrolltolower"> -->
     <scroll-view
-    :style="{'height': '550px'}"
+    :style="{'height': windowHeight + 'px'}"
     :scroll-y="true"
     @scrolltolower="scrolltolower">
-      <div v-for="(item, index) in itemList" :key="index" class="idleItemBox">
-        <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
-        <img :src="item.imgUrl" class="detailImg" @click="preview(item)"/>
-        <div class="one">详情：{{  item.name  }}</div>
-        <div class="two">价格：{{  item.price  }}</div>
-        <button @click="toPublisher(item)" class="btn">收入囊中(联系卖主)</button>
+      <div v-for="(item, index) in itemList" :key="index" v-show='!item.isSaled' class="idleItemBox">
+        <div class="topDiv">
+          <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
+          <div class="nicknameDiv">{{ item.belongUsername }}</div>
+          <div class="deleteDiv"></div>
+          <div class="acceptDiv" @click="toPublisher(item)"></div>
+        </div>
+        <div class="idleItemImgBox"><img :src="item.imgUrl" class="idleItemImg" @click="preview(item)"/></div>
+        <div class="details" :style="{'width': windowWidth - 160 + 'px'}">
+          <ul>
+            <li>详情：{{  item.name  }}</li>
+            <li>价格：{{  item.price  }}</li>
+            <!-- <li>{{ item.date }}</li> -->
+          </ul>
+        </div>
+        <div class="date">{{ item.date }}</div>
       </div>
     </scroll-view>
   </div>
 </template>
 
 <script>
+  import { formatTime } from '../../../utils'
   export default {
     name: 'index',
     data () {
@@ -33,12 +47,16 @@
         avatar1: '',
         avatar2: '',
         is: false,
-        count: 0
+        count: 0,
+        windowHeight: 0,
+        windowWidth: 0
       }
     },
     onLoad () {
       this.showData()
       this.$store.commit('judgeNewUser')
+      this.windowHeight = this.$store.state.windowHeight
+      this.windowWidth = this.$store.state.windowWidth
     },
     methods: {
       showData () {
@@ -46,6 +64,9 @@
         this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
           .then(res => {
             console.log(res)
+            res.data.data.forEach(value => {
+              value.date = formatTime(new Date(value.date))
+            })
             this.itemList = res.data.data
             this.count = res.data.count / 20
           })
@@ -79,6 +100,9 @@
           this.pages++
           this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
             .then(res => {
+              res.data.data.forEach(value => {
+                value.date = formatTime(new Date(value.date))
+              })
               this.itemList = this.itemList.concat(res.data.data)
             })
             .catch(err => {
@@ -92,14 +116,15 @@
         this.saleTo = this.$store.state.userInformation.id
         this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
           belongTo: item.belongTo,
-          date: item.date,
+          date: new Date(),
           id: item.id,
           imgUrl: item.imgUrl,
-          isSaled: false,
+          isSaled: true,
           name: item.name,
           price: item.price,
           saleTo: this.saleTo,
-          userAva: item.userAva
+          userAva: item.userAva,
+          belongUsername: item.belongUsername
         })
           .then(res => {
             console.log(res)
@@ -176,54 +201,70 @@
 </script>
 
 <style scoped>
-  .title {
-    text-align: center;
-    margin-bottom: 50rpx
+.title {
+  text-align: center;
+  margin: 10rpx;
+  font-size:50rpx
   }
-  .avatar{
-  width: 100rpx;
+.idleItemBox{
+  height: 400rpx;
+  position: relative;
+  border-top:1px solid gray;
+  margin:0 20rpx 10rpx 20rpx
+}
+.topDiv{
+  position: relative;
   height: 100rpx;
-  border-radius:100rpx;
+  margin-bottom: 5rpx
+}
+.avatarDiv{
+  float:left;
+  height: 90rpx;
+  margin:5rpx 31rpx 0 0   
+}
+.avatar{
+  width: 90rpx;
+  height: 90rpx;
+  border-radius:50%;
   }
-  .avatarDiv{
-    width: 700rpx;
-    height: 100rpx;
-    background-color:lightgrey;
-    border-top-left-radius: 50rpx;
-    border-bottom-left-radius: 50rpx;
-    border-top-right-radius: 40rpx    
+.nicknameDiv{
+  float: left;
+  height:90rpx;
+  line-height: 90rpx;
+  font-size:30rpx
+}
+.deleteDiv{
+  opacity: 0.6;
+  float: right;
+  width: 50rpx;
+  height: 50rpx;
+  background-image: url('../../../../static/images/delete2.png');
+  background-size: 50rpx;
+  margin: 23rpx 10rpx 0 20rpx
+}
+.acceptDiv{
+  opacity: 0.5;
+  float: right;
+  width: 60rpx;
+  height: 60rpx;
+  background-image: url('../../../../static/images/accept1.png');
+  background-size: 60rpx;
+  margin: 20rpx 20rpx 0 20rpx
+}
+.idleItemImgBox{
+  display: inline-block
+}
+.idleItemImg{
+  width: 250rpx;
+  height: 250rpx;
   }
-  .detailImg{
-    position: absolute;
-    width: 300rpx;
-    height: 300rpx;
-    top: 100rpx
-  }
-  .one{
-    position: absolute;
-    width: 380rpx;
-    height: 200rpx;
-    left:320rpx;
-    top:100rpx;
-    word-wrap:break-word;
-  }
-  .two{
-    position: absolute;
-    width: 380rpx;
-    height: 100rpx;
-    left:320rpx;
-    top:340rpx
-  }
-  .idleItemBox{
-    height: 500rpx;
-    position: relative;
-    border: 3px solid black;
-    margin: 0 20rpx 20rpx 20rpx;
-    border-radius: 20px;
-  }
-  .btn{
-    position: absolute;
-    top:400rpx;
-    width: 698rpx;
-  }
+.details{
+  width: 400rpx;
+  float: right;
+  margin-right: 20rpx
+}
+.date{
+  font-size: 25rpx;
+  float: right
+}
 </style>

@@ -52,7 +52,8 @@ export default {
       bookPrice: '',
       belongTo: 0,
       userAva: '',
-      source: ''
+      source: '',
+      belongUsername: ''
     }
   },
   onLoad () {
@@ -62,6 +63,7 @@ export default {
         console.log(res)
         this.belongTo = res.data.data[0].id
         this.userAva = res.data.data[0].avatar
+        this.belongUsername = res.data.data[0].nickName
       })
       .catch(err => {
         console.log(err)
@@ -105,7 +107,8 @@ export default {
         isSaled: false,
         belongTo: this.belongTo,
         saleTo: 'string',
-        userAva:this.userAva
+        userAva:this.userAva,
+        belongUsername: this.belongUsername
       }).then(res => {
         console.log(res)
       }).catch(err => {

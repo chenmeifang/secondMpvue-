@@ -23,20 +23,20 @@ export default {
       detail: '',
       price: '',
       belongTo: 0,
-      userAva: ''
+      userAva: '',
+      belongUsername: ''
     }
   },
   onLoad () {
-    console.log(this.$store.state.openId)
     /* 要是在第一页没有对应的值，应该是会报错，居然没有报错！！！算了这里先不管到时候问一下吴迪
-    难道在第一页匹配不到后面跟的参数会自动去第二页搜索？？？
+    难道在第一页匹配不到后面跟的参数会自动去第二页搜索？？？yes
     */
     this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
       .then(res => {
         console.log(res)
-        console.log('啊啊啊啊啊')
         this.belongTo = res.data.data[0].id
         this.userAva = res.data.data[0].avatar
+        this.belongUsername = res.data.data[0].nickName
       })
       .catch(err => {
         console.log(err)
@@ -53,7 +53,8 @@ export default {
         keywords: 'express',
         servicedMan: null,
         date: new Date(),
-        userAva: this.userAva
+        userAva: this.userAva,
+        belongUsername: this.belongUsername
       })
         .then(res => {
           console.log(res)

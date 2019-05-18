@@ -7,6 +7,7 @@ export default {
       }
     },
     created () {
+      this.$store.commit('getWindowHeight')
     },
     mounted () {
       // setTimeout(this.findUser, 1000)

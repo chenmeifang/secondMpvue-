@@ -18,7 +18,8 @@ export default {
     return {
       detail: '',
       belongTo: 0,
-      userAva: ''
+      userAva: '',
+      belongUsername: ''
     }
   },
   onLoad () {
@@ -28,6 +29,7 @@ export default {
         console.log(res)
         this.belongTo = res.data.data[0].id
         this.userAva = res.data.data[0].avatar
+        this.belongUsername = res.data.data[0].nickName
       })
       .catch(err => {
         console.log(err)
@@ -44,7 +46,8 @@ export default {
         keywords: 'shareBill',
         serviceMan: null,
         date: new Date(),
-        userAva: this.userAva
+        userAva: this.userAva,
+        belongUsername: this.belongUsername
       })
         .then(res => {
           console.log(res)

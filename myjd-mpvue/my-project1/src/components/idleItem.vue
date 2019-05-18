@@ -1,22 +1,20 @@
 <template>
     <div>
-    <div class="title">
-        <p>闲置物转出</p>
-    </div>
-    <div class="each">
-      <span>闲置物详情：</span>
-      <input type="textarea" v-model="name" placeholder="请输入闲置物详情"/>
-    </div>
-    <div class="each">
-      <span>价格：</span>
-      <input type="textarea" v-model="price" placeholder="请输入价格"/>
-    </div>
-    <div class="each second">
-      <span>图片：</span>
-      <div class="photo" @click="addPhoto"><img :src="source" /></div>
-    </div>
-    <i-button class="btn" @click="handleClick" type="primary" shape="circle">发布</i-button>
-    <i-toast id="toast"/>
+      <div class="title"><p>闲置物转出</p></div>
+      <div class="each">
+        <span>闲置物详情：</span>
+        <input type="textarea" v-model="name" placeholder="请输入闲置物详情"/>
+      </div>
+      <div class="each">
+        <span>价格：</span>
+        <input type="textarea" v-model="price" placeholder="请输入价格"/>
+      </div>
+      <div class="each second">
+        <span>图片：</span>
+        <div class="photo" @click="addPhoto"><img :src="source" /></div>
+      </div>
+      <i-button class="btn" @click="handleClick" type="primary" shape="circle">发布</i-button>
+      <i-toast id="toast"/>
     </div>
 </template>
 <script>
@@ -55,20 +53,21 @@ export default {
     }
   },
   onLoad () {
-    console.log(this.$store.state.openId)
-    this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
-      .then(res => {
-        console.log(res)
-        this.belongTo = res.data.data[0].id
-        this.userAva = res.data.data[0].avatar
-        console.log('啊啊啊啊')
-        console.log(this.userAva)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    this.getSomeUserInfo()
   },
   methods: {
+    getSomeUserInfo () {
+      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+        .then(res => {
+          console.log(res)
+          this.belongTo = res.data.data[0].id
+          this.userAva = res.data.data[0].avatar
+          this.belongUsername = res.data.data[0].nickName
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     handleClick () {
       this.$fly.post('https://www.wjxweb.cn:789/setAsideGoods', {
         id: 0,
@@ -79,7 +78,8 @@ export default {
         date: new Date(),
         saleTo: 'string',
         isSaled: false,
-        userAva: this.userAva
+        userAva: this.userAva,
+        belongUsername: this.belongUsername
       }).then(res => {
         console.log(res)
       }).catch(err => {

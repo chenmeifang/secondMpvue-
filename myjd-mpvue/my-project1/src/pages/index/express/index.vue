@@ -1,23 +1,32 @@
 <template>
   <div>
+    <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
+      点击蓝色图标联系发布人，点击红色图标删除（仅发布该条记录的人删除有效）
+    </i-notice-bar>
     <p class="title">快递</p>
     <scroll-view
-    :style="{'height': '550px'}"
+    :style="{'height': windowHeight + 'px'}"
     :scroll-y="true"
     @scrolltolower="scrolltolower">
-    <div v-for="item in expressList" v-show=item.isFind :key="item" class="expressBox">
-      <img :src="item.userAva" class="avatar"/>
+    <div v-for="item in expressList" v-show='!item.isFind' :key="item" class="expressBox">
+      <div class="topDiv">
+        <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
+        <div class="nicknameDiv">{{ item.belongUsername }}</div>
+        <div class="deleteDiv" @click="Delete(item)"></div>
+        <div class="acceptDiv" @click="toPublisher(item)"></div>
+      </div>
       <ul>
         <li>详情：{{ item.detail }}</li>
         <li>赏金：{{ item.price }}</li>
       </ul>
-      <button @click="toPublisher(item)">代拿快递</button>
+      <div class="publishDateDiv">{{ item.date}}</div>
     </div>
     </scroll-view>
   </div>
 </template>
 
 <script>
+import {formatTime} from '../../../utils'
 export default {
   name: 'index',
   data () {
@@ -30,12 +39,14 @@ export default {
       avatar1: '',
       avatar2: '',
       is: false,
-      count: 0
+      count: 0,
+      windowHeight: 0
     }
   },
   onLoad () {
     this.showData()
     this.$store.commit('judgeNewUser')
+    this.windowHeight = this.$store.state.windowHeight
   },
   methods: {
     showData () {
@@ -43,18 +54,25 @@ export default {
       this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=express`)
         .then((res) => {
           console.log(res)
+          res.data.data.forEach(value => {
+            value.date = formatTime(new Date(value.date))
+          })
           this.expressList = res.data.data
-          this.count = res.data.count
+          this.count = res.data.count / 20
         })
         .catch((err) => {
           console.log(err)
         })
     },
     scrolltolower () {
+      // 这里有问题！！！！
       if (this.count > this.pages) {
         this.pages++
         this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=express`)
           .then(res => {
+            res.data.data.forEach(value => {
+              value.date = formatTime(new Date(value.date))
+            })
             this.expressList = this.expressList.concat(res.data.data)
           })
           .catch(err => {
@@ -68,12 +86,13 @@ export default {
         belongTo: item.belongTo,
         detail: item.detail,
         price: item.price,
-        date: item.date,
+        date: new Date(),
         id: item.id,
         imgUrl: item.imgUrl,
         isFind: true,
         servicedMan: this.servicedMan,
-        userAva: item.userAva
+        userAva: item.userAva,
+        belongUsername: item.belongUsername
       })
         .then(res => {
           console.log(res)
@@ -131,6 +150,9 @@ export default {
               })
           }
         })
+    },
+    Delete (item) {
+      // 点击删除按钮的人跟发布该需求的人是否匹配
     }
   }
 }
@@ -138,21 +160,57 @@ export default {
 
 <style scoped>
 .title {
-    text-align: center;
-    margin-bottom: 50rpx
-  }
-.avatar{
-  width: 100rpx;
-  height: 100rpx;
-  border-radius:100rpx;
-  float:left
-}
-li{
-  margin: 20rpx 20rpx 20rpx 120rpx
+  text-align: center;
+  margin: 10rpx;
+  font-size:50rpx
 }
 .expressBox{
-  border:3px solid black;
-  margin: 0 20rpx 20rpx 20rpx;
-  border-radius: 20px;
+  position: relative;
+  border-top:1px solid gray;
+  margin:0 20rpx 45rpx 20rpx
+}
+.topDiv{
+  position: relative;
+  height: 100rpx;
+  margin-bottom: 5rpx
+}
+.avatarDiv{
+  float:left;
+  height: 90rpx;
+  margin:5rpx 31rpx 0 0   
+}
+.avatar{
+  width: 90rpx;
+  height: 90rpx;
+  border-radius:50%;
+  }
+.nicknameDiv{
+  float: left;
+  height:90rpx;
+  line-height: 90rpx;
+  font-size:30rpx
+}
+.deleteDiv{
+  opacity: 0.6;
+  float: right;
+  width: 50rpx;
+  height: 50rpx;
+  background-image: url('../../../../static/images/delete2.png');
+  background-size: 50rpx;
+  margin: 23rpx 10rpx 0 20rpx
+}
+.acceptDiv{
+  opacity: 0.5;
+  float: right;
+  width: 60rpx;
+  height: 60rpx;
+  background-image: url('../../../../static/images/accept1.png');
+  background-size: 60rpx;
+  margin: 20rpx 20rpx 0 20rpx
+}
+.publishDateDiv{
+  float:right;
+  font-size: 25rpx;
+  margin-right: 20rpx
 }
 </style>

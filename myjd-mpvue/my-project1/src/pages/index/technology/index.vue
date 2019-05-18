@@ -1,23 +1,30 @@
 <template>
   <div class="technology">
+    <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
+      点击蓝色图标联系发布人，点击红色图标删除（仅发布该条记录的人删除有效）
+    </i-notice-bar>
     <p class="title">技术处理</p>
     <scroll-view
-    :style="{'height': '550px'}"
+    :style="{'height': windowHeight + 'px'}"
     :scroll-y="true"
     @scrolltolower="scrolltolower">
-    <div v-for="item in technologyList" :key="item" class="technologyBox">
-      <img :src="item.userAva" class="avatar"/>     
-      <ul>
-        <li>详情：{{ item.detail }}</li>
-        <li>报酬：{{ item.price }}</li>
-      </ul>
-      <button @click="toPublisher(item)">处理(联系发布人)</button>
+    <div v-for="item in technologyList" :key="item" v-show="!item.isFind" class="technologyBox">
+      <div class="topDiv">
+        <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
+        <div class="nicknameDiv">{{ item.belongUsername }}</div>
+        <div class="deleteDiv"></div>
+        <div class="acceptDiv" @click="toPublisher(item)"></div>
+      </div>  
+      <div>详情：{{ item.detail }}</div>
+      <div>报酬：{{ item.price }}</div>
+      <div class="publishDateDiv">{{ item.date}}</div>
     </div>
     </scroll-view>
   </div>
 </template>
 
 <script>
+  import {formatTime} from '../../../utils'
   export default {
     data () {
       return {
@@ -29,12 +36,14 @@
         avatar1: '',
         avatar2: '',
         is: false,
-        count: 0
+        count: 0,
+        windowHeight: 0
       }
     },
     onLoad () {
       this.$store.commit('judgeNewUser')
       this.showData()
+      this.windowHeight = this.$store.state.windowHeight
     },
     methods: {
       showData () {
@@ -42,6 +51,9 @@
         this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=technology`)
           .then(res => {
             console.log(res)
+            res.data.data.forEach(value => {
+              value.date = formatTime(new Date(value.date))
+            })
             this.technologyList = res.data.data
             this.count = res.data.count / 20
           })
@@ -54,6 +66,9 @@
           this.pages++
           this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=technology`)
             .then(res => {
+              res.data.data.forEach(value => {
+                value.date = formatTime(new Date(value.date))
+              })
               this.technologyList = this.technologyList.concat(res.data.data)
             })
             .catch(err => {
@@ -67,12 +82,13 @@
           belongTo: item.belongTo,
           detail: item.detail,
           price: item.price,
-          date: item.date,
+          date: new Date(),
           id: item.id,
           imgUrl: item.imgUrl,
           isFind: true,
           servicedMan: this.servicedMan,
-          userAva: item.userAva
+          userAva: item.userAva,
+          belongUsername: item.belongUsername
         })
           .then(res => {
             console.log(res)
@@ -136,23 +152,58 @@
 </script>
 
 <style scoped>
-  .title {
-    text-align: center;
-    margin-bottom: 50rpx
-  }
-  .avatar{
-  width: 100rpx;
+.title {
+  text-align: center;
+  margin: 10rpx;
+  font-size:50rpx
+}
+.technologyBox{
+  position: relative;
+  border-top:1px solid gray;
+  margin:0 20rpx 45rpx 20rpx
+}
+.topDiv{
+  position: relative;
   height: 100rpx;
-  border-radius:100rpx;
-  float:left
+  margin-bottom: 5rpx
+}
+.avatarDiv{
+  float:left;
+  height: 90rpx;
+  margin:5rpx 31rpx 0 0   
+}
+.avatar{
+  width: 90rpx;
+  height: 90rpx;
+  border-radius:50%;
   }
-  li{
-    word-wrap:break-word;
-    margin: 20rpx 20rpx 20rpx 120rpx
-  }
-  .technologyBox{
-    border:3px solid black;
-    margin: 0 20rpx 20rpx 20rpx;
-    border-radius: 20px;
-  }
+.nicknameDiv{
+  float: left;
+  height:90rpx;
+  line-height: 90rpx;
+  font-size:30rpx
+}
+.deleteDiv{
+  opacity: 0.6;
+  float: right;
+  width: 50rpx;
+  height: 50rpx;
+  background-image: url('../../../../static/images/delete2.png');
+  background-size: 50rpx;
+  margin: 23rpx 10rpx 0 20rpx
+}
+.acceptDiv{
+  opacity: 0.5;
+  float: right;
+  width: 60rpx;
+  height: 60rpx;
+  background-image: url('../../../../static/images/accept1.png');
+  background-size: 60rpx;
+  margin: 20rpx 20rpx 0 20rpx
+}
+.publishDateDiv{
+  float:right;
+  font-size: 25rpx;
+  margin-right: 20rpx
+}
 </style>

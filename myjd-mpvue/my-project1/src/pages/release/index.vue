@@ -69,9 +69,7 @@ export default {
   },
   methods: {
     showDiff (choiceList) {
-      console.log(choiceList.mp.detail.value[0])
       this.choice = choiceList.mp.detail.value[0]
-      console.log(this.choice)
     }
   },
   updated () {

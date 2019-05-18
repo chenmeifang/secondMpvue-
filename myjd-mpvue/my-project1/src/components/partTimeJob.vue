@@ -17,7 +17,7 @@
     </div>
     <div class="each">
         <span>需要人数：</span>
-        <input type="textarea" v-model="num" placeholder="请输入需要人数"/>
+        <input type="textarea" v-model="needNum" placeholder="请输入需要人数"/>
     </div>
     <i-button @click="handleClick" type="primary" shape="circle">发布</i-button>
     <i-toast id="toast"/>
@@ -31,19 +31,33 @@ export default {
       detail: '',
       workplace: '',
       salary: '',
-      num: ''
+      needNum: null,
+      userAva: ''
     }
   },
+  onLoad () {
+    this.getSomeUserInfo()
+  },
   methods: {
+    getSomeUserInfo () {
+      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+        .then(res => {
+          console.log(res)
+          this.userAva = res.data.data[0].avatar
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     handleClick () {
       this.$fly.post('https://www.wjxweb.cn:789/PartTimeJob', {
         id: 0,
         detail: this.detail,
         workplace: this.workplace,
         salary: this.salary,
-        num: this.num,
-        isReview: true,
-        isFull: true
+        needNum: this.needNum,
+        userAva: this.userAva,
+        alreadyNum: 0
       })
         .then(res => {
           console.log(res)

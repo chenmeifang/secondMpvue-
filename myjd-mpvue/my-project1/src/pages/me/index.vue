@@ -1,5 +1,6 @@
 <template>
   <div class="whole">
+    <div class="all" :style="{'height': windowHeight + 'px'}">
     <div class="header">
       <button 
       v-if="canIUse" 
@@ -10,31 +11,32 @@
       点击认证
       </button>
       <block v-else>
-      <img class="userinfo-avatar" :src=avatarUrl alt="">
+      <img class="avatar" :src=avatarUrl alt="">
       <p>{{ nickName }}</p>
       </block>
     </div>
-    <div class="menuRoom">
-      <div class="each" @click="goToMyAcceptation">
-        <img class="each1" src="../../../static/images/1.png"/>
-        <p class="each2">接受的单子</p>
-        <p class="each3">></p>
-      </div>
-      <div class="each" @click="goToMyRelease">
-        <img class="each1" src="../../../static/images/2.png"/>
-        <p class="each2">发布的单子</p>
-        <p class="each3">></p>
-      </div>
-      <div class="each" @click="goToFindUs">
-        <img class="each1" src="../../../static/images/3.png"/>
-        <p class="each2">联系开发者</p>
-        <p class="each3">></p>
-      </div>
-      <div class="each" @click="goToAboutUs">
-        <img class="each1" src="../../../static/images/4.png"/>
-        <p class="each2">关于小程序</p>
-        <p class="each3">></p>
-        </div>
+    <div class="each" @click="goToMyAcceptation">
+      <img class="each1" src="../../../static/images/1.png"/>
+      <!-- :style="{'line-height': (windowHeight - windowHeight / 4.5 - 175) / 4+ 'px'}" -->
+      <p class="each2">接受的单子</p>
+      <p class="each3">></p>
+    </div>
+    <div class="each" @click="goToMyRelease">
+      <img class="each1" src="../../../static/images/2.png"/>
+      <p class="each2">发布的单子</p>
+      <p class="each3">></p>
+    </div>
+    <div class="each" @click="goToFindUs">
+      <img class="each1" src="../../../static/images/3.png"/>
+      <p class="each2">联系开发者</p>
+      <p class="each3">></p>
+    </div>
+    <div class="each lasteach" @click="goToAboutUs">
+      <img class="each1" src="../../../static/images/4.png"/>
+      <p class="each2">关于小程序</p>
+      <p class="each3">></p>
+    </div>
+    <div class="footer" :style="{'height': windowHeight / 4.5 + 'px'}"></div>
     </div>
   </div>
 </template>
@@ -45,7 +47,8 @@
       return {
         canIUse: true,
         avatarUrl: '',
-        nickName: ''
+        nickName: '',
+        windowHeight: 0
       }
     },
     // 这里一定要写onShow 不能写onLoad！！！！
@@ -54,6 +57,7 @@
       // 这个地方跟那个隐藏button有一些逻辑冲突
       // this.hideBtn()
       this.judgeNewUser()
+      this.getWindowHeight()
     },
     methods: {
       judgeNewUser () {
@@ -115,6 +119,15 @@
           }
         })
       },
+      getWindowHeight () {
+        wx.getSystemInfo({
+          success: res => {
+            console.log(res.windowHeight) /* 可使用窗口高度 */
+            console.log(res.screenHeight)/* 屏幕高度 */
+            this.windowHeight = res.windowHeight
+          }
+        })
+      },
       goToMyAcceptation () {
         wx.navigateTo({
           url: 'myAcceptation/main'
@@ -135,22 +148,6 @@
           url: 'aboutUs/main'
         })
       },
-      /* hideBtn () {
-        this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
-          .then(res => {
-            console.log('啊啊啊啊')
-            console.log(res)
-            if (res.data.data[0] !== undefined) {
-              this.canIUse = false
-              // 隐藏认证按钮的同时要显示该用户的头像和昵称
-              this.avatarUrl = res.data.data[0].avatar
-              this.nickName = res.data.data[0].nickName
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }, */
       onGotUserInfo: function (res) {
         wx.showToast({
           title: '认证成功，可正常使用该程序',
@@ -161,7 +158,6 @@
         this.avatarUrl = res.mp.detail.userInfo.avatarUrl
         this.nickName = res.mp.detail.userInfo.nickName
         this.$store.state.wxInfo = res.mp.detail.userInfo
-        console.log(this.$store.state.wxInfo)
         // 这里拿到的是微信提供的用户信息 如：avatarUrl city country gender nickName language
         if (this.$store.state.openId === '') {
           wx.showToast({
@@ -207,31 +203,33 @@
 </script>
 
 <style scoped>
-  .header {
-    text-align: center
-  }
-  .userinfo-avatar {
-    width: 250rpx;
-    height: 250rpx;
-    border-radius: 50%;
-    margin-top: 10rpx;
-  }
+.all{
+  display: flex;
+  flex-direction: column
+}
+.header{
+  margin-bottom: 5px;
+  text-align: center;
+  padding: 15px
+}
+.each{
+  border-top: 1px solid lightgray;
+  flex: 1;
+  margin-bottom: 5px
+}
+.lasteach{
+  border-bottom: 1px solid lightgray;
+}
+.avatar{
+  width: 250rpx;
+  height: 250rpx;
+  border-radius: 50%;
+}
   button {
     margin-top: 10%;
     height: 50px;
     width: 100%;
     text-align: center;
-  }
-  .menuRoom{
-    position: fixed;
-    bottom: 290rpx
-  }
-  .each{
-    border:1rpx solid darkgray;
-    margin-bottom: 10rpx;
-    height:100rpx;
-    width: 750rpx;
-    line-height: 2.5
   }
   .each1{
     float: left;
@@ -241,10 +239,12 @@
   }
   .each2{
     float:left;
-    margin-left: 30rpx
+    margin-left: 30rpx;
+    margin-top: 20rpx 
   }
   .each3{
     float:right;
-    margin-right: 25rpx
+    margin-right: 25rpx;
+    margin-top: 20rpx
   }
 </style>

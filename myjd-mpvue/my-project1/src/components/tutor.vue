@@ -24,25 +24,36 @@ import { $Toast } from '../../static/dist/base/index'
 export default {
   data () {
     return {
-      date: null,
       detail: '',
-      id: 0,
-      isFind: true,
       salary: '',
-      serviceMan: 'string',
-      workPlace: ''
+      workPlace: '',
+      userAva: ''
     }
   },
+  onLoad () {
+    this.getSomeUserInfo()
+  },
   methods: {
+    getSomeUserInfo () {
+      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+        .then(res => {
+          console.log(res)
+          this.userAva = res.data.data[0].avatar
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     handleClick () {
       this.$fly.post('https://www.wjxweb.cn:789/Tutor', {
-        'date': new Date(),
-        'detail': this.detail,
-        'id': 0,
-        'isFind': 0,
-        'salary': this.salary,
-        'serviceMan': null,
-        'workPlace': this.workPlace
+        date: new Date(),
+        detail: this.detail,
+        id: 0,
+        isFind: false,
+        salary: this.salary,
+        serviceMan: null,
+        workPlace: this.workPlace,
+        userAva: this.userAva
       })
         .then(res => {
           console.log(res)

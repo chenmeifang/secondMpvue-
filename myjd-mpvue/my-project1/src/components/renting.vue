@@ -28,11 +28,23 @@ export default {
       detail: '',
       place: '',
       price: '',
-      date: null,
-      isFind: true
+      userAva: ''
     }
   },
+  onLoad () {
+    this.getSomeUserInfo()
+  },
   methods: {
+    getSomeUserInfo () {
+      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+        .then(res => {
+          console.log(res)
+          this.userAva = res.data.data[0].avatar
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     handleClick () {
       this.$fly.post('https://www.wjxweb.cn:789/Renting', {
         id: this.id,
@@ -40,12 +52,17 @@ export default {
         place: this.place,
         price: this.price,
         date: new Date(),
-        isFind: this.isFind
-      }).then(res => {
-        console.log(res)
-      }).catch(err => {
-        console.log(err)
+        isFind: false,
+        userAva: this.userAva,
+        roomMateNum: 0,
+        alreadyNum: 0
       })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
       $Toast({
         content: '发布成功',
         type: 'success'

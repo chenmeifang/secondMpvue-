@@ -1,5 +1,6 @@
 <template>
   <div class="whole">
+    <div class="displayBackground">
     <div class="displayRoom">
       <p class="header">{{ name }}</p>
       <div class="msg_room" v-for="(item, index) in allList"  :key="index">
@@ -13,6 +14,7 @@
       <div class="li3"><img class="userinfo-avatar-right" :src=user.avatar v-if="(item.fromTo ===  myId +  '-' + sendId)"></div>
       </div>
       </div>
+    </div>
     <div class="footer">
       <label><input type="text" v-model="msg"></label>
       <i-button i-class="i-button" type="primary" @click="sendMsg">发送</i-button>
@@ -35,29 +37,34 @@
         reservedList: [],
         sendList: [],
         allList: [],
-        reserve: true,
-        send: true,
-        myId: ''
+        reservedTimer: '',
+        sendTimer: '',
+        allTimer: '',
+        myId: '',
+        user: {}
       }
     },
     onLoad (option) {
       this.name = option.name
       this.sendId = option.toWho
       this.ava = option.ava
-      this.myId = this.$store.state.userInformation[0].id
-      // 设置定时器，不断从服务器取得数据，轮询是一种性能比较差的方法
-      setInterval(this.getReserved, 200)
-      setInterval(this.getSend, 200)
+      this.myId = this.$store.state.userInformation.id
+      this.user = this.$store.state.userInformation
     },
-    onReady () {
-      setInterval(this.handleList, 200)
+    onShow () {
+      // 设置定时器，不断从服务器取得数据，轮询是一种性能比较差的方法
+      this.reservedTimer = setInterval(this.getReserved, 200)
+      this.sendTimer = setInterval(this.getSend, 200)
+      this.allTimer = setInterval(this.handleList, 200)
+    },
+    onUnload () {
+      clearInterval(this.reservedTimer)
+      clearInterval(this.sendTimer)
+      clearInterval(this.allTimer)
     },
     computed: {
       sortAllList () {
         return this.sortById(this.allList, 'id')
-      },
-      user () {
-        return this.$store.state.userInformation[0]
       }
     },
     methods: {
@@ -134,16 +141,21 @@
  input {
    height: 36px;
    border-radius: 10px;
-   border:3px solid #ffd9bd;
+   border:3px solid #a2c6e7;
    background: #f6f7ff;
  }
   .displayRoom {
     position: absolute;
     width: 100%;
-    height: 100%;
     text-align: center;
-    background: linear-gradient(to bottom right, #63b5f0, #ffd3c7);
-    border-radius:25px;
+    /*background: linear-gradient(to bottom right, #63b5f0, #ffd3c7);*/
+    background-color: #e6e5ff;
+  }
+  .displayBackground {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #e5e4fe;
   }
   .header {
     text-align: center;
