@@ -1,5 +1,5 @@
 <template>
-  <div class="resource">
+  <div class="all">
     <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
       点击蓝色图标联系发布人，点击红色图标删除（仅发布该条记录的人删除有效）
     </i-notice-bar>
@@ -12,7 +12,7 @@
       <div class="topDiv">
         <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
         <div class="nicknameDiv">{{ item.belongUsername }}</div>
-        <div class="deleteDiv"></div>
+        <div class="deleteDiv" @click="Delete(item)"></div>
         <div class="acceptDiv" @click="toPublisher(item)"></div>
       </div>
       <div>详情：{{ item.detail }}</div>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import {formatTime} from '../../../utils'
+  import { formatTime1 } from '../../../utils'
   export default {
     data () {
       return {
@@ -52,7 +52,7 @@
           .then(res => {
             console.log(res)
             res.data.data.forEach(value => {
-              value.date = formatTime(new Date(value.date))
+              value.date = formatTime1(new Date(value.date))
             })
             this.resourceList = res.data.data
             this.count = res.data.count / 20
@@ -67,7 +67,7 @@
           this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=resource`)
             .then(res => {
               res.data.data.forEach(value => {
-                value.date = formatTime(new Date(value.date))
+                value.date = formatTime1(new Date(value.date))
               })
               this.resourceList = this.resourceList.concat(res.data.data)
             })
@@ -78,24 +78,6 @@
       },
       toPublisher (item) {
         this.servicedMan = this.$store.state.userInformation.id
-        this.$fly.put('https://www.wjxweb.cn:789/Demand', {
-          belongTo: item.belongTo,
-          detail: item.detail,
-          price: item.price,
-          date: new Date(),
-          id: item.id,
-          imgUrl: item.imgUrl,
-          isFind: true,
-          servicedMan: this.servicedMan,
-          userAva: item.userAva,
-          belongUsername: item.belongUsername
-        })
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
-          })
         this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.servicedMan}`)
           .then(res => {
             res.data.data.forEach(value => {
@@ -146,12 +128,50 @@
                 })
             }
           })
+      },
+      Delete (item) {
+      // 点击删除按钮的人跟发布该需求的人是否匹配
+        if (item.belongTo === this.$store.state.userInformation.id.toString()) {
+          this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
+            belongTo: item.belongTo,
+            date: new Date(),
+            id: item.id,
+            imgUrl: item.imgUrl,
+            isSaled: true,
+            name: item.name,
+            price: item.price,
+            saleTo: this.saleTo,
+            userAva: item.userAva,
+            belongUsername: item.belongUsername
+          })
+            .then(res => {
+              console.log(res)
+              this.showData()
+              wx.showToast({
+                title: '删除成功！！！',
+                icon: 'success',
+                duration: 2000
+              })
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        } else {
+          wx.showToast({
+            icon: 'none',
+            title: '不是该记录的发布者，无法进行删除操作！！！',
+            duration: 2000
+          })
+        }
       }
     }
   }
 </script>
 
 <style scoped>
+.all{
+  background-color: #f8f8f9;
+}
 .title {
   text-align: center;
   margin: 10rpx;

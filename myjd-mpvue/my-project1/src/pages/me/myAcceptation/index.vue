@@ -1,24 +1,90 @@
 <template>
-  <div class="whole">
-    <h2>接受的单子</h2>
+  <div class="all">
+    <p class="title">接受记录</p>
+    <div v-for="item in idleItemlist" :key="item" class="myReleaseBox">
+      <ul>
+        <li>详情：{{ item.name }}</li>
+      </ul>
+    </div>
+    <div v-for="item in usedBookList" :key="item" class="myReleaseBox">
+      <ul>
+        <li>书名：{{ item.bookName }}</li>
+        <li>书价：{{ item.bookPrice }}</li>           
+      </ul>
+    </div>
+    <div v-for="item in DemandList" :key="item" class="myReleaseBox">
+      <ul>
+        <li>详情：{{ item.detail }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
   export default {
+    data () {
+      return {
+        servicedMan: 0,
+        usedBookList: [],
+        idleItemlist: [],
+        DemandList: []
+      }
+    },
+    onLoad () {
+      this.showPublished()
+      // 没有按时间排序 这个功能可以后面补上
+    },
     methods: {
+      showPublished () {
+        this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+          .then(res => {
+            console.log(res)
+            this.servicedMan = res.data.data[0].id
+            this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/1?type=servicedMan&value=${this.servicedMan}`)
+              .then(res => {
+                console.log(res)
+                this.DemandList = res.data.data
+              })
+              .catch(err => {
+                console.log(err)
+              })
+            this.$fly.get(`https://www.wjxweb.cn:789/TwoHandsBook/all/1?type=saleTo&value=${this.servicedMan}`)
+              .then(res => {
+                console.log(res)
+                this.usedBookList = res.data.data
+              })
+              .catch(err => {
+                console.log(err)
+              })
+            this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/1?type=saleTo&value=${this.servicedMan}`)
+              .then(res => {
+                console.log(res)
+                this.idleItemlist = res.data.data
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     }
   }
 </script>
 
 <style scoped>
-h2{
-  text-align: center
+.all{
+  background-color: #f8f8f9;
 }
-  /* .body {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom right, #c5d2ff, #fc9c8d);
-  } */
+.title {
+  text-align: center;
+  margin: 10rpx;
+  font-size:50rpx
+}
+.myReleaseBox{
+  border:3px solid #e9eaec;
+  margin: 0 20rpx 20rpx 20rpx;
+  border-radius: 10px;
+}
 </style>

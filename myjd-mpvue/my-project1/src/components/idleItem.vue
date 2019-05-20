@@ -56,6 +56,7 @@ export default {
     this.getSomeUserInfo()
   },
   methods: {
+    // 拿到发布者的一些信息,用于点击发布按钮post数据的时候
     getSomeUserInfo () {
       this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
         .then(res => {

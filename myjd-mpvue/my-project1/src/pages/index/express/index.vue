@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="all">
     <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
       点击蓝色图标联系发布人，点击红色图标删除（仅发布该条记录的人删除有效）
     </i-notice-bar>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {formatTime} from '../../../utils'
+import {formatTime1} from '../../../utils'
 export default {
   name: 'index',
   data () {
@@ -38,15 +38,15 @@ export default {
       nickname2: '',
       avatar1: '',
       avatar2: '',
-      is: false,
+      is: false, /* 用来判断contact表是否存在相应联系人的标志 is为true时，表明已存在；is为false时，双向创建联系人 */
       count: 0,
-      windowHeight: 0
+      windowHeight: 0 /* 屏幕高度 */
     }
   },
   onLoad () {
-    this.showData()
     this.$store.commit('judgeNewUser')
     this.windowHeight = this.$store.state.windowHeight
+    this.showData()
   },
   methods: {
     showData () {
@@ -55,7 +55,7 @@ export default {
         .then((res) => {
           console.log(res)
           res.data.data.forEach(value => {
-            value.date = formatTime(new Date(value.date))
+            value.date = formatTime1(new Date(value.date))
           })
           this.expressList = res.data.data
           this.count = res.data.count / 20
@@ -64,14 +64,14 @@ export default {
           console.log(err)
         })
     },
+    // 滚动到scroll-view底部时，触发渲染数据库下一页数据
     scrolltolower () {
-      // 这里有问题！！！！
       if (this.count > this.pages) {
         this.pages++
         this.$fly.get(`https://www.wjxweb.cn:789/Demand/all/${this.pages}?type=keywords&value=express`)
           .then(res => {
             res.data.data.forEach(value => {
-              value.date = formatTime(new Date(value.date))
+              value.date = formatTime1(new Date(value.date))
             })
             this.expressList = this.expressList.concat(res.data.data)
           })
@@ -80,36 +80,19 @@ export default {
           })
       }
     },
+    // 联系发布人
     toPublisher (item) {
       this.servicedMan = this.$store.state.userInformation.id
-      this.$fly.put('https://www.wjxweb.cn:789/Demand', {
-        belongTo: item.belongTo,
-        detail: item.detail,
-        price: item.price,
-        date: new Date(),
-        id: item.id,
-        imgUrl: item.imgUrl,
-        isFind: true,
-        servicedMan: this.servicedMan,
-        userAva: item.userAva,
-        belongUsername: item.belongUsername
-      })
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      // 首先遍历看contact表中是否已有该联系人
       this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.servicedMan}`)
         .then(res => {
           res.data.data.forEach(value => {
             if (value.toWho.toString() === item.belongTo) {
-              console.log('已存在该联系人')
               this.is = true
             }
           })
+          // 若contact表中没有该联系人，双向创建
           if (!this.is) {
-            console.log('不存在此联系人，正在双向创建')
             this.$fly.post('https://www.wjxweb.cn:789/Contact', {
               id: 0,
               fromWho: item.belongTo,
@@ -152,17 +135,54 @@ export default {
         })
     },
     Delete (item) {
-      // 点击删除按钮的人跟发布该需求的人是否匹配
+      // 判断点击删除按钮的人跟发布该需求的人是否匹配
+      // 如果匹配可正常进行删除操作
+      if (item.belongTo === this.this.$store.state.userInformation.id.toString()) {
+        this.$fly.put('https://www.wjxweb.cn:789/Demand', {
+          belongTo: item.belongTo,
+          detail: item.detail,
+          price: item.price,
+          date: new Date(),
+          id: item.id,
+          isFind: true,
+          keywords: item.keywords,
+          servicedMan: this.servicedMan,
+          userAva: item.userAva,
+          belongUsername: item.belongUsername
+        })
+          .then(res => {
+            console.log(res)
+            this.showData()
+            wx.showToast({
+              title: '删除成功！！！',
+              icon: 'success',
+              duration: 2000
+            })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        // 如果不匹配 弹框显示下面内容
+        wx.showToast({
+          icon: 'none',
+          title: '不是该记录的发布者，无法进行删除操作！！！',
+          duration: 2000
+        })
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+.all{
+  background-color: #f8f8f9;
+}
 .title {
   text-align: center;
   margin: 10rpx;
-  font-size:50rpx
+  font-size:50rpx;
 }
 .expressBox{
   position: relative;

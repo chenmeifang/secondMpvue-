@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top">
-      <img src="/static/images/header.png"/>
+      <img src="https://i.loli.net/2019/05/20/5ce2bcf7b4f8c20743.png"/>
     </div>
     <i-grid>
     <i-grid-item @click="toTutorPage">
@@ -62,7 +62,7 @@
         <i-grid-icon>
             <image src="/static/images/technology.png" />
         </i-grid-icon>
-        <i-grid-label>技术处理类</i-grid-label>
+        <i-grid-label>技术处理</i-grid-label>
     </i-grid-item>
     <i-grid-item  @click="toOthersPage">
         <i-grid-icon>
@@ -83,7 +83,7 @@ export default {
   },
   created () {
     this.windowHeight = this.$store.state.windowHeight
-    console.log(this.windowHeight)
+    // console.log(this.windowHeight)
   },
   onLoad () {
   },

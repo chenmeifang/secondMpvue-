@@ -1,11 +1,11 @@
 <template>
   <div>
-    <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop>
+    <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
       请在下方选择需求类型！！
     </i-notice-bar>
   <router-view>
-    <tutor v-if="zero"></tutor>
-    <usedBook v-if="one"></usedBook>
+    <usedBook v-if="zero"></usedBook>
+    <tutor v-if="one"></tutor>
     <shareBill v-if="two"></shareBill>
     <idleItem v-if="three"></idleItem>
     <partTimeJob v-if="four"></partTimeJob>
@@ -18,8 +18,8 @@
   <view>
   <picker-view @change="showDiff" indicator-style="height: 50px;" class="allList">
     <picker-view-column>
-      <view  class="choiceList">家教类</view>
       <view  class="choiceList">二手书类</view>
+      <view  class="choiceList">家教类</view>
       <view  class="choiceList">拼单类</view>
       <view  class="choiceList">闲置物转出</view>
       <view  class="choiceList">兼职类</view>

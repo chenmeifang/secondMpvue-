@@ -1,5 +1,5 @@
 <template>
-  <div class="partTimeJob">
+  <div class="all">
     <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
       点击蓝色图标联系发布人，点击红色图标删除（仅发布该条记录的人删除有效）
     </i-notice-bar>
@@ -8,11 +8,11 @@
     :style="{'height': windowHeight + 'px'}"
     :scroll-y="true"
     @scrolltolower="scrolltolower">
-    <div v-for="item in partTimeJobList" :key="item" class="partTimeJobBox">
+    <div v-for="item in partTimeJobList" :key="item" v-show="!item.isFind" class="partTimeJobBox">
       <div class="topDiv">
               <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
               <div class="nicknameDiv">腾飞</div>
-              <div class="deleteDiv"></div>
+              <div class="deleteDiv" @click="Delete(item)"></div>
               <div class="acceptDiv" @click="toPublisher(item)"></div>
       </div>
       <ul>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import {formatTime} from '../../../utils'
+  import { formatTime1 } from '../../../utils'
   export default {
     data () {
       return {
@@ -53,7 +53,7 @@
           .then(res => {
             console.log(res)
             res.data.data.forEach(value => {
-              value.date = formatTime(new Date(value.date))
+              value.date = formatTime1(new Date(value.date))
             })
             this.partTimeJobList = res.data.data
             this.count = res.data.count / 20
@@ -67,8 +67,9 @@
           this.pages++
           this.$fly.get(`https://www.wjxweb.cn:789/PartTimeJob/all/${this.pages}`)
             .then(res => {
+              // 将时间转换为标准格式
               res.data.data.forEach(value => {
-                value.date = formatTime(new Date(value.date))
+                value.date = formatTime1(new Date(value.date))
               })
               this.partTimeJobList = this.partTimeJobList.concat(res.data.data)
             })
@@ -79,21 +80,7 @@
       },
       toPublisher (item) {
         this.serverMan = this.$store.state.userInformation.id
-        this.$fly.put('https://www.wjxweb.cn:789/PartTimeJob', {
-          detail: item.detail,
-          id: item.id,
-          needNum: item.needNum,
-          salary: item.salary,
-          userAva: item.userAva,
-          workplace: item.workplace,
-          alreadyNum: this.alreadyNum++
-        })
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
-          })
+        // post这条记录主要是为了拿到serverMan
         this.$fly.post('https://www.wjxweb.cn:789/PartTimeJobHelper', {
           id: 0,
           jobNum: item.id,
@@ -168,11 +155,61 @@
           .catch(err => {
             console.log(err)
           })
+      },
+      Delete (item) {
+        this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=avatar&value=${item.userAva}`)
+          .then(res => {
+            console.log(res)
+            // partTimeJob表中没有belongTo字段,(即没有item.belongTo),自己定义一个变量belongTo
+            this.belongTo = res.data.data[0].id
+            if (this.belongTo === this.$store.state.userInformation.id) {
+              this.$fly.put('https://www.wjxweb.cn:789/PartTimeJob', {
+                detail: item.detail,
+                id: item.id,
+                needNum: item.needNum,
+                salary: item.salary,
+                userAva: item.userAva,
+                workplace: item.workplace,
+                alreadyNum: this.alreadyNum++,
+                isFind: true,
+                /* 这里把isFind改为true之后，该条记录应该立马就不显示了
+                   但实际上只能在下次进入到这个页面时才不显示该条记录
+                   若要想它立马不显示，可以重新渲染一遍数据，但问题是若当前记录是第2页数据，重新渲染的时候会跳回第一页数据，不太好 */
+                // 怎么让他重新渲染的时候直接显示当前页数据 后面再完善
+                date: new Date()
+              })
+                .then(res => {
+                  console.log(res)
+                  // 重新渲染数据
+                  this.showData()
+                  wx.showToast({
+                    title: '删除成功！！！',
+                    icon: 'success',
+                    duration: 2000
+                  })
+                })
+                .catch(err => {
+                  console.log(err)
+                })
+            } else {
+              wx.showToast({
+                icon: 'none',
+                title: '不是该记录的发布者，无法进行删除操作！！！',
+                duration: 2000
+              })
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
       }
     }
   }
 </script>
 <style scoped>
+.all{
+  background-color: #f8f8f9;
+}
 .title {
     text-align: center;
     margin: 10rpx;

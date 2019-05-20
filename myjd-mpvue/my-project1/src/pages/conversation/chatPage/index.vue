@@ -67,6 +67,13 @@
         return this.sortById(this.allList, 'id')
       }
     },
+    onHide () {
+      wx.showToast({
+        icon: 'none',
+        title: '若交易已谈妥，建议发布者在相应页点击红色图标删除对应需求记录，谢谢合作！！！',
+        duration: 5000
+      })
+    },
     methods: {
       sortById (array, key) {
         // 根据id排序，由于id自增，id排序等于时间排序

@@ -32,8 +32,20 @@ export default {
   },
   onLoad () {
     this.getSomeUserInfo()
+    this.showHint()
   },
   methods: {
+    // 但实际上显示完这个之后用户若执意仍去发布消息还是可以发布，只是她们误以为不可以
+    showHint () {
+      wx.showToast({
+        icon: 'none',
+        title: '因该类需求涉及大量金钱交易，为保证家教信息可靠，同学不被虚假信息欺骗，故该类消息由腾飞有限公司统一发布',
+        duration: 6000
+      })
+    },
+    /* 拿到发布者的一些信息,用于点击发布按钮post数据的时候,
+       tutor表没有belongTo和belongUsername，所以这里没有拿到
+    */
     getSomeUserInfo () {
       this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
         .then(res => {

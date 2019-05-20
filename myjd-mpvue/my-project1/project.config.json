@@ -1,7 +1,7 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
@@ -12,7 +12,7 @@
 	},
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
-	"appid": "wx1a248a5991325e7d",
+	"appid": "wx9122a6cd0208fd3f",
 	"projectname": "myjd-mpvue",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},

@@ -1,10 +1,9 @@
 <template>
-  <div class="twoHandsBook">
+  <div class="all">
     <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
       点击蓝色图标联系发布人，点击红色图标删除（仅发布该条记录的人删除有效）
     </i-notice-bar>
     <p class="title">二手书</p>
-    <!-- :style="{'height': windowHeight + 'px'}" -->
     <scroll-view
       :style="{'height':windowHeight + 'px'}"
       :scroll-y="true"
@@ -13,7 +12,7 @@
       <div class="topDiv">
         <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
         <div class="nicknameDiv">{{ item.belongUsername }}</div>
-        <div class="deleteDiv"></div>
+        <div class="deleteDiv" @click="Delete(item)"></div>
         <div class="acceptDiv" @click="toPublisher(item)"></div>
       </div>
       <div class="bookBoxImg"><img :src="item.imgUrl" class="bookImg" @click="preview(item)"/></div>
@@ -30,7 +29,7 @@
 </template>
 
 <script>
-  import { formatTime } from '../../../utils'
+  import { formatTime1 } from '../../../utils'
   export default {
     name: 'index',
     data () {
@@ -51,18 +50,6 @@
       this.showData()
       this.$store.commit('judgeNewUser')
       this.windowHeight = this.$store.state.windowHeight
-      // 不能直接执行下面这段代码，逻辑有问题，如果该用户还没有注册，那下面拿到的数据就是错误的
-      // 下面这段代码的功能：拿到当前用户的信息
-      /* this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
-        .then(res => {
-          console.log(res)
-          this.saleTo = res.data.data[0].id
-          this.nickname1 = res.data.data[0].nickName
-          this.avatar1 = res.data.data[0].avatar
-        })
-        .catch(err => {
-          console.log(err)
-        }) */
     },
     methods: {
       showData () {
@@ -71,7 +58,7 @@
           .then(res => {
             console.log(res)
             res.data.data.forEach(value => {
-              value.date = formatTime(new Date(value.date))
+              value.date = formatTime1(new Date(value.date))
             })
             this.usedBookList = res.data.data
             this.count = res.data.count / 20
@@ -80,13 +67,14 @@
             console.log(err)
           })
       },
+      // 滑动到容器底部时触发加载更多数据
       scrolltolower () {
         if (this.count > this.pages) {
           this.pages++
           this.$fly.get(`https://www.wjxweb.cn:789/TwoHandsBook/all/${this.pages}`)
             .then(res => {
               res.data.data.forEach(value => {
-                value.date = formatTime(new Date(value.date))
+                value.date = formatTime1(new Date(value.date))
               })
               this.usedBookList = this.usedBookList.concat(res.data.data)
             })
@@ -95,36 +83,17 @@
             })
         }
       },
+      // 联系发布人
       toPublisher (item) {
         this.saleTo = this.$store.state.userInformation.id
-        this.$fly.put('https://www.wjxweb.cn:789/TwoHandsBook', {
-          belongTo: item.belongTo,
-          bookName: item.bookName,
-          bookPrice: item.bookPrice,
-          date: new Date(),
-          id: item.id,
-          imgUrl: item.imgUrl,
-          isSaled: true,
-          saleTo: this.saleTo,
-          userAva: item.userAva,
-          belongUsername: item.belongUsername
-        })
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
-          })
         this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.saleTo}`)
           .then(res => {
             res.data.data.forEach(value => {
               if (value.toWho.toString() === item.belongTo) {
-                console.log('已存在该联系人')
                 this.is = true
               }
             })
             if (!this.is) {
-              console.log('不存在此联系人，正在双向创建')
               this.$fly.post('https://www.wjxweb.cn:789/Contact', {
                 id: 0,
                 fromWho: item.belongTo,
@@ -152,6 +121,12 @@
                   })
                     .then(res => {
                       console.log(res)
+                      this.showData()
+                      wx.showToast({
+                        title: '删除成功！！！',
+                        icon: 'success',
+                        duration: 2000
+                      })
                     })
                     .catch(err => {
                       console.log(err)
@@ -171,12 +146,44 @@
           current: item.imgUrl, // 当前显示图片的http链接
           urls: [item.imgUrl] // 需要预览的图片http链接列表
         })
+      },
+      Delete (item) {
+      // 点击删除按钮的人跟发布该需求的人是否匹配
+        if (item.belongTo === this.$store.state.userInformation.id.toString()) {
+          this.$fly.put('https://www.wjxweb.cn:789/TwoHandsBook', {
+            belongTo: item.belongTo,
+            bookName: item.bookName,
+            bookPrice: item.bookPrice,
+            date: new Date(),
+            id: item.id,
+            imgUrl: item.imgUrl,
+            isSaled: true,
+            saleTo: this.saleTo.toString(),
+            userAva: item.userAva,
+            belongUsername: item.belongUsername
+          })
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        } else {
+          wx.showToast({
+            icon: 'none',
+            title: '不是该记录的发布者，无法进行删除操作！！！',
+            duration: 2000
+          })
+        }
       }
     }
   }
 </script>
 
 <style scoped>
+.all{
+  background-color: #f8f8f9;
+}
 .title {
     text-align: center;
     margin: 10rpx;
@@ -185,7 +192,7 @@
 .usedBookBox{
   position: relative;
   border-top:1px solid gray;
-  margin:0 20rpx 10rpx 20rpx
+  margin:0 20rpx 0rpx 20rpx
 }
 .topDiv{
   position: relative;

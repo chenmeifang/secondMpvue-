@@ -28,19 +28,22 @@ export default {
     }
   },
   onLoad () {
-    console.log('pppppppp' + this.$store.state.openId)
-    this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
-      .then(res => {
-        console.log(res)
-        this.belongTo = res.data.data[0].id
-        this.userAva = res.data.data[0].avatar
-        this.belongUsername = res.data.data[0].nickName
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    this.getSomeUserInfo()
   },
   methods: {
+    // 拿到发布者的一些信息,用于点击发布按钮post数据的时候
+    getSomeUserInfo () {
+      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=${this.$store.state.openId}`)
+        .then(res => {
+          console.log(res)
+          this.belongTo = res.data.data[0].id
+          this.userAva = res.data.data[0].avatar
+          this.belongUsername = res.data.data[0].nickName
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     handleClick () {
       this.$fly.post('https://www.wjxweb.cn:789/Demand', {
         id: 0,

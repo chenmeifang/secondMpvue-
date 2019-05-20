@@ -1,13 +1,9 @@
 <template>
-  <div class="idleItem">
+  <div class="all">
     <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
       点击蓝色图标联系发布人，点击红色图标删除（仅发布该条记录的人删除有效）
     </i-notice-bar>
     <p class="title">闲置物转出</p>
-    <!-- <scroll-view
-    scroll-y
-    style="height: 400px;"
-    @bindscrolltolower="scrolltolower"> -->
     <scroll-view
     :style="{'height': windowHeight + 'px'}"
     :scroll-y="true"
@@ -16,7 +12,7 @@
         <div class="topDiv">
           <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
           <div class="nicknameDiv">{{ item.belongUsername }}</div>
-          <div class="deleteDiv"></div>
+          <div class="deleteDiv" @click="Delete(item)"></div>
           <div class="acceptDiv" @click="toPublisher(item)"></div>
         </div>
         <div class="idleItemImgBox"><img :src="item.imgUrl" class="idleItemImg" @click="preview(item)"/></div>
@@ -24,7 +20,6 @@
           <ul>
             <li>详情：{{  item.name  }}</li>
             <li>价格：{{  item.price  }}</li>
-            <!-- <li>{{ item.date }}</li> -->
           </ul>
         </div>
         <div class="date">{{ item.date }}</div>
@@ -34,7 +29,7 @@
 </template>
 
 <script>
-  import { formatTime } from '../../../utils'
+  import { formatTime1 } from '../../../utils'
   export default {
     name: 'index',
     data () {
@@ -65,7 +60,7 @@
           .then(res => {
             console.log(res)
             res.data.data.forEach(value => {
-              value.date = formatTime(new Date(value.date))
+              value.date = formatTime1(new Date(value.date))
             })
             this.itemList = res.data.data
             this.count = res.data.count / 20
@@ -74,34 +69,13 @@
             console.log(err)
           })
       },
-      /* scrolltolower () {
-        if (this.itemList.length < 20) {
-          this.pages = null
-        }
-        this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
-          .then(res => {
-            this.itemList = this.itemList.concat(res.data.data)
-            if (res.data.data.length < 20) {
-              // 如果请求的那一页的数据没有20个，pages就不再自增了
-              // 设置pages为 null，这样就请求不到数据了，只是服务器会报错
-              // 这个地方应该还可以改进
-              this.pages = null
-            } else {
-              this.pages++
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }, */
-      // 改进后
       scrolltolower () {
         if (this.count > this.pages) {
           this.pages++
           this.$fly.get(`https://www.wjxweb.cn:789/setAsideGoods/all/${this.pages}`)
             .then(res => {
               res.data.data.forEach(value => {
-                value.date = formatTime(new Date(value.date))
+                value.date = formatTime1(new Date(value.date))
               })
               this.itemList = this.itemList.concat(res.data.data)
             })
@@ -112,31 +86,10 @@
       },
       /* 点击收入囊中（联系卖主）的按钮时，要用this.$fly.put修改需求表中的对应的需求的saleTo和isSaled属性 */
       toPublisher (item) {
-        /* 拿到接受需求的人的openid，点击按钮的时候，就调用put修改saleTo为此人openId的对应User表里面的id */
         this.saleTo = this.$store.state.userInformation.id
-        this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
-          belongTo: item.belongTo,
-          date: new Date(),
-          id: item.id,
-          imgUrl: item.imgUrl,
-          isSaled: true,
-          name: item.name,
-          price: item.price,
-          saleTo: this.saleTo,
-          userAva: item.userAva,
-          belongUsername: item.belongUsername
-        })
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
-          })
         this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.saleTo}`)
           .then(res => {
             res.data.data.forEach(value => {
-              /* console.log(value.toWho)
-              console.log(item.belongTo) */
               // 这里toWho和belongTo数据类型不一致  toWho是int型，belongTo是string型
               if (value.toWho.toString() === item.belongTo) {
                 console.log('已存在该联系人')
@@ -195,12 +148,50 @@
           current: item.imgUrl, // 当前显示图片的http链接
           urls: [item.imgUrl] // 需要预览的图片http链接列表
         })
+      },
+      Delete (item) {
+      // 点击删除按钮的人跟发布该需求的人是否匹配
+        if (item.belongTo === this.$store.state.userInformation.id.toString()) {
+          this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
+            belongTo: item.belongTo,
+            date: new Date(),
+            id: item.id,
+            imgUrl: item.imgUrl,
+            isSaled: true,
+            name: item.name,
+            price: item.price,
+            saleTo: this.saleTo,
+            userAva: item.userAva,
+            belongUsername: item.belongUsername
+          })
+            .then(res => {
+              console.log(res)
+              this.showData()
+              wx.showToast({
+                title: '删除成功！！！',
+                icon: 'success',
+                duration: 2000
+              })
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        } else {
+          wx.showToast({
+            icon: 'none',
+            title: '不是该记录的发布者，无法进行删除操作！！！',
+            duration: 2000
+          })
+        }
       }
     }
   }
 </script>
 
 <style scoped>
+.all{
+  background-color: #f8f8f9;
+}
 .title {
   text-align: center;
   margin: 10rpx;
@@ -210,7 +201,7 @@
   height: 400rpx;
   position: relative;
   border-top:1px solid gray;
-  margin:0 20rpx 10rpx 20rpx
+  margin:0 20rpx 0rpx 20rpx
 }
 .topDiv{
   position: relative;

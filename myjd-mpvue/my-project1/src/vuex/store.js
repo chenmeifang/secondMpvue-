@@ -16,66 +16,44 @@ const store = new Vuex.Store({
     windowWidth: 0
   },
   mutations: {
-    judgeNewUser (state) {
-      wx.login({
-        success: function (res) {
-          console.log(res)
-          const code = res.code
-          wx.request({
-            url: 'https://www.wjxweb.cn:789/me/wxLogin?code=' + code,
-            method: 'POST',
-            header: {
-              'content-type': 'application/json'
-            },
-            success: (result) => {
-              state.openId = result.data.data.openid
-              wx.request({
-                url: 'https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=' + state.openId,
-                method: 'GET',
-                header: {
-                  'content-type': 'application/json'
-                },
-                success: (res) => {
-                  if (res.data.data[0] !== undefined) {
-                    state.userInformation = res.data.data[0]
-                    state.nickname1 = res.data.data[0].nickName
-                    state.avatar1 = res.data.data[0].avatar
-                  }
-                  if (res.data.data[0] === undefined) {
-                    wx.showModal({
-                      title: '温馨提示',
-                      content: '是否跳转到‘我的‘界面进行点击认证，否则无法正常运行该小程序',
-                      success (res) {
-                        if (res.confirm) {
-                          wx.switchTab({
-                            url: '/pages/me/main'
-                          })
-                        } else if (res.cancel) {
-                          wx.switchTab({
-                            url: '/pages/index/main'
-                          })
-                        }
-                      }
-                    })
-                  }
-                },
-                fail: err => {
-                  console.log(err)
-                }
-              })
-            },
-            fail: (err) => {
-              console.log(err)
-            }
-          })
-        }
-      })
-    },
+    // 获取屏幕高度和宽度
     getWindowHeight (state) {
       wx.getSystemInfo({
         success: res => {
           state.windowHeight = res.windowHeight
           state.windowWidth = res.windowWidth
+        }
+      })
+    },
+    judgeNewUser (state) {
+      wx.request({
+        url: 'https://www.wjxweb.cn:789/User/all/1?type=wxOpen&value=' + state.openId,
+        method: 'GET',
+        header: {
+          'content-type': 'application/json'
+        },
+        success: res => {
+          console.log(res)
+          if (res.data.count !== 1) {
+            wx.showModal({
+              title: '提示',
+              content: '建议先跳转至“我的”页面实现点击认证，否则无法正常使用该小程序',
+              success (res) {
+                if (res.confirm) {
+                  wx.switchTab({
+                    url: '/pages/me/main'
+                  })
+                } else if (res.cancel) {
+                  wx.switchTab({
+                    url: '/pages/index/main'
+                  })
+                }
+              }
+            })
+          }
+        },
+        fail: err => {
+          console.log(err)
         }
       })
     },

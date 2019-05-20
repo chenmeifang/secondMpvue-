@@ -12,7 +12,7 @@
           <div class="topDiv">
             <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
             <div class="nicknameDiv">腾飞</div>
-            <div class="deleteDiv"></div>
+            <div class="deleteDiv" @click="Delete(item)"></div>
             <div class="acceptDiv" @click="toPublisher(item)"></div>
           </div>
           <ul>
@@ -26,7 +26,7 @@
     </div>
 </template>
 <script>
-import { formatTime } from '../../../utils'
+import { formatTime1 } from '../../../utils'
 export default {
   data () {
     return {
@@ -53,7 +53,7 @@ export default {
         .then(res => {
           console.log(res)
           res.data.data.forEach(value => {
-            value.date = formatTime(new Date(value.date))
+            value.date = formatTime1(new Date(value.date))
           })
           this.tutorList = res.data.data
           this.count = res.data.count / 20
@@ -68,7 +68,7 @@ export default {
         this.$fly.get(`https://www.wjxweb.cn:789/Tutor/all/${this.pages}`)
           .then(res => {
             res.data.data.forEach(value => {
-              value.date = formatTime(new Date(value.date))
+              value.date = formatTime1(new Date(value.date))
             })
             this.tutorList = this.tutorList.concat(res.data.data)
           })
@@ -79,23 +79,6 @@ export default {
     },
     toPublisher (item) {
       this.serviceMan = this.$store.state.userInformation.id
-      this.$fly.put('https://www.wjxweb.cn:789/Tutor', {
-        date: new Date(),
-        detail: item.detail,
-        id: item.id,
-        isFind: true,
-        salary: item.salary,
-        userAva: item.userAva,
-        workPlace: item.workPlace,
-        serviceMan: this.serviceMan,
-        belongUsername: this.belongUsername
-      })
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err)
-        })
       this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=avatar&value=${item.userAva}`)
         .then(res => {
           console.log(res)
@@ -158,11 +141,57 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    Delete (item) {
+      // 点击删除按钮的人跟发布该需求的人是否匹配
+      this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=avatar&value=${item.userAva}`)
+        .then(res => {
+          console.log(res)
+          this.belongTo = res.data.data[0].id
+          if (this.belongTo === this.$store.state.userInformation.id) {
+            this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
+              belongTo: item.belongTo,
+              date: new Date(),
+              id: item.id,
+              imgUrl: item.imgUrl,
+              isSaled: true,
+              name: item.name,
+              price: item.price,
+              saleTo: this.saleTo,
+              userAva: item.userAva,
+              belongUsername: item.belongUsername
+            })
+              .then(res => {
+                console.log(res)
+                this.showData()
+                wx.showToast({
+                  title: '删除成功！！！',
+                  icon: 'success',
+                  duration: 2000
+                })
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          } else {
+            wx.showToast({
+              icon: 'none',
+              title: '不是该记录的发布者，无法进行删除操作！！！',
+              duration: 2000
+            })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }
 </script>
 <style scoped>
+.all{
+  background-color: #f8f8f9;
+}
 .title {
     text-align: center;
     margin: 10rpx;
