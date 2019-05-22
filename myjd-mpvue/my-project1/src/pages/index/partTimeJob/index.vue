@@ -103,6 +103,9 @@
                   if (value.toWho === this.belongTo) {
                     console.log('已存在该联系人')
                     this.is = true
+                    wx.switchTab({
+                      url: '/pages/conversation/main'
+                    })
                   }
                 })
                 if (!this.is) {
@@ -144,9 +147,6 @@
                       console.log(err)
                     })
                 }
-                wx.switchTab({
-                  url: '/pages/conversation/main'
-                })
               })
               .catch(err => {
                 console.log(err)
@@ -155,6 +155,9 @@
           .catch(err => {
             console.log(err)
           })
+        wx.switchTab({
+          url: '/pages/conversation/main'
+        })
       },
       Delete (item) {
         this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=avatar&value=${item.userAva}`)

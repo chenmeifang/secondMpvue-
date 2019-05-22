@@ -135,13 +135,13 @@
                   console.log(err)
                 })
             }
-            wx.switchTab({
-              url: '/pages/conversation/main'
-            })
           })
           .catch(err => {
             console.log(err)
           })
+        wx.switchTab({
+          url: '/pages/conversation/main'
+        })
       },
       preview (item) {
         wx.previewImage({

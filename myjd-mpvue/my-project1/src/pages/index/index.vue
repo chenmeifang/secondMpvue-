@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="top">
-      <img src="https://i.loli.net/2019/05/20/5ce2bcf7b4f8c20743.png"/>
+      <!-- https://i.loli.net/2019/05/20/5ce2bcf7b4f8c20743.png -->
+      <img src="../../../static/images/header.png"/>
     </div>
     <i-grid>
     <i-grid-item @click="toTutorPage">

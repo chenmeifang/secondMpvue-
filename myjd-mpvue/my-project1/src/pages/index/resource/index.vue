@@ -84,6 +84,9 @@
               if (value.toWho.toString() === item.belongTo) {
                 console.log('已存在该联系人')
                 this.is = true
+                wx.switchTab({
+                  url: '/pages/conversation/main'
+                })
               }
             })
             if (!this.is) {
@@ -119,15 +122,18 @@
                     .catch(err => {
                       console.log(err)
                     })
-                  wx.switchTab({
-                    url: '/pages/conversation/main'
-                  })
                 })
                 .catch(err => {
                   console.log(err)
                 })
             }
           })
+          .catch(err => {
+            console.log(err)
+          })
+        wx.switchTab({
+          url: '/pages/conversation/main'
+        })
       },
       Delete (item) {
       // 点击删除按钮的人跟发布该需求的人是否匹配

@@ -91,6 +91,9 @@
             res.data.data.forEach(value => {
               if (value.toWho.toString() === item.belongTo) {
                 this.is = true
+                wx.switchTab({
+                  url: '/pages/conversation/main'
+                })
               }
             })
             if (!this.is) {
@@ -131,15 +134,18 @@
                     .catch(err => {
                       console.log(err)
                     })
-                  wx.switchTab({
-                    url: '/pages/conversation/main'
-                  })
                 })
                 .catch(err => {
                   console.log(err)
                 })
             }
           })
+          .catch(err => {
+            console.log(err)
+          })
+        wx.switchTab({
+          url: '/pages/conversation/main'
+        })
       },
       preview (item) {
         wx.previewImage({
