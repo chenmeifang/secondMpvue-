@@ -1,14 +1,17 @@
 <template>
   <div>
-      <div class="linkMan-list"
-           @click="nav(item)"
-           v-for="(item, index) in list"
-           :key="index">
-        <div class="contact">
-          <img class="avatar" :src=item.avatar>
-          <p class="name">{{ item.nickname }}</p>
-        </div>
+    <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
+      若交易谈妥，建议及时删除发布的需求！！！
+    </i-notice-bar>
+    <div class="linkMan-list"
+          @click="nav(item)"
+          v-for="(item, index) in list"
+          :key="index">
+      <div class="contact">
+        <img class="avatar" :src=item.avatar>
+        <p class="name">{{ item.nickname }}</p>
       </div>
+    </div>
   </div>
 </template>
 

@@ -13,9 +13,12 @@
     </div>
     <div class="each">
       <span>图片：</span>
-      <div class="photo" @click="addPhoto"><img :src="source" /></div>
+      <div class="photo" @click="addPhoto">
+        <img :src="source" />
+      </div>
       <div @click="handleClick" class="bgimg">发布</div>
     </div>
+    <!-- <i-progress :percent="percent" status="active"></i-progress> -->
     <i-toast id="toast" />
     </div>
 </template>
@@ -53,7 +56,8 @@ export default {
       belongTo: 0,
       userAva: '',
       source: '',
-      belongUsername: ''
+      belongUsername: '',
+      percent: 0
     }
   },
   onLoad () {
@@ -80,6 +84,7 @@ export default {
         sizeType: ['original'], // 可以指定是原图还是压缩图，默认用原图
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
         success: function (res) {
+          that.source = '../../static/images/uploading.png'
           const filePath = res.tempFiles[0].path
           const filename = filePath.substr(filePath.lastIndexOf('/') + 1)
           cos.postObject({
@@ -91,6 +96,7 @@ export default {
               console.log('info', JSON.stringify(info))
               // 这里要完善：上传图片时要显示上传进度
               console.log(JSON.stringify(info.percent))
+              that.percent = JSON.stringify(info.percent) * 100
             }
           }, function (err, data) {
             console.log(err || data)

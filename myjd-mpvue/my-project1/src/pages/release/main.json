@@ -5,6 +5,7 @@
         "i-button": "../../../static/dist/button/index",
         "i-notice-bar": "../../../static/dist/notice-bar/index",
         "i-icon": "../../../static/dist/icon/index",
-        "i-toast": "../../../static/dist/toast/index"
+        "i-toast": "../../../static/dist/toast/index",
+        "i-progress": "../../../static/dist/progress/index"
     }
 }

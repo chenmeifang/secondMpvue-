@@ -34,8 +34,8 @@ export default {
       pages: 1,
       expressList: [],
       servicedMan: 0,
-      nickname1: '',
-      nickname2: '',
+      nickname1: '', /*  */
+      nickname2: '', /*  */
       avatar1: '',
       avatar2: '',
       is: false, /* 用来判断contact表是否存在相应联系人的标志 is为true时，表明已存在；is为false时，双向创建联系人 */
@@ -140,7 +140,7 @@ export default {
     Delete (item) {
       // 判断点击删除按钮的人跟发布该需求的人是否匹配
       // 如果匹配可正常进行删除操作
-      if (item.belongTo === this.this.$store.state.userInformation.id.toString()) {
+      if (item.belongTo === this.$store.state.userInformation.id.toString()) {
         this.$fly.put('https://www.wjxweb.cn:789/Demand', {
           belongTo: item.belongTo,
           detail: item.detail,

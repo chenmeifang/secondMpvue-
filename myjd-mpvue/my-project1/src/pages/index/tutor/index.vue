@@ -152,7 +152,7 @@ export default {
           console.log(res)
           this.belongTo = res.data.data[0].id
           if (this.belongTo === this.$store.state.userInformation.id) {
-            this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
+            this.$fly.put('https://www.wjxweb.cn:789/Tutor', {
               belongTo: item.belongTo,
               date: new Date(),
               id: item.id,

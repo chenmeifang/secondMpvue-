@@ -61,11 +61,13 @@ export default {
       seven: false,
       eight: false,
       nine: false,
-      choice: 13
+      choice: 13,
+      windowHeight: 0
     }
   },
   onShow () {
     this.$store.commit('judgeNewUser')
+    this.windowHeight = this.$store.state.windowHeight
   },
   methods: {
     showDiff (choiceList) {

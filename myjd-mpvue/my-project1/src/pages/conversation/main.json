@@ -8,7 +8,9 @@
     "i-cell": "../../static/dist/cell/index",
     "i-card": "../../static/dist/card/index",
     "i-cell-group": "../../static/dist/cell-group/index",
-    "i-divider": "../../static/dist/divider/index"
+    "i-divider": "../../static/dist/divider/index",
+    "i-notice-bar": "../../static/dist/notice-bar/index"
+
   },
   "exclude": [
     "node_modules"

@@ -145,7 +145,7 @@
             price: item.price,
             date: new Date(),
             id: item.id,
-            keywords: 'item.keywords',
+            keywords: item.keywords,
             isFind: true,
             servicedMan: this.servicedMan,
             userAva: item.userAva,
