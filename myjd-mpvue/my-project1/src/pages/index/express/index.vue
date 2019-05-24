@@ -140,7 +140,7 @@ export default {
     Delete (item) {
       // 判断点击删除按钮的人跟发布该需求的人是否匹配
       // 如果匹配可正常进行删除操作
-      if (item.belongTo === this.$store.state.userInformation.id.toString()) {
+      if (item.belongTo === this.$store.state.userInformation[0].id.toString()) {
         this.$fly.put('https://www.wjxweb.cn:789/Demand', {
           belongTo: item.belongTo,
           detail: item.detail,

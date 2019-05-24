@@ -138,7 +138,9 @@
       },
       Delete (item) {
       // 点击删除按钮的人跟发布该需求的人是否匹配
-        if (item.belongTo === this.$store.state.userInformation.id.toString()) {
+        console.log(item.belongTo)
+        console.log(this.$store.state.userInformation[0].id.toString())
+        if (item.belongTo === this.$store.state.userInformation[0].id.toString()) {
           this.$fly.put('https://www.wjxweb.cn:789/Demand', {
             belongTo: item.belongTo,
             detail: item.detail,
@@ -153,11 +155,20 @@
           })
             .then(res => {
               console.log(res)
-              this.showData()
-              wx.showToast({
-                title: '删除成功！！！',
-                icon: 'success',
-                duration: 2000
+              wx.showModal({
+                title: '提示',
+                content: '确定删除吗',
+                success: res => {
+                  if (res.confirm) {
+                    this.showData()
+                    wx.showToast({
+                      title: '删除成功！！！',
+                      icon: 'success',
+                      duration: 2000
+                    })
+                  } else if (res.cancel) {
+                  }
+                }
               })
             })
             .catch(err => {

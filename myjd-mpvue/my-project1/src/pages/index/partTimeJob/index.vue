@@ -165,7 +165,7 @@
             console.log(res)
             // partTimeJob表中没有belongTo字段,(即没有item.belongTo),自己定义一个变量belongTo
             this.belongTo = res.data.data[0].id
-            if (this.belongTo === this.$store.state.userInformation.id) {
+            if (this.belongTo === this.$store.state.userInformation[0].id) {
               this.$fly.put('https://www.wjxweb.cn:789/PartTimeJob', {
                 detail: item.detail,
                 id: item.id,

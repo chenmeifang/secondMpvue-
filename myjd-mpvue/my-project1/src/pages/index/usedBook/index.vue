@@ -155,7 +155,7 @@
       },
       Delete (item) {
       // 点击删除按钮的人跟发布该需求的人是否匹配
-        if (item.belongTo === this.$store.state.userInformation.id.toString()) {
+        if (item.belongTo === this.$store.state.userInformation.id[0].toString()) {
           this.$fly.put('https://www.wjxweb.cn:789/TwoHandsBook', {
             belongTo: item.belongTo,
             bookName: item.bookName,

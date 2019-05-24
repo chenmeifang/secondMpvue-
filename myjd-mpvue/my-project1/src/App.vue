@@ -1,11 +1,13 @@
 <script>
   // const app = getApp()
-
+  // 没有<template>  因为App.vue是整个应用，所以在这不需要去写任何的页面
+  // <script里面的内容可以写当前整个应用的声明周期以及全局的那些数据>
 export default {
     data () {
       return {
       }
     },
+    // created是原生小程序的生命周期函数还是vue组件的生命周期函数？？？------>vue组件的生命周期函数
     created () {
       // 拿到屏幕高度 scroll-view绑定了屏幕高度 否则scroll-view高度为0，会造成能请求到数据，但渲染不上去，因为容器高度为0
       this.$store.commit('getWindowHeight')
@@ -34,7 +36,7 @@ export default {
                 // 若不进行此步操作，用户若不进去“我的”页面而直接操作别的页面会拿不到userInformation里面的内容
                 success: res => {
                   console.log(res)
-                  that.$store.state.userInformation = res.data.data[0]
+                  that.$store.state.userInformation = res.data.data
                   that.$store.state.nickname1 = that.$store.state.userInformation.nickName
                   that.$store.state.avatar1 = that.$store.state.userInformation.avatar
                 }
@@ -58,6 +60,7 @@ export default {
 </script>
 
 <style>
+/* 全局公共的样式 */
 .container {
   height: 100%;
   display: flex;

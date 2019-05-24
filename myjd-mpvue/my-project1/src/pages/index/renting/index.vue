@@ -151,7 +151,7 @@
           .then(res => {
             console.log(res)
             this.belongTo = res.data.data[0].id
-            if (this.belongTo === this.$store.state.userInformation) {
+            if (this.belongTo === this.$store.state.userInformation[0].id) {
               // 把租房先做成一对一吧降低难度
               this.$fly.put('https://www.wjxweb.cn:789/Renting', {
                 alreadyNum: 0,
