@@ -11,7 +11,7 @@
         <div v-for="item in tutorList" v-show='!item.isFind' :key="item" class="tutorBox">
           <div class="topDiv">
             <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
-            <div class="nicknameDiv">腾飞</div>
+            <div class="nicknameDiv"><!-- 先不填 --></div>
             <div class="deleteDiv" @click="Delete(item)"></div>
             <div class="acceptDiv" @click="toPublisher(item)"></div>
           </div>
@@ -124,6 +124,9 @@ export default {
                     })
                       .then(res => {
                         console.log(res)
+                        wx.switchTab({
+                          url: '/pages/conversation/main'
+                        })
                       })
                       .catch(err => {
                         console.log(err)
@@ -141,9 +144,6 @@ export default {
         .catch(err => {
           console.log(err)
         })
-      wx.switchTab({
-        url: '/pages/conversation/main'
-      })
     },
     Delete (item) {
       // 点击删除按钮的人跟发布该需求的人是否匹配
@@ -151,31 +151,40 @@ export default {
         .then(res => {
           console.log(res)
           this.belongTo = res.data.data[0].id
-          if (this.belongTo === this.$store.state.userInformation[0].id) {
-            this.$fly.put('https://www.wjxweb.cn:789/Tutor', {
-              belongTo: item.belongTo,
-              date: new Date(),
-              id: item.id,
-              imgUrl: item.imgUrl,
-              isSaled: true,
-              name: item.name,
-              price: item.price,
-              saleTo: this.saleTo,
-              userAva: item.userAva,
-              belongUsername: item.belongUsername
+          if (this.belongTo === this.$store.state.userInformation.id) {
+            wx.showModal({
+              title: '提示',
+              content: '确认删除吗？',
+              success: res => {
+                if (res.confirm) {
+                  this.$fly.put('https://www.wjxweb.cn:789/Tutor', {
+                    belongTo: item.belongTo,
+                    date: new Date(),
+                    id: item.id,
+                    imgUrl: item.imgUrl,
+                    isSaled: true,
+                    name: item.name,
+                    price: item.price,
+                    saleTo: this.saleTo,
+                    userAva: item.userAva,
+                    belongUsername: item.belongUsername
+                  })
+                    .then(res => {
+                      console.log(res)
+                      this.showData()
+                      wx.showToast({
+                        title: '删除成功！！！',
+                        icon: 'success',
+                        duration: 2000
+                      })
+                    })
+                    .catch(err => {
+                      console.log(err)
+                    })
+                } else if (res.cancle) {
+                }
+              }
             })
-              .then(res => {
-                console.log(res)
-                this.showData()
-                wx.showToast({
-                  title: '删除成功！！！',
-                  icon: 'success',
-                  duration: 2000
-                })
-              })
-              .catch(err => {
-                console.log(err)
-              })
           } else {
             wx.showToast({
               icon: 'none',

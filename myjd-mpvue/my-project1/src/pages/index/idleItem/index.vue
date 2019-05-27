@@ -15,14 +15,16 @@
           <div class="deleteDiv" @click="Delete(item)"></div>
           <div class="acceptDiv" @click="toPublisher(item)"></div>
         </div>
-        <div class="idleItemImgBox"><img :src="item.imgUrl" class="idleItemImg" @click="preview(item)"/></div>
-        <div class="details" :style="{'width': windowWidth - 160 + 'px'}">
-          <ul>
-            <li>详情：{{  item.name  }}</li>
-            <li>价格：{{  item.price  }}</li>
-          </ul>
+        <div class="middleDiv">
+          <div class="idleItemImgBox"><img :src="item.imgUrl" class="idleItemImg" @click="preview(item)"/></div>
+          <div class="details" :style="{'width': windowWidth - 160 + 'px'}">
+            <ul>
+              <li>详情：{{  item.name  }}</li>
+              <li>价格：{{  item.price  }}</li>
+            </ul>
+          </div>
         </div>
-        <div class="date">{{ item.date }}</div>
+        <div class="dateDiv">{{ item.date }}</div>
       </div>
     </scroll-view>
   </div>
@@ -87,61 +89,69 @@
       /* 点击收入囊中（联系卖主）的按钮时，要用this.$fly.put修改需求表中的对应的需求的saleTo和isSaled属性 */
       toPublisher (item) {
         this.saleTo = this.$store.state.userInformation.id
-        this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.saleTo}`)
-          .then(res => {
-            res.data.data.forEach(value => {
-              // 这里toWho和belongTo数据类型不一致  toWho是int型，belongTo是string型
-              if (value.toWho.toString() === item.belongTo) {
-                console.log('已存在该联系人')
-                this.is = true
+        if (this.saleTo.toString() === item.belongTo) {
+          wx.showToast({
+            icon: 'none',
+            title: '无法自己联系自己！！！',
+            duration: 2000
+          })
+        } else {
+          this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.saleTo}`)
+            .then(res => {
+              res.data.data.forEach(value => {
+                // 这里toWho和belongTo数据类型不一致  toWho是int型，belongTo是string型
+                if (value.toWho.toString() === item.belongTo) {
+                  console.log('已存在该联系人')
+                  this.is = true
+                }
+              })
+              if (!this.is) {
+                console.log('不存在此联系人，正在双向创建')
+                this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+                  id: 0,
+                  fromWho: item.belongTo,
+                  toWho: this.saleTo,
+                  nickname: this.$store.state.nickname1,
+                  avatar: this.$store.state.avatar1
+                })
+                  .then(res => {
+                    console.log(res)
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+                this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
+                  .then(res => {
+                    this.nickname2 = res.data.data[0].nickName
+                    this.avatar2 = res.data.data[0].avatar
+                    console.log(res)
+                    this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+                      id: 0,
+                      fromWho: this.saleTo,
+                      toWho: item.belongTo,
+                      // 这里的nickname和avatar是发布这条需求的人的nickname和avatar
+                      nickname: this.nickname2,
+                      avatar: this.avatar2
+                    })
+                      .then(res => {
+                        console.log(res)
+                        wx.switchTab({
+                          url: '/pages/conversation/main'
+                        })
+                      })
+                      .catch(err => {
+                        console.log(err)
+                      })
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
               }
             })
-            if (!this.is) {
-              console.log('不存在此联系人，正在双向创建')
-              this.$fly.post('https://www.wjxweb.cn:789/Contact', {
-                id: 0,
-                fromWho: item.belongTo,
-                toWho: this.saleTo,
-                nickname: this.$store.state.nickname1,
-                avatar: this.$store.state.avatar1
-              })
-                .then(res => {
-                  console.log(res)
-                })
-                .catch(err => {
-                  console.log(err)
-                })
-              this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${item.belongTo}`)
-                .then(res => {
-                  this.nickname2 = res.data.data[0].nickName
-                  this.avatar2 = res.data.data[0].avatar
-                  console.log(res)
-                  this.$fly.post('https://www.wjxweb.cn:789/Contact', {
-                    id: 0,
-                    fromWho: this.saleTo,
-                    toWho: item.belongTo,
-                    // 这里的nickname和avatar是发布这条需求的人的nickname和avatar
-                    nickname: this.nickname2,
-                    avatar: this.avatar2
-                  })
-                    .then(res => {
-                      console.log(res)
-                    })
-                    .catch(err => {
-                      console.log(err)
-                    })
-                })
-                .catch(err => {
-                  console.log(err)
-                })
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        wx.switchTab({
-          url: '/pages/conversation/main'
-        })
+            .catch(err => {
+              console.log(err)
+            })
+        }
       },
       preview (item) {
         wx.previewImage({
@@ -151,31 +161,33 @@
       },
       Delete (item) {
       // 点击删除按钮的人跟发布该需求的人是否匹配
-        if (item.belongTo === this.$store.state.userInformation.id[0].toString()) {
-          this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
-            belongTo: item.belongTo,
-            date: new Date(),
-            id: item.id,
-            imgUrl: item.imgUrl,
-            isSaled: true,
-            name: item.name,
-            price: item.price,
-            saleTo: this.saleTo,
-            userAva: item.userAva,
-            belongUsername: item.belongUsername
+        if (item.belongTo === this.$store.state.userInformation.id.toString()) {
+          wx.showModal({
+            title: '提示',
+            content: '确认删除吗？',
+            success: res => {
+              if (res.confirm) {
+                this.$fly.put('https://www.wjxweb.cn:789/setAsideGoods', {
+                  belongTo: item.belongTo,
+                  date: new Date(),
+                  id: item.id,
+                  imgUrl: item.imgUrl,
+                  isSaled: true,
+                  name: item.name,
+                  price: item.price,
+                  saleTo: this.saleTo,
+                  userAva: item.userAva,
+                  belongUsername: item.belongUsername
+                })
+                  .then(res => {
+                    console.log(res)
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+              }
+            }
           })
-            .then(res => {
-              console.log(res)
-              this.showData()
-              wx.showToast({
-                title: '删除成功！！！',
-                icon: 'success',
-                duration: 2000
-              })
-            })
-            .catch(err => {
-              console.log(err)
-            })
         } else {
           wx.showToast({
             icon: 'none',
@@ -242,8 +254,15 @@
   background-size: 60rpx;
   margin: 20rpx 20rpx 0 20rpx
 }
+.middleDiv{
+  position:relative;
+  height: 250rpx;
+}
 .idleItemImgBox{
-  display: inline-block
+  float: left;
+  width: 250rpx;
+  height: 250rpx;
+  /* background-image: url("../../../../static/images/loading.png") */
 }
 .idleItemImg{
   width: 250rpx;
@@ -252,9 +271,9 @@
 .details{
   width: 400rpx;
   float: right;
-  margin-right: 20rpx
+  /* margin-right: 20rpx */
 }
-.date{
+.dateDiv{
   font-size: 25rpx;
   float: right
 }

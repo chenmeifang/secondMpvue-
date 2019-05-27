@@ -35,10 +35,17 @@ export default {
                 },
                 // 若不进行此步操作，用户若不进去“我的”页面而直接操作别的页面会拿不到userInformation里面的内容
                 success: res => {
+                  console.log('用户信息')
                   console.log(res)
-                  that.$store.state.userInformation = res.data.data
+                  console.log(res.data.data)
+                  console.log(res.data.data[0])
+                  that.$store.state.userInformation = res.data.data[0]
+                  // 这个地方可能有问题
+                  // nickname1,avatar1: 接受者
                   that.$store.state.nickname1 = that.$store.state.userInformation.nickName
                   that.$store.state.avatar1 = that.$store.state.userInformation.avatar
+                  console.log(that.$store.state.nickname1)
+                  console.log(that.$store.state.avatar1)
                 }
               })
             },

@@ -32,7 +32,7 @@ export default {
   },
   onLoad () {
     this.getSomeUserInfo()
-    this.showHint()
+    // this.showHint()
   },
   methods: {
     // 但实际上显示完这个之后用户若执意仍去发布消息还是可以发布，只是她们误以为不可以

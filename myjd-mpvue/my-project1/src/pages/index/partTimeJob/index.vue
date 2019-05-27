@@ -11,7 +11,7 @@
     <div v-for="item in partTimeJobList" :key="item" v-show="!item.isFind" class="partTimeJobBox">
       <div class="topDiv">
               <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
-              <div class="nicknameDiv">腾飞</div>
+              <div class="nicknameDiv"><!-- 先空着 --></div>
               <div class="deleteDiv" @click="Delete(item)"></div>
               <div class="acceptDiv" @click="toPublisher(item)"></div>
       </div>
@@ -80,6 +80,7 @@
       },
       toPublisher (item) {
         this.serverMan = this.$store.state.userInformation.id
+        // 该表中没有belongTo，不能判断点击联系按钮的是不是自己
         // post这条记录主要是为了拿到serverMan
         this.$fly.post('https://www.wjxweb.cn:789/PartTimeJobHelper', {
           id: 0,
@@ -138,6 +139,9 @@
                       })
                         .then(res => {
                           console.log(res)
+                          wx.switchTab({
+                            url: '/pages/conversation/main'
+                          })
                         })
                         .catch(err => {
                           console.log(err)
@@ -155,9 +159,6 @@
           .catch(err => {
             console.log(err)
           })
-        wx.switchTab({
-          url: '/pages/conversation/main'
-        })
       },
       Delete (item) {
         this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=avatar&value=${item.userAva}`)
@@ -165,35 +166,43 @@
             console.log(res)
             // partTimeJob表中没有belongTo字段,(即没有item.belongTo),自己定义一个变量belongTo
             this.belongTo = res.data.data[0].id
-            if (this.belongTo === this.$store.state.userInformation[0].id) {
-              this.$fly.put('https://www.wjxweb.cn:789/PartTimeJob', {
-                detail: item.detail,
-                id: item.id,
-                needNum: item.needNum,
-                salary: item.salary,
-                userAva: item.userAva,
-                workplace: item.workplace,
-                alreadyNum: this.alreadyNum++,
-                isFind: true,
-                /* 这里把isFind改为true之后，该条记录应该立马就不显示了
-                   但实际上只能在下次进入到这个页面时才不显示该条记录
-                   若要想它立马不显示，可以重新渲染一遍数据，但问题是若当前记录是第2页数据，重新渲染的时候会跳回第一页数据，不太好 */
-                // 怎么让他重新渲染的时候直接显示当前页数据 后面再完善
-                date: new Date()
+            if (this.belongTo === this.$store.state.userInformation.id) {
+              wx.showModal({
+                title: '提示',
+                content: '确认删除吗？',
+                success: res => {
+                  if (res.confirm) {
+                    this.$fly.put('https://www.wjxweb.cn:789/PartTimeJob', {
+                      detail: item.detail,
+                      id: item.id,
+                      needNum: item.needNum,
+                      salary: item.salary,
+                      userAva: item.userAva,
+                      workplace: item.workplace,
+                      alreadyNum: this.alreadyNum++,
+                      isFind: true,
+                      date: new Date()
+                    })
+                    // 这里把isFind改为true之后，该条记录应该立马就不显示了
+                    // 但实际上只能在下次进入到这个页面时才不显示该条记录
+                    // 若要想它立马不显示，可以重新渲染一遍数据，但问题是若当前记录是第2页数据，重新渲染的时候会跳回第一页数据，不太好
+                    // 怎么让他重新渲染的时候直接显示当前页数据 后面再完善
+                      .then(res => {
+                        console.log(res)
+                        this.showData()
+                        wx.showToast({
+                          title: '删除成功！！！',
+                          icon: 'success',
+                          duration: 2000
+                        })
+                      })
+                      .catch(err => {
+                        console.log(err)
+                      })
+                  } else if (res.cancle) {
+                  }
+                }
               })
-                .then(res => {
-                  console.log(res)
-                  // 重新渲染数据
-                  this.showData()
-                  wx.showToast({
-                    title: '删除成功！！！',
-                    icon: 'success',
-                    duration: 2000
-                  })
-                })
-                .catch(err => {
-                  console.log(err)
-                })
             } else {
               wx.showToast({
                 icon: 'none',
