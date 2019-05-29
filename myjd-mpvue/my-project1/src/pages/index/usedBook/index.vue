@@ -10,7 +10,7 @@
       @scrolltolower="scrolltolower">
     <div v-for="item in usedBookList" v-show='!item.isSaled' :key="item" class="usedBookBox">
       <div class="topDiv">
-        <div class="avatarDiv"><img :src="item.userAva" class="avatar"/></div>
+        <div class="avatarDiv"><image :src="item.userAva" class="avatar" lazy-load=true></image></div>
         <div class="nicknameDiv">{{ item.belongUsername }}</div>
         <div class="deleteDiv" @click="Delete(item)"></div>
         <div class="acceptDiv" @click="toPublisher(item)"></div>

@@ -181,6 +181,12 @@
                 })
                   .then(res => {
                     console.log(res)
+                    this.showData()
+                    wx.showToast({
+                      title: '删除成功！！！',
+                      icon: 'success',
+                      duration: 2000
+                    })
                   })
                   .catch(err => {
                     console.log(err)

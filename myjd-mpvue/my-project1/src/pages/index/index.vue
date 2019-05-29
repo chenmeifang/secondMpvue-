@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="top">
-      <!-- https://i.loli.net/2019/05/20/5ce2bcf7b4f8c20743.png -->
       <img src="../../../static/images/header.png"/>
     </div>
     <i-grid>
@@ -84,7 +83,6 @@ export default {
   },
   created () {
     this.windowHeight = this.$store.state.windowHeight
-    // console.log(this.windowHeight)
   },
   onLoad () {
   },
@@ -156,14 +154,13 @@ export default {
 </script>
 
 <style scoped>
-
 img{
   width: 320rpx;
   height: 300rpx;
   margin-left: 220rpx;
 }
 .top {
-width:750px;
-height:300rpx;
+  width:750px;
+  height:300rpx;
 }
 </style>

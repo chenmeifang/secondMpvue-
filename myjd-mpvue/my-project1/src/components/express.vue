@@ -5,11 +5,11 @@
     </div>
     <div class="each">
         <span>快递位置：</span>
-        <input tyep="textarea" v-model="detail" placeholder="请输入快递位置（不要输快递单号）"/>
+        <input type="textarea" v-model="detail" placeholder="请输入快递位置"/>
     </div>
     <div class="each">
         <span>报酬：</span>
-        <input tyep="textarea" v-model="price" placeholder="请输入报酬"/>
+        <input type="textarea" v-model="price" placeholder="请输入报酬"/>
     </div>
     <i-button @click="handleClick" type="primary" shape="circle">发布</i-button>
     <i-toast id="toast"/>
@@ -24,11 +24,13 @@ export default {
       price: '',
       belongTo: 0,
       userAva: '',
-      belongUsername: ''
+      belongUsername: '',
+      windowWidth: 0
     }
   },
   onLoad () {
     this.getSomeUserInfo()
+    this.windowWidth = this.$store.state.windowWidth
   },
   methods: {
     // 拿到发布者的一些信息,用于点击发布按钮post数据的时候
@@ -73,13 +75,13 @@ export default {
 </script>
 <style scoped>
 .title{
-    margin-bottom: 50rpx
+  margin-bottom: 50rpx
 }
 p{
   text-align: center
 }
 .each{
-    margin-bottom: 50rpx
+  margin-bottom: 50rpx
 }
 input{
   float:right;
