@@ -6,15 +6,14 @@
     <div class="linkMan-list"
          v-for="(item, index) in list"
          :key="index">
-      <i-swipeout  i-class="i-swipeout-demo-item" :actions="actions" @click="handleDelete(item)">
+      <i-swipeout  i-class="i-swipeout-demo-item" :actions="actions" @change="handleDelete(item)">
         <view slot="content">
-            <div class="contact"  v-show="isDelete">
-              <img class="avatar" :src=item.avatar @click="nav(item)">
-              <div class="name">{{ item.nickname }}</div>
-            </div>
+          <div class="contact" v-show='item.isDisplay'>
+            <img class="avatar" :src=item.avatar @click="nav(item)">
+            <div class="name">{{ item.nickname }}</div>
+          </div>
         </view>
       </i-swipeout>
-      <!-- v-show和@click的位置确定不下来 -->
     </div>
     <div class="whaleAndText" v-show="is" :style="{'left': (windowWidth - 160) / 2 + 'px' }">
       <img class="whale" src="../../../static/images/whale.jpeg"/>
@@ -47,34 +46,38 @@
         ]
       }
     },
+    onload () {
+      // this.showData()
+    },
     // 这里把onshow改为onload试试
     onShow () {
       this.$store.commit('judgeNewUser')
       this.windowHeight = this.$store.state.windowHeight
       this.windowWidth = this.$store.state.windowWidth
       this.me = this.$store.state.userInformation.id
-      this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.me}`)
-        .then(res => {
-          console.log(res)
-          this.list = res.data.data
-          if (res.data.data.length !== 0) {
-            this.is = false
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      this.showData()
     },
     methods: {
+      showData () {
+        this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.me}`)
+          .then(res => {
+            console.log(res)
+            this.list = res.data.data
+            if (res.data.data.length !== 0) {
+              this.is = false
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
       nav (item) {
         wx.navigateTo({
           url: `chatPage/main?name=${item.nickname}&toWho=${item.toWho}&ava=${item.avatar}`
         })
       },
       handleDelete (item) {
-        this.isDelete = false
-        console.log(this.isDelete)
-        console.log('啊啊啊啊啊')
+        item.isDisplay = false
       }
     }
   }

@@ -97,6 +97,9 @@ export default {
             res.data.data.forEach(value => {
               if (value.toWho.toString() === item.belongTo) {
                 this.is = true
+                wx.switchTab({
+                  url: '/pages/conversation/main'
+                })
                 console.log('已存在该联系人')
               }
             })
@@ -107,7 +110,8 @@ export default {
                 fromWho: item.belongTo,
                 toWho: this.servicedMan,
                 nickname: this.$store.state.nickname1,
-                avatar: this.$store.state.avatar1
+                avatar: this.$store.state.avatar1,
+                isDisplay: 'true'
               })
                 .then(res => {
                   console.log(res)
@@ -125,7 +129,8 @@ export default {
                     fromWho: this.servicedMan,
                     toWho: item.belongTo,
                     nickname: this.nickname2,
-                    avatar: this.avatar2
+                    avatar: this.avatar2,
+                    isDisplay: 'true'
                   })
                     .then(res => {
                       console.log(res)

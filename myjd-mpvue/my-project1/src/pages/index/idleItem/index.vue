@@ -102,6 +102,9 @@
                 // 这里toWho和belongTo数据类型不一致  toWho是int型，belongTo是string型
                 if (value.toWho.toString() === item.belongTo) {
                   console.log('已存在该联系人')
+                  wx.switchTab({
+                    url: '/pages/conversation/main'
+                  })
                   this.is = true
                 }
               })
@@ -112,7 +115,8 @@
                   fromWho: item.belongTo,
                   toWho: this.saleTo,
                   nickname: this.$store.state.nickname1,
-                  avatar: this.$store.state.avatar1
+                  avatar: this.$store.state.avatar1,
+                  isDisplay: true
                 })
                   .then(res => {
                     console.log(res)
@@ -131,7 +135,8 @@
                       toWho: item.belongTo,
                       // 这里的nickname和avatar是发布这条需求的人的nickname和avatar
                       nickname: this.nickname2,
-                      avatar: this.avatar2
+                      avatar: this.avatar2,
+                      isDisplay: 'true'
                     })
                       .then(res => {
                         console.log(res)

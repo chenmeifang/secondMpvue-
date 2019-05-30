@@ -104,7 +104,8 @@
                   fromWho: item.belongTo,
                   toWho: this.servicedMan,
                   nickname: this.$store.state.nickname1,
-                  avatar: this.$store.state.avatar1
+                  avatar: this.$store.state.avatar1,
+                  isDisplay: 'true'
                 })
                   .then(res => {
                     console.log(res)
@@ -122,7 +123,8 @@
                       fromWho: this.servicedMan,
                       toWho: item.belongTo,
                       nickname: this.nickname2,
-                      avatar: this.avatar2
+                      avatar: this.avatar2,
+                      isDisplay: 'true'
                     })
                       .then(res => {
                         console.log(res)

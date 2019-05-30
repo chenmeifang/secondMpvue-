@@ -101,7 +101,8 @@ export default {
                   fromWho: this.belongTo,
                   toWho: this.serviceMan,
                   nickname: this.$store.state.nickname1,
-                  avatar: this.$store.state.avatar1
+                  avatar: this.$store.state.avatar1,
+                  isDisplay: 'true'
                 })
                   .then(res => {
                     console.log(res)
@@ -120,7 +121,8 @@ export default {
                       toWho: this.belongTo,
                       // 这里的nickname和avatar是发布这条需求的人的nickname和avatar
                       nickname: this.nickname2,
-                      avatar: this.avatar2
+                      avatar: this.avatar2,
+                      isDisplay: 'true'
                     })
                       .then(res => {
                         console.log(res)
