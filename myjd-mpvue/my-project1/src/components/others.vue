@@ -45,28 +45,48 @@ export default {
         })
     },
     handleClick () {
-      this.$fly.post('https://www.wjxweb.cn:789/Demand', {
-        belongTo: this.belongTo,
-        date: new Date(),
-        detail: this.detail,
-        id: 0,
-        isFind: false,
-        keywords: 'others',
-        price: this.price,
-        servicedMan: 0,
-        userAva: this.userAva,
-        belongUsername: this.belongUsername
-      })
-        .then(res => {
-          console.log(res)
+      if (this.detail === '' && this.price === '') {
+        wx.showToast({
+          title: '详情和报酬不能为空',
+          icon: 'none',
+          duration: 2000
         })
-        .catch(err => {
-          console.log(err)
+      } else if (this.price === '') {
+        wx.showToast({
+          title: '报酬不能为空',
+          icon: 'none',
+          duration: 2000
         })
-      $Toast({
-        content: '发布成功',
-        type: 'success'
-      })
+      } else if (this.detail === '') {
+        wx.showToast({
+          title: '详情不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+      } else {
+        this.$fly.post('https://www.wjxweb.cn:789/Demand', {
+          belongTo: this.belongTo,
+          date: new Date(),
+          detail: this.detail,
+          id: 0,
+          isFind: false,
+          keywords: 'others',
+          price: this.price,
+          servicedMan: 0,
+          userAva: this.userAva,
+          belongUsername: this.belongUsername
+        })
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        $Toast({
+          content: '发布成功',
+          type: 'success'
+        })
+      }
     }
   }
 }

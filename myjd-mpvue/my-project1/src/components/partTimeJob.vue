@@ -31,7 +31,7 @@ export default {
       detail: '',
       workplace: '',
       salary: '',
-      needNum: null,
+      needNum: '',
       userAva: ''
     }
   },
@@ -62,27 +62,35 @@ export default {
         })
     },
     handleClick () {
-      this.$fly.post('https://www.wjxweb.cn:789/PartTimeJob', {
-        id: 0,
-        detail: this.detail,
-        workplace: this.workplace,
-        salary: this.salary,
-        needNum: this.needNum,
-        userAva: this.userAva,
-        alreadyNum: 0,
-        date: new Date(),
-        isFind: false
-      })
-        .then(res => {
-          console.log(res)
+      if (this.detail === '' || this.workplace === '' || this.salary === '' || this.needNum === '') {
+        wx.showToast({
+          title: '每一项均不能为空',
+          icon: 'none',
+          duration: 2000
         })
-        .catch(err => {
-          console.log(err)
+      } else {
+        this.$fly.post('https://www.wjxweb.cn:789/PartTimeJob', {
+          id: 0,
+          detail: this.detail,
+          workplace: this.workplace,
+          salary: this.salary,
+          needNum: this.needNum,
+          userAva: this.userAva,
+          alreadyNum: 0,
+          date: new Date(),
+          isFind: false
         })
-      $Toast({
-        content: '发布成功',
-        type: 'success'
-      })
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        $Toast({
+          content: '发布成功',
+          type: 'success'
+        })
+      }
     }
   }
 }

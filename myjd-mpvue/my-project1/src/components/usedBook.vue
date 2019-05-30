@@ -109,26 +109,34 @@ export default {
       })
     },
     handleClick () {
-      this.$fly.post('https://www.wjxweb.cn:789/TwoHandsBook?', {
-        id: this.id,
-        bookName: this.bookName,
-        bookPrice: this.bookPrice,
-        imgUrl: this.imgUrl,
-        date: new Date(),
-        isSaled: false,
-        belongTo: this.belongTo,
-        saleTo: 'string',
-        userAva:this.userAva,
-        belongUsername: this.belongUsername
-      }).then(res => {
-        console.log(res)
-      }).catch(err => {
-        console.log(err)
-      })
-      $Toast({
-        content: '发布成功',
-        type: 'success'
-      })
+      if (this.bookName === '' || this.bookPrice === '' || this.source === '') {
+        wx.showToast({
+          title: '每一项均不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+      } else {
+        this.$fly.post('https://www.wjxweb.cn:789/TwoHandsBook?', {
+          id: this.id,
+          bookName: this.bookName,
+          bookPrice: this.bookPrice,
+          imgUrl: this.imgUrl,
+          date: new Date(),
+          isSaled: false,
+          belongTo: this.belongTo,
+          saleTo: 'string',
+          userAva:this.userAva,
+          belongUsername: this.belongUsername
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+        $Toast({
+          content: '发布成功',
+          type: 'success'
+        })
+      }
     }
   }
 }

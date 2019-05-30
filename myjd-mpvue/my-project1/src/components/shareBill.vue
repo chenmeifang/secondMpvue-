@@ -40,28 +40,36 @@ export default {
         })
     },
     handleClick () {
-      this.$fly.post('https://www.wjxweb.cn:789/Demand', {
-        id: 0,
-        belongTo: this.belongTo,
-        detail: this.detail,
-        price: 0,
-        isFind: false,
-        keywords: 'shareBill',
-        serviceMan: null,
-        date: new Date(),
-        userAva: this.userAva,
-        belongUsername: this.belongUsername
-      })
-        .then(res => {
-          console.log(res)
+      if (this.detail === '') {
+        wx.showToast({
+          title: '拼单详情不能为空',
+          icon: 'none',
+          duration: 2000
         })
-        .catch(err => {
-          console.log(err)
+      } else {
+        this.$fly.post('https://www.wjxweb.cn:789/Demand', {
+          id: 0,
+          belongTo: this.belongTo,
+          detail: this.detail,
+          price: 0,
+          isFind: false,
+          keywords: 'shareBill',
+          serviceMan: null,
+          date: new Date(),
+          userAva: this.userAva,
+          belongUsername: this.belongUsername
         })
-      $Toast({
-        content: '发布成功',
-        type: 'success'
-      })
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        $Toast({
+          content: '发布成功',
+          type: 'success'
+        })
+      }
     }
   }
 }

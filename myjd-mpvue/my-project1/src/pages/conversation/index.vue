@@ -3,18 +3,22 @@
     <i-notice-bar icon="remind" color="#6495ED" backgroundcolor="#FFFFFF" loop closable>
       若交易谈妥，建议及时删除发布的需求！！！
     </i-notice-bar>
+    <div class="linkMan-list"
+         v-for="(item, index) in list"
+         :key="index">
+      <i-swipeout  i-class="i-swipeout-demo-item" :actions="actions" @click="handleDelete(item)">
+        <view slot="content">
+            <div class="contact"  v-show="isDelete">
+              <img class="avatar" :src=item.avatar @click="nav(item)">
+              <div class="name">{{ item.nickname }}</div>
+            </div>
+        </view>
+      </i-swipeout>
+      <!-- v-show和@click的位置确定不下来 -->
+    </div>
     <div class="whaleAndText" v-show="is" :style="{'left': (windowWidth - 160) / 2 + 'px' }">
       <img class="whale" src="../../../static/images/whale.jpeg"/>
       <span>暂无联系人</span>
-    </div>
-    <div class="linkMan-list"
-          @click="nav(item)"
-          v-for="(item, index) in list"
-          :key="index">
-      <div class="contact">
-        <img class="avatar" :src=item.avatar>
-        <p class="name">{{ item.nickname }}</p>
-      </div>
     </div>
   </div>
 </template>
@@ -29,7 +33,18 @@
         me: '',
         windowHeight: 0,
         windowWidth: 0,
-        is: true
+        is: true,
+        isDelete: true,
+        actions: [
+          {
+            name: '删除',
+            color: '#fff',
+            fontsize: '20',
+            width: 100,
+            icon: 'close',
+            background: '#ed3f14'
+          }
+        ]
       }
     },
     // 这里把onshow改为onload试试
@@ -55,6 +70,11 @@
         wx.navigateTo({
           url: `chatPage/main?name=${item.nickname}&toWho=${item.toWho}&ava=${item.avatar}`
         })
+      },
+      handleDelete (item) {
+        this.isDelete = false
+        console.log(this.isDelete)
+        console.log('啊啊啊啊啊')
       }
     }
   }
@@ -76,15 +96,17 @@ span{
   font-size: 15px
 }
 .contact{
-  border:1px solid grey;
-  height: 150rpx;
+  position: relative;
 }
 .avatar {
   width: 128rpx;
   height: 128rpx;
   border-radius: 50%;
   float:left;
-  margin-left: 20rpx;
-  margin-top: 10rpx
+  margin: 10rpx 0 10rpx 10rpx
+}
+.name{
+  float:left;
+  margin: 15rpx 0 0 10rpx 
 }
 </style>

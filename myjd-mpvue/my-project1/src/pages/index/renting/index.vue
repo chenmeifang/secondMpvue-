@@ -174,7 +174,7 @@
                         console.log(res)
                         this.showData()
                         wx.showToast({
-                          title: '删除成功！！！',
+                          title: '删除成功',
                           icon: 'success',
                           duration: 2000
                         })

@@ -57,26 +57,34 @@ export default {
         })
     },
     handleClick () {
-      this.$fly.post('https://www.wjxweb.cn:789/Tutor', {
-        date: new Date(),
-        detail: this.detail,
-        id: 0,
-        isFind: false,
-        salary: this.salary,
-        serviceMan: null,
-        workPlace: this.workPlace,
-        userAva: this.userAva
-      })
-        .then(res => {
-          console.log(res)
+      if (this.detail === '' || this.salary === '' || this.workPlace === '') {
+        wx.showToast({
+          title: '每一项均不能为空',
+          icon: 'none',
+          duration: 2000
         })
-        .catch(err => {
-          console.log(err)
+      } else {
+        this.$fly.post('https://www.wjxweb.cn:789/Tutor', {
+          date: new Date(),
+          detail: this.detail,
+          id: 0,
+          isFind: false,
+          salary: this.salary,
+          serviceMan: null,
+          workPlace: this.workPlace,
+          userAva: this.userAva
         })
-      $Toast({
-        content: '发布成功',
-        type: 'success'
-      })
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        $Toast({
+          content: '发布成功',
+          type: 'success'
+        })
+      }
     }
   }
 }

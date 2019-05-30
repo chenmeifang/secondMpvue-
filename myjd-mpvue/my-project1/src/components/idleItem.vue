@@ -47,7 +47,7 @@ export default {
       name: '',
       price: '',
       belongTo: 0,
-      source: '',
+      source: '', /* 图片位置 */
       filePath: '',
       userAva: ''
     }
@@ -70,26 +70,70 @@ export default {
         })
     },
     handleClick () {
-      this.$fly.post('https://www.wjxweb.cn:789/setAsideGoods', {
-        id: 0,
-        belongTo: this.belongTo,
-        name: this.name,
-        price: this.price,
-        imgUrl: this.source,
-        date: new Date(),
-        saleTo: 'string',
-        isSaled: false,
-        userAva: this.userAva,
-        belongUsername: this.belongUsername
-      }).then(res => {
-        console.log(res)
-      }).catch(err => {
-        console.log(err)
-      })
-      $Toast({
-        content: '发布成功',
-        type: 'success'
-      })
+      if (this.name === '' && this.price === '' && this.source === '') {
+        wx.showToast({
+          title: '三者不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+      } else if (this.name === '' && this.price === '') {
+        wx.showToast({
+          title: '详情和价格不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+      } else if (this.price === '' && this.source === '') {
+        wx.showToast({
+          title: '价格和图片不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+      } else if (this.name === '' && this.source === '') {
+        wx.showToast({
+          title: '详情和图片不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+      } else if (this.name === '') {
+        wx.showToast({
+          title: '详情不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+      } else if (this.price === '') {
+        wx.showToast({
+          title: '价格不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+      } else if (this.source === '') {
+        wx.showToast({
+          title: '图片不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+      } else {
+        this.$fly.post('https://www.wjxweb.cn:789/setAsideGoods', {
+          id: 0,
+          belongTo: this.belongTo,
+          name: this.name,
+          price: this.price,
+          imgUrl: this.source,
+          date: new Date(),
+          saleTo: 'string',
+          isSaled: false,
+          userAva: this.userAva,
+          belongUsername: this.belongUsername
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+        $Toast({
+          content: '发布成功',
+          type: 'success'
+        })
+      }
     },
     addPhoto () {
       const that = this
