@@ -19,6 +19,7 @@
     "pages/me/myRelease/main",
     "pages/me/findUs/main",
     "pages/me/aboutUs/main",
+    "pages/me/percentage/main",
     "pages/release/main"
   ],
   "window": {

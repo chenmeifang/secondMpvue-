@@ -89,9 +89,23 @@
               res.data.data.forEach(value => {
                 if (value.toWho.toString() === item.belongTo) {
                   this.is = true
-                  wx.switchTab({
-                    url: '/pages/conversation/main'
+                  this.$fly.put('https://www.wjxweb.cn:789/Contact', {
+                    id: value.id,
+                    fromWho: value.fromWho,
+                    toWho: value.toWho,
+                    nickname: value.nickname,
+                    avatar: value.avatar,
+                    isDisplay: 'true'
                   })
+                    .then(res => {
+                      console.log(res)
+                      wx.switchTab({
+                        url: '/pages/conversation/main'
+                      })
+                    })
+                    .catch(err => {
+                      console.log(err)
+                    })
                 }
               })
               if (!this.is) {
@@ -227,7 +241,7 @@
   font-size:30rpx
 }
 .deleteDiv{
-  opacity: 0.6;
+  opacity: 1;
   float: right;
   width: 50rpx;
   height: 50rpx;

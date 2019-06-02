@@ -1,54 +1,61 @@
 <template>
   <div class="whole">
-    <div class="all" :style="{'height': windowHeight + 'px'}">
-    <div class="header">
-      <button 
-      v-if="canIUse" 
-      class="auth-button" 
-      size="default" 
-      open-type="getUserInfo" 
-      @getuserinfo="onGotUserInfo">
-      点击认证
-      </button>
-      <block v-else>
-      <img class="avatar" :src="avatarUrl" alt="">
-      <p>{{ nickName }}</p>
-      </block>
-    </div>
-    <!-- 这里把图标图片上传到sm.ms了 -->
-    <div class="each" @click="goToMyAcceptation">
-      <img 
-        class="each1" 
-        src="https://i.loli.net/2019/05/20/5ce2b989e6e5a20650.png"
-        :style="{'top': imgOffset }"/>
-      <p class="each2" :style="{'line-height': textLineHeight }">接受的单子</p>
-      <p class="each3" :style="{'line-height': textLineHeight }">></p>
-    </div>
-    <div class="each" @click="goToMyRelease">
-      <img 
-        class="each1" 
-        src="https://i.loli.net/2019/05/20/5ce2b9b987e7744566.png"
-        :style="{'top': imgOffset }"/>
-      <p class="each2" :style="{'line-height': textLineHeight }">发布的单子</p>
-      <p class="each3" :style="{'line-height': textLineHeight }">></p>
-    </div>
-    <div class="each" @click="goToFindUs">
-      <img 
-        class="each1" 
-        src="https://i.loli.net/2019/05/20/5ce2b9d6dd66c58804.png"
-        :style="{'top': imgOffset }"/>
-      <p class="each2" :style="{'line-height': textLineHeight }">联系开发者</p>
-      <p class="each3" :style="{'line-height': textLineHeight }">></p>
-    </div>
-    <div class="each" @click="goToAboutUs">
-      <img 
-        class="each1" 
-        src="https://i.loli.net/2019/05/20/5ce2b9fe547cc93092.png"
-        :style="{'top': imgOffset }"/>
-      <p class="each2" :style="{'line-height': textLineHeight }">关于小程序</p>
-      <p class="each3" :style="{'line-height': textLineHeight }">></p>
-    </div>
-    <div class="footer" :style="{'height': windowHeight / 4.5 + 'px'}"></div>
+    <div class="all" :style="{'height': windowHeight - windowHeight / 4.5 + 'px'}">
+      <div class="header">
+        <button 
+        v-if="canIUse" 
+        class="auth-button" 
+        size="default" 
+        open-type="getUserInfo" 
+        @getuserinfo="onGotUserInfo">
+        点击认证
+        </button>
+        <block v-else>
+        <img class="avatar" :src="avatarUrl" alt="">
+        <p>{{ nickName }}</p>
+        </block>
+      </div>
+      <!-- 这里把图标图片上传到sm.ms了 -->
+      <div class="each" @click="goToMyAcceptation">
+        <img 
+          class="each1" 
+          src="https://i.loli.net/2019/05/20/5ce2b989e6e5a20650.png"
+          :style="{'top': imgOffset }"/>
+        <p class="each2" :style="{'line-height': textLineHeight }">接受记录</p>
+        <p class="each3" :style="{'line-height': textLineHeight }">></p>
+      </div>
+      <div class="each" @click="goToMyRelease">
+        <img 
+          class="each1" 
+          src="https://i.loli.net/2019/05/20/5ce2b9b987e7744566.png"
+          :style="{'top': imgOffset }"/>
+        <p class="each2" :style="{'line-height': textLineHeight }">发布记录</p>
+        <p class="each3" :style="{'line-height': textLineHeight }">></p>
+      </div>
+      <!-- <div class="each" @click="goToPercentage">
+        <img 
+          class="each1" 
+          src="https://i.loli.net/2019/05/30/5ceffa1389cfd13235.png"
+          :style="{'top': imgOffset }"/>
+        <p class="each2" :style="{'line-height': textLineHeight }">需求发布比例</p>
+        <p class="each3" :style="{'line-height': textLineHeight }">></p>
+      </div> -->
+      <div class="each" @click="goToFindUs">
+        <img 
+          class="each1" 
+          src="https://i.loli.net/2019/05/20/5ce2b9d6dd66c58804.png"
+          :style="{'top': imgOffset }"/>
+        <p class="each2" :style="{'line-height': textLineHeight }">联系开发者</p>
+        <p class="each3" :style="{'line-height': textLineHeight }">></p>
+      </div>
+      <div class="each" @click="goToAboutUs">
+        <img 
+          class="each1" 
+          src="https://i.loli.net/2019/05/20/5ce2b9fe547cc93092.png"
+          :style="{'top': imgOffset }"/>
+        <p class="each2" :style="{'line-height': textLineHeight }">关于小程序</p>
+        <p class="each3" :style="{'line-height': textLineHeight }">></p>
+      </div>
     </div>
   </div>
 </template>
@@ -68,6 +75,7 @@
     // 这里一定要写onShow 不能写onLoad！！！！
     onShow () {
       this.getWindowHeight()
+      console.log(this.windowHeight)
       this.judgeNewUser()
       this.textLineHeight = (this.windowHeight - this.windowHeight / 4.5 - 165) / 4 + 'px'
       this.imgOffset = (((this.windowHeight - this.windowHeight / 4.5 - 165) / 4) - 32) / 2 + 'px'
@@ -111,6 +119,11 @@
       goToMyRelease () {
         wx.navigateTo({
           url: 'myRelease/main'
+        })
+      },
+      goToPercentage () {
+        wx.navigateTo({
+          url: 'percentage/main'
         })
       },
       goToFindUs () {
@@ -163,21 +176,15 @@
 </script>
 
 <style scoped>
+/* 页面布局重新写 */
 .all{
   display: flex;
   flex-direction: column;
-  /* background-color: #f8f8f9 */
-;
 }
 .header{
-  /* margin-bottom: 10rpx; */
   text-align: center;
-  /* padding: 30rpx; */
   background-color:#A2C6E7;
 }
-/* .lasteach{
-  border-bottom: 1px solid lightgray;
-} */
 .avatar{
   width: 250rpx;
   height: 250rpx;
@@ -192,23 +199,19 @@ button {
 .each{
   border-bottom: 1px solid lightgray;
   flex: 1;
-  /* margin-bottom: 5px */
 }
 .each1{
   float: left;
   width: 64rpx;
   height: 64rpx;
   position: relative;
-  /* margin-top: 15rpx */
 }
 .each2{
   float:left;
   margin-left: 30rpx;
-  /* margin-top: 20rpx  */
 }
 .each3{
   float:right;
   margin-right: 25rpx;
-  /* margin-top: 20rpx */
   }
 </style>

@@ -11,7 +11,9 @@
     "i-divider": "../../../static/dist/divider/index",
     "i-notice-bar": "../../../static/dist/notice-bar/index",
     "i-swipeout": "../../../static/dist/swipeout/index",
-    "i-icon": "../../../static/dist/icon/index"
+    "i-icon": "../../../static/dist/icon/index",
+    "i-tabs": "../../../static/dist/tabs/index",
+    "i-tab": "../../../static/dist/tab/index"
   },
   "exclude": [
     "node_modules"

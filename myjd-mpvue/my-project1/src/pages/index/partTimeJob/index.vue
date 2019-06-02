@@ -20,8 +20,10 @@
         <li>工作地点：{{ item.workplace }}</li>
         <li>工作报酬：{{ item.salary }}</li>
         <li>需要人数：{{ item.needNum }}</li>
-        <li>{{ item.date }}</li>
       </ul>
+      <div class="bigdate">
+        <div class="date">{{ item.date }}</div>
+      </div>
     </div>
     </scroll-view>
   </div>
@@ -80,12 +82,9 @@
       },
       toPublisher (item) {
         this.serverMan = this.$store.state.userInformation.id
-        // 该表中没有belongTo，不能判断点击联系按钮的是不是自己
-        // post这条记录主要是为了拿到serverMan
         this.$fly.post('https://www.wjxweb.cn:789/PartTimeJobHelper', {
           id: 0,
           jobNum: item.id,
-          // 这里的jobNum是兼职对应的编号
           serverMan: this.serverMan
         })
           .then(res => {
@@ -98,45 +97,25 @@
           .then(res => {
             console.log(res)
             this.belongTo = res.data.data[0].id
-            this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.serverMan}`)
-              .then(res => {
-                res.data.data.forEach(value => {
-                  if (value.toWho === this.belongTo) {
-                    console.log('已存在该联系人')
-                    this.is = true
-                    wx.switchTab({
-                      url: '/pages/conversation/main'
-                    })
-                  }
-                })
-                if (!this.is) {
-                  console.log('不存在此联系人，正在双向创建')
-                  this.$fly.post('https://www.wjxweb.cn:789/Contact', {
-                    id: 0,
-                    fromWho: this.belongTo,
-                    toWho: this.serverMan,
-                    nickname: this.$store.state.nickname1,
-                    avatar: this.$store.state.avatar1,
-                    isDisplay: 'true'
-                  })
-                    .then(res => {
-                      console.log(res)
-                    })
-                    .catch(err => {
-                      console.log(err)
-                    })
-                  this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${this.belongTo}`)
-                    .then(res => {
-                      this.nickname2 = res.data.data[0].nickName
-                      this.avatar2 = res.data.data[0].avatar
-                      console.log(res)
-                      this.$fly.post('https://www.wjxweb.cn:789/Contact', {
-                        id: 0,
-                        fromWho: this.serverMan,
-                        toWho: this.belongTo,
-                        // 这里的nickname和avatar是发布这条需求的人的nickname和avatar
-                        nickname: this.nickname2,
-                        avatar: this.avatar2,
+            if (this.serverMan === this.belongTo) {
+              wx.showToast({
+                icon: 'none',
+                title: '无法自己联系自己！！！',
+                duration: 2000
+              })
+            } else {
+              this.$fly.get(`https://www.wjxweb.cn:789/Contact/all/1?type=fromWho&value=${this.serverMan}`)
+                .then(res => {
+                  res.data.data.forEach(value => {
+                    if (value.toWho === this.belongTo) {
+                      console.log('已存在该联系人')
+                      this.is = true
+                      this.$fly.put('https://www.wjxweb.cn:789/Contact', {
+                        id: value.id,
+                        fromWho: value.fromWho,
+                        toWho: value.toWho,
+                        nickname: value.nickname,
+                        avatar: value.avatar,
                         isDisplay: 'true'
                       })
                         .then(res => {
@@ -148,15 +127,57 @@
                         .catch(err => {
                           console.log(err)
                         })
+                    }
+                  })
+                  if (!this.is) {
+                    console.log('不存在此联系人，正在双向创建')
+                    this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+                      id: 0,
+                      fromWho: this.belongTo,
+                      toWho: this.serverMan,
+                      nickname: this.$store.state.nickname1,
+                      avatar: this.$store.state.avatar1,
+                      isDisplay: 'true'
                     })
-                    .catch(err => {
-                      console.log(err)
-                    })
-                }
-              })
-              .catch(err => {
-                console.log(err)
-              })
+                      .then(res => {
+                        console.log(res)
+                      })
+                      .catch(err => {
+                        console.log(err)
+                      })
+                    this.$fly.get(`https://www.wjxweb.cn:789/User/all/1?type=id&value=${this.belongTo}`)
+                      .then(res => {
+                        this.nickname2 = res.data.data[0].nickName
+                        this.avatar2 = res.data.data[0].avatar
+                        console.log(res)
+                        this.$fly.post('https://www.wjxweb.cn:789/Contact', {
+                          id: 0,
+                          fromWho: this.serverMan,
+                          toWho: this.belongTo,
+                          // 这里的nickname和avatar是发布这条需求的人的nickname和avatar
+                          nickname: this.nickname2,
+                          avatar: this.avatar2,
+                          isDisplay: 'true'
+                        })
+                          .then(res => {
+                            console.log(res)
+                            wx.switchTab({
+                              url: '/pages/conversation/main'
+                            })
+                          })
+                          .catch(err => {
+                            console.log(err)
+                          })
+                      })
+                      .catch(err => {
+                        console.log(err)
+                      })
+                  }
+                })
+                .catch(err => {
+                  console.log(err)
+                })
+            }
           })
           .catch(err => {
             console.log(err)
@@ -249,7 +270,7 @@
   font-size:30rpx
 }
 .deleteDiv{
-  opacity: 0.6;
+  opacity: 1;
   float: right;
   width: 50rpx;
   height: 50rpx;
@@ -266,14 +287,14 @@
   background-size: 60rpx;
   margin: 20rpx
 }
-li:nth-child(4){
-  display: inline;
+.bigdate{
+  position:relative;
+  height: 15px;
 }
-li:nth-child(5){
-  display: inline-block;
-  float: right;
+.date{
   font-size: 26rpx;
-  padding:15rpx
+  float: right;
+  margin-right: 5px
 }
 li{
   margin: 0 0 5rpx 9rpx;

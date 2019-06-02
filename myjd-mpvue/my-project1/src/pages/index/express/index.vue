@@ -84,7 +84,7 @@ export default {
     toPublisher (item) {
       this.servicedMan = this.$store.state.userInformation.id
       // 先判断点击联系人按钮的是否是发布者本人，若是，弹出提示，不是本人则先判断表中是否已存在该联系人
-      if (this.servicedMan.toString() === item.belongTo) {
+      if (this.serviceMan.toString() === item.belongTo) {
         wx.showToast({
           icon: 'none',
           title: '无法自己联系自己！！！',
@@ -97,9 +97,23 @@ export default {
             res.data.data.forEach(value => {
               if (value.toWho.toString() === item.belongTo) {
                 this.is = true
-                wx.switchTab({
-                  url: '/pages/conversation/main'
+                this.$fly.put('https://www.wjxweb.cn:789/Contact', {
+                  id: value.id,
+                  fromWho: value.fromWho,
+                  toWho: value.toWho,
+                  nickname: value.nickname,
+                  avatar: value.avatar,
+                  isDisplay: 'true'
                 })
+                  .then(res => {
+                    console.log(res)
+                    wx.switchTab({
+                      url: '/pages/conversation/main'
+                    })
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
                 console.log('已存在该联系人')
               }
             })
@@ -130,7 +144,7 @@ export default {
                     toWho: item.belongTo,
                     nickname: this.nickname2,
                     avatar: this.avatar2,
-                    isDisplay: 'true'
+                    isDisplay: true
                   })
                     .then(res => {
                       console.log(res)
@@ -161,6 +175,7 @@ export default {
           content: '确认删除吗？',
           success: res => {
             if (res.confirm) {
+              // 根据id修改实例
               this.$fly.put('https://www.wjxweb.cn:789/Demand', {
                 belongTo: item.belongTo,
                 detail: item.detail,
@@ -235,7 +250,7 @@ export default {
   font-size:30rpx
 }
 .deleteDiv{
-  opacity: 0.6;
+  opacity: 1;
   float: right;
   width: 50rpx;
   height: 50rpx;

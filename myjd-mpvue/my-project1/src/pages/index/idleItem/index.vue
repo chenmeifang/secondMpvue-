@@ -102,9 +102,23 @@
                 // 这里toWho和belongTo数据类型不一致  toWho是int型，belongTo是string型
                 if (value.toWho.toString() === item.belongTo) {
                   console.log('已存在该联系人')
-                  wx.switchTab({
-                    url: '/pages/conversation/main'
+                  this.$fly.put('https://www.wjxweb.cn:789/Contact', {
+                    id: value.id,
+                    fromWho: value.fromWho,
+                    toWho: value.toWho,
+                    nickname: value.nickname,
+                    avatar: value.avatar,
+                    isDisplay: 'true'
                   })
+                    .then(res => {
+                      console.log(res)
+                      wx.switchTab({
+                        url: '/pages/conversation/main'
+                      })
+                    })
+                    .catch(err => {
+                      console.log(err)
+                    })
                   this.is = true
                 }
               })
@@ -248,7 +262,7 @@
   font-size:30rpx
 }
 .deleteDiv{
-  opacity: 0.6;
+  opacity: 1;
   float: right;
   width: 50rpx;
   height: 50rpx;
@@ -273,7 +287,6 @@
   float: left;
   width: 250rpx;
   height: 250rpx;
-  /* background-image: url("../../../../static/images/loading.png") */
 }
 .idleItemImg{
   width: 250rpx;
@@ -282,7 +295,6 @@
 .details{
   width: 400rpx;
   float: right;
-  /* margin-right: 20rpx */
 }
 .dateDiv{
   font-size: 25rpx;
